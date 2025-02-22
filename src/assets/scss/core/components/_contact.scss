@@ -1,0 +1,21 @@
+.nk-contact {
+    &-box {
+        &.with-transparent {
+            background-color: $white;
+        }
+    }
+    &-content {
+        padding: $contact-box-content-padding;
+    }
+}
+.nk-form-card {
+    .nk-mask {
+        z-index: inherit;
+    }
+    .title {
+        color: $form-card-title-color;
+    }
+    .text {
+        color: $form-card-text-color;
+    }
+}

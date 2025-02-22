@@ -1,0 +1,33 @@
+.badge {
+    font-size: $badge-font-size;
+    line-height: $badge-line-height;
+    letter-spacing: $badge-letter-spacing;
+    background: $badge-bg-color;
+    &-md {
+        padding: $badge-padding-y-md $badge-padding-x-md;
+    }
+
+    // typography
+    &-text--sm {
+        font-size: 0.75rem;
+        font-weight: 600;
+        line-height: 0.875rem;
+    }
+
+    &-feature {
+        display: flex;
+        width: 60px;
+        height: 60px;
+        overflow: hidden;
+        align-items: center;
+        border-radius: 50%;
+        justify-content: center;
+        background-color: #fff;
+        img {
+            max-width: 45px;
+            max-height: 45px;
+            overflow: hidden;
+            border-radius: 50%;
+        }
+    }
+}

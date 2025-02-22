@@ -1,0 +1,78 @@
+{
+  "name": "NioLandReact",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@fortawesome/free-solid-svg-icons": "^6.7.2",
+    "@fortawesome/react-fontawesome": "^0.2.2",
+    "@heroicons/react": "^2.2.0",
+    "@material-tailwind/react": "^2.1.10",
+    "@popperjs/core": "^2.11.6",
+    "axios": "^1.7.9",
+    "bootstrap": "^5.3.2",
+    "classnames": "^2.5.1",
+    "countries-list": "^3.1.1",
+    "deepmerge": "^4.3.1",
+    "filterizr": "^2.2.4",
+    "framer-motion": "^12.4.5",
+    "fslightbox-react": "^1.7.2",
+    "lucide-react": "^0.475.0",
+    "mdb-react-ui-kit": "^9.0.0",
+    "react": "^18.0.0",
+    "react-bootstrap": "^2.7.2",
+    "react-bootstrap-icons": "^1.11.5",
+    "react-copy-to-clipboard": "^5.1.0",
+    "react-countdown": "^2.3.5",
+    "react-countup": "^6.4.1",
+    "react-dom": "^18.0.0",
+    "react-flags-select": "^2.2.3",
+    "react-google-recaptcha": "^3.1.0",
+    "react-helmet": "^6.1.0",
+    "react-helmet-async": "^1.3.0",
+    "react-hook-form": "^7.45.2",
+    "react-icons": "^5.5.0",
+    "react-phone-input-2": "^2.15.1",
+    "react-pro-sidebar": "^1.1.0",
+    "react-router-dom": "^6.8.1",
+    "react-router-scroll-to-top": "^1.2.1",
+    "react-scripts": "5.0.1",
+    "react-scroll": "^1.8.9",
+    "react-select": "^5.10.0",
+    "react-step-progress-bar": "^1.0.3",
+    "sass": "^1.54.9",
+    "sass-loader": "^13.2.0",
+    "scroll-carousel": "^1.2.1",
+    "swiper": "^10.1.0",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@hookform/devtools": "^4.3.1",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^4.0.7"
+  }
+}

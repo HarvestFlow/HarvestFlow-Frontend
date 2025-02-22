@@ -1,0 +1,56 @@
+/* TopNavbar.css */
+.top-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--dark);
+    color: var(--light);
+    padding: 10px 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+  }
+  
+  .top-navbar-left {
+    display: flex;
+    align-items: center;
+  }
+  
+  .top-navbar-title {
+    margin-left: 15px;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  
+  .menu-toggle {
+    background: none;
+    border: none;
+    color: var(--light);
+    font-size: 24px;
+    cursor: pointer;
+  }
+  
+  .top-navbar-right {
+    display: flex;
+    align-items: center;
+  }
+  
+  .top-navbar-icons {
+    display: flex;
+    gap: 15px;
+  }
+  
+  .top-navbar-icon {
+    font-size: 20px;
+    cursor: pointer;
+  }
+  
+  .menu-icon {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: var(--light);
+  }
+  

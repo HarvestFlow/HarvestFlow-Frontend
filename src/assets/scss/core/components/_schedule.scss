@@ -1,0 +1,178 @@
+$schedule-class: "nk-schedule";
+
+.#{$schedule-class} {
+    &-item {
+        overflow: hidden;
+        padding-top: $schedule-item-gap-y;
+        padding-bottom: $schedule-item-gap-y;
+        &:not(:last-child) .nk-schedule-item-inner {
+            padding-bottom: $schedule-item-inner-gap;
+        }
+        &-inner {
+            display: flex;
+        }
+        &:last-child {
+            .#{$schedule-class}-symbol {
+                &::before {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    &-symbol {
+        position: relative;
+        align-self: flex-start;
+        display: inline-flex;
+        &::before {
+            content: "";
+            left: 50%;
+            z-index: 1;
+            width: 2px;
+            height: 100rem;
+            position: absolute;
+            transform: translateX(-50%);
+            top: calc(100% + $schedule-item-gap-y);
+            opacity: $schedule-symbol-before-opacity;
+            background-color: $schedule-symbol-before-bg;
+        }
+        + .#{$schedule-class}-content {
+            padding-left: $schedule-content-gap;
+        }
+    }
+
+    &-center {
+        .nk-schedule-item-inner {
+            align-items: center;
+        }
+    }
+
+    &-s1 {
+        .#{$schedule-class} {
+            &-item {
+                overflow: inherit;
+                padding-top: 0;
+                padding-bottom: $schedule-s1-item-gap-y;
+                &-inner {
+                    align-items: center;
+                }
+                &:last-child {
+                    padding-bottom: 0;
+                }
+            }
+            &-symbol {
+                display: none;
+                margin-left: -$schedule-s1-symbol-negative-gap;
+
+                &::before {
+                    display: none;
+                }
+            }
+            &-content {
+                padding-left: 0px;
+            }
+        }
+    }
+    &-s2 {
+        .#{$schedule-class} {
+            &-item {
+                padding-top: 0;
+                position: relative;
+                overflow: inherit;
+                padding-bottom: $schedule-s2-item-gap-y;
+                &:not(:last-child) .nk-schedule-item-inner {
+                    padding-bottom: 0;
+                }
+                &:last-child {
+                    padding-bottom: 0;
+                    &::after {
+                        display: none;
+                    }
+                }
+                &::after {
+                    content: "";
+                    top: 76px;
+                    left: 22px;
+                    height: 100%;
+                    opacity: 0.3;
+                    position: absolute;
+                    border-left: 2px dashed $primary;
+                    left: $schedule-s2-item-after-left;
+                    opacity: $schedule-s2-item-after-opaticy;
+                    border-left: 2px dashed currentColor;
+                }
+            }
+            &-symbol {
+                margin-top: 34px;
+                align-self: inherit;
+                margin-top: $schedule-s2-symbol-margin-y;
+                + .#{$schedule-class}-content {
+                    padding-left: $schedule-s2-content-gap;
+                }
+                &::before {
+                    display: none;
+                }
+            }
+        }
+    }
+    &-s3 {
+        .#{$schedule-class} {
+            &-item {
+                .#{$schedule-class}-symbol {
+                    &::before {
+                        top: 100%;
+                    }
+                }
+                &:nth-last-child(2) {
+                    .#{$schedule-class}-symbol {
+                        &::before {
+                            width: 0px;
+                            background-color: transparent;
+                            border: 1px dashed $schedule-symbol-before-bg;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    &-s4 {
+        .#{$schedule-class} {
+            &-symbol {
+                &::before {
+                    content: none;
+                }
+            }
+        }
+    }
+}
+
+// responsive breakpoints
+
+@include media-breakpoint-up(sm) {
+    .#{$schedule-class} {
+        &-s1 {
+            border-left: $schedule-s1-border;
+            .#{$schedule-class} {
+                &-symbol {
+                    display: inline-flex;
+                }
+                &-content {
+                    padding-left: 1.5rem;
+                }
+            }
+        }
+    }
+}
+
+@include media-breakpoint-up(md) {
+    .#{$schedule-class} {
+        &-s1 {
+            .#{$schedule-class} {
+                &-content {
+                    padding-left: $schedule-s1-content-gap;
+                }
+            }
+        }
+    }
+}

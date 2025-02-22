@@ -1,0 +1,3886 @@
+{
+  "navigation": {
+    "one": {
+      "menus": [
+        {
+          "item": {
+            "url": "/",
+            "mega": true,
+            "toggle": true,
+            "title": "Homepages",
+            "submenu": {
+              "media": false,
+              "items": [
+                {
+                  "color": "primary",
+                  "icon": "pie-fill",
+                  "url": "/index-analytics",
+                  "title": "Analytics Saas",
+                  "subtitle": "All In One Analytics Tool."
+                },
+                {
+                  "color": "danger",
+                  "icon": "book-fill",
+                  "url": "/index-kids-course",
+                  "title": "Kids Course Startup",
+                  "subtitle": "Super Courses For Super Kids."
+                },
+                {
+                  "color": "info",
+                  "icon": "users-fill",
+                  "url": "/index-collaboration-tool",
+                  "title": "Collaboration Tool",
+                  "subtitle": "Secure Team Management."
+                },
+                {
+                  "color": "warning",
+                  "icon": "building-fill",
+                  "url": "/index-bs-expense-tracker",
+                  "title": "Business Expense Tracker",
+                  "subtitle": "Track Business Performance."
+                },
+                {
+                  "color": "success",
+                  "icon": "chat-circle-fill",
+                  "url": "/index-live-chat-app",
+                  "title": "Live Chat App Software",
+                  "subtitle": "Connect With Customers."
+                },
+                {
+                  "color": "primary",
+                  "icon": "db-fill",
+                  "url": "/index-bs-solution",
+                  "title": "Business Solutions",
+                  "subtitle": "Empowering Business Growth."
+                },
+                {
+                  "color": "danger",
+                  "icon": "bar-chart-fill",
+                  "url": "/index-saas",
+                  "title": "Business Expenses",
+                  "subtitle": "Coast Mangement Tool."
+                },
+                {
+                  "color": "success",
+                  "icon": "cloud-fill",
+                  "url": "/index-bs-digital",
+                  "title": "Digital Business SAAS",
+                  "subtitle": "Streamline Business Opearations"
+                },
+                {
+                  "color": "warning",
+                  "icon": "sign-btc-alt",
+                  "url": "/index-crypto-profile",
+                  "title": "Crypto Profile",
+                  "subtitle": "Manage Your Crypto Assets."
+                },
+                {
+                  "color": "info",
+                  "icon": "package-fill",
+                  "url": "/index-bs-management",
+                  "title": "Business Management",
+                  "subtitle": "Smart Business Tool."
+                },
+                {
+                  "color": "danger",
+                  "icon": "coin-alt-fill",
+                  "url": "/index-bs-subscription",
+                  "title": "Business Subscription",
+                  "subtitle": "Grow business with subscription."
+                },
+                {
+                  "color": "primary",
+                  "icon": "growth-fill",
+                  "url": "/index-data-driven",
+                  "title": "Data-Driven Business",
+                  "subtitle": "Business analysis tool."
+                },
+                {
+                  "color": "info-alt",
+                  "icon": "file-text-fill",
+                  "url": "/index-language-learning",
+                  "title": "Language Learning",
+                  "subtitle": "Optimize Decisions and Outcomes."
+                }
+              ]
+            }
+          }
+        },
+        {
+          "item": {
+            "url": "#demo",
+            "mega": false,
+            "title": "Demos",
+            "submenu": {
+              "media": false,
+              "items": []
+            }
+          }
+        },
+        {
+          "item": {
+            "url": "/",
+            "mega": false,
+            "title": "Pages",
+            "submenu": {
+              "media": true,
+              "items": [
+                {
+                  "url": "/about",
+                  "title": "About"
+                },
+                {
+                  "url": "/about-solution",
+                  "title": "About 2"
+                },
+                {
+                  "url": "/404",
+                  "title": "404 Error"
+                },
+                {
+                  "url": "/features",
+                  "title": "Features"
+                },
+                {
+                  "url": "/features-solution",
+                  "title": "Features 2"
+                },
+                {
+                  "url": "/customer-testimonials",
+                  "title": "Testimonials"
+                },
+                {
+                  "url": "/contact-us",
+                  "title": "Contact Us"
+                },
+                {
+                  "url": "/contact-us-solution",
+                  "title": "Contact Us 2 "
+                },
+                {
+                  "url": "/auth/login",
+                  "title": "Login"
+                },
+                {
+                  "url": "/pricing",
+                  "title": "Pricing"
+                },
+                {
+                  "url": "/pricing-solution",
+                  "title": "Pricing 2"
+                },
+                {
+                  "url": "/auth/sign-up",
+                  "title": "Sign Up"
+                },
+                {
+                  "url": "/blogs",
+                  "title": "Blogs"
+                },
+                {
+                  "url": "/blog-details",
+                  "title": "Blog Single"
+                },
+                {
+                  "url": "/auth/reset-password",
+                  "title": "Reset Password"
+                },
+                {
+                  "url": "/help-center",
+                  "title": "Help Center"
+                },
+                {
+                  "url": "/help-center-details",
+                  "title": "Help Center Single"
+                },
+                {
+                  "url": "/auth/forgot-password",
+                  "title": "Forgot Password"
+                },
+                {
+                  "url": "/terms-and-conditions",
+                  "title": "Terms & Conditions"
+                },
+                {
+                  "url": "/careers",
+                  "title": "Careers"
+                },
+                {
+                  "url": "/career-details",
+                  "title": "Career Details"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "item": {
+            "url": "#features",
+            "mega": false,
+            "title": "Features",
+            "submenu": {
+              "media": false,
+              "items": []
+            }
+          }
+        }
+      ]
+    },
+    "two": {
+      "menus": [
+        {
+          "item": {
+            "url": "#",
+            "mega": true,
+            "toggle": true,
+            "title": "Homepages",
+            "submenu": {
+              "media": false,
+              "items": [
+                {
+                  "color": "primary",
+                  "icon": "pie-fill",
+                  "url": "/index-analytics",
+                  "title": "Analytics Saas",
+                  "subtitle": "All In One Analytics Tool."
+                },
+                {
+                  "color": "danger",
+                  "icon": "book-fill",
+                  "url": "/index-kids-course",
+                  "title": "Kids Course Startup",
+                  "subtitle": "Super Courses For Super Kids."
+                },
+                {
+                  "color": "info",
+                  "icon": "users-fill",
+                  "url": "/index-collaboration-tool",
+                  "title": "Collaboration Tool",
+                  "subtitle": "Secure Team Management."
+                },
+                {
+                  "color": "warning",
+                  "icon": "building-fill",
+                  "url": "/index-bs-expense-tracker",
+                  "title": "Business Expense Tracker",
+                  "subtitle": "Track Business Performance."
+                },
+                {
+                  "color": "success",
+                  "icon": "chat-circle-fill",
+                  "url": "/index-live-chat-app",
+                  "title": "Live Chat App Software",
+                  "subtitle": "Connect With Customers."
+                },
+                {
+                  "color": "primary",
+                  "icon": "db-fill",
+                  "url": "/index-bs-solution",
+                  "title": "Business Solutions",
+                  "subtitle": "Empowering Business Growth."
+                },
+                {
+                  "color": "danger",
+                  "icon": "bar-chart-fill",
+                  "url": "/index-saas",
+                  "title": "Business Expenses",
+                  "subtitle": "Coast Mangement Tool."
+                },
+                {
+                  "color": "success",
+                  "icon": "cloud-fill",
+                  "url": "/index-bs-digital",
+                  "title": "Digital Business SAAS",
+                  "subtitle": "Streamline Business Opearations"
+                },
+                {
+                  "color": "warning",
+                  "icon": "sign-btc-alt",
+                  "url": "/index-crypto-profile",
+                  "title": "Crypto Profile",
+                  "subtitle": "Manage Your Crypto Assets."
+                },
+                {
+                  "color": "info",
+                  "icon": "package-fill",
+                  "url": "/index-bs-management",
+                  "title": "Business Management",
+                  "subtitle": "Smart Business tool."
+                },
+                {
+                  "color": "danger",
+                  "icon": "coin-alt-fill",
+                  "url": "/index-bs-subscription",
+                  "title": "Business Subscription",
+                  "subtitle": "Grow Business With Subscription."
+                },
+                {
+                  "color": "primary",
+                  "icon": "growth-fill",
+                  "url": "/index-data-driven",
+                  "title": "Data-Driven Business",
+                  "subtitle": "Optimize Decisions and Outcomes."
+                },
+                {
+                  "color": "info-alt",
+                  "icon": "file-text-fill",
+                  "url": "/index-language-learning",
+                  "title": "Language Learning",
+                  "subtitle": "Dive into Language Learning"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "item": {
+            "url": "/about",
+            "mega": false,
+            "title": "About",
+            "submenu": {
+              "media": false,
+              "items": []
+            }
+          }
+        },
+        {
+          "item": {
+            "url": "#",
+            "mega": false,
+            "title": "Pages",
+            "submenu": {
+              "media": true,
+              "items": [
+                {
+                  "url": "/about",
+                  "title": "About"
+                },
+                {
+                  "url": "/about-solution",
+                  "title": "About 2"
+                },
+                {
+                  "url": "/404",
+                  "title": "404 Error"
+                },
+                {
+                  "url": "/features",
+                  "title": "Features"
+                },
+                {
+                  "url": "/features-solution",
+                  "title": "Features 2"
+                },
+                {
+                  "url": "/customer-testimonials",
+                  "title": "Testimonials"
+                },
+                {
+                  "url": "/contact-us",
+                  "title": "Contact Us"
+                },
+                {
+                  "url": "/contact-us-solution",
+                  "title": "Contact Us 2"
+                },
+                {
+                  "url": "/auth/login",
+                  "title": "Login"
+                },
+                {
+                  "url": "/pricing",
+                  "title": "Pricing"
+                },
+                {
+                  "url": "/pricing-solution",
+                  "title": "Pricing 2"
+                },
+                {
+                  "url": "/auth/sign-up",
+                  "title": "Sign Up"
+                },
+                {
+                  "url": "/blogs",
+                  "title": "Blogs"
+                },
+                {
+                  "url": "/blog-details",
+                  "title": "Blog Single"
+                },
+                {
+                  "url": "/auth/reset-password",
+                  "title": "Reset Password"
+                },
+                {
+                  "url": "/help-center",
+                  "title": "Help Center"
+                },
+                {
+                  "url": "/help-center-details",
+                  "title": "Help Center Single"
+                },
+                {
+                  "url": "/auth/forgot-password",
+                  "title": "Forgot Password"
+                },
+                {
+                  "url": "/terms-and-conditions",
+                  "title": "Terms & Conditions"
+                },
+                {
+                  "url": "/careers",
+                  "title": "Careers"
+                },
+                {
+                  "url": "/career-details",
+                  "title": "Career Details"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "item": {
+            "url": "/blogs",
+            "mega": false,
+            "title": "Blogs",
+            "submenu": {
+              "media": false,
+              "items": []
+            }
+          }
+        },
+        {
+          "item": {
+            "url": "/contact-us",
+            "mega": false,
+            "title": "Contact",
+            "submenu": {
+              "media": false,
+              "items": []
+            }
+          }
+        }
+      ]
+    }
+  },
+  "testimonials": {
+    "kids": {
+      "contents": [
+        {
+          "author": {
+            "name": "John Morrision",
+            "cover": "images/testimonial/avatar1.png"
+          },
+          "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Gravida a amet feugiat justo dictum in sagittis id. In dui amet amet eget quam dolor. Sit nunc at pretium elementum turpis sit non. Sed semper malesuada odio pulvinar."
+        },
+        {
+          "author": {
+            "name": "Melica Anderson",
+            "cover": "images/testimonial/avatar2.png"
+          },
+          "description": "Lorem ipsum dolor pulvinar sit amet,  adipi scing elit. Gravida a amet feugiat justo dictum in sagittis id. In dui amet amet eget quam dolor. Sit nunc at pretium elementum turpis sit non. Sed semper malesuada cons ectetur odio ."
+        },
+        {
+          "author": {
+            "name": "Andy Robertson",
+            "cover": "images/testimonial/avatar3.png"
+          },
+          "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Gravida a amet feugiat justo dictum in sagittis id. In dui amet amet eget quam dolor. Sit nunc at pretium elementum turpis sit non. Sed semper malesuada odio pulvinar."
+        },
+        {
+          "author": {
+            "name": "John Morrision",
+            "cover": "images/testimonial/avatar1.png"
+          },
+          "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Gravida a amet feugiat justo dictum in sagittis id. In dui amet amet eget quam dolor. Sit nunc at pretium elementum turpis sit non. Sed semper malesuada odio pulvinar."
+        },
+        {
+          "author": {
+            "name": "Melica Anderson",
+            "cover": "images/testimonial/avatar2.png"
+          },
+          "description": "Lorem ipsum dolor pulvinar sit amet,  adipi scing elit. Gravida a amet feugiat justo dictum in sagittis id. In dui amet amet eget quam dolor. Sit nunc at pretium elementum turpis sit non. Sed semper malesuada cons ectetur odio ."
+        },
+        {
+          "author": {
+            "name": "Andy Robertson",
+            "cover": "images/testimonial/avatar3.png"
+          },
+          "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Gravida a amet feugiat justo dictum in sagittis id. In dui amet amet eget quam dolor. Sit nunc at pretium elementum turpis sit non. Sed semper malesuada odio pulvinar."
+        }
+      ]
+    },
+    "collaboration": {
+      "contents": [
+        {
+          "cover": "people-6.png",
+          "name": "Robert Mayer",
+          "logo": "luminous-red.png",
+          "designation": "Founder Of Luminious",
+          "comments": "I want my team to spend time thinking about high level UX problems, rather than mindlessly repeating busy work. NioLand helps them do that."
+        },
+        {
+          "cover": "people-6.png",
+          "name": "Parvez Khan",
+          "logo": "sitemark-red.png",
+          "designation": "Founder Of Sitemark",
+          "comments": "I want my team to spend time thinking about high level UX problems, rather than mindlessly repeating busy work. NioLand helps them do that."
+        },
+        {
+          "cover": "people-6.png",
+          "name": "Sheikh Rashed",
+          "logo": "greenish-red.png",
+          "designation": "Founder Of Greenish",
+          "comments": "I want my team to spend time thinking about high level UX problems, rather than mindlessly repeating busy work. NioLand helps them do that."
+        },
+        {
+          "cover": "people-6.png",
+          "name": "Illiyas Hossain",
+          "logo": "luminous-red.png",
+          "designation": "Co-Founder Of Luminious",
+          "comments": "I want my team to spend time thinking about high level UX problems, rather than mindlessly repeating busy work. NioLand helps them do that."
+        },
+        {
+          "cover": "people-6.png",
+          "name": "Razib Sarker",
+          "logo": "greenish-red.png",
+          "designation": "Co-Founder Of Greenish",
+          "comments": "I want my team to spend time thinking about high level UX problems, rather than mindlessly repeating busy work. NioLand helps them do that."
+        }
+      ]
+    },
+    "tracker": {
+      "contents": [
+        {
+          "cover": "a.jpg",
+          "name": "John Carter",
+          "designation": "Financial Analyst",
+          "comments": "An augue cubilia laoreet undo magna ipsum and semper suscipit egestas magna ipsum ligula vitae purus and ipsum primis cubilia magna suscipit "
+        },
+        {
+          "cover": "b.jpg",
+          "name": "Bella Grace",
+          "designation": "Digital Merketer",
+          "comments": "An augue cubilia laoreet undo magna ipsum and semper suscipit egestas magna ipsum ligula vitae purus and ipsum primis cubilia magna suscipit "
+        },
+        {
+          "cover": "a.jpg",
+          "name": "John Carter",
+          "designation": "Financial Analyst",
+          "comments": "An augue cubilia laoreet undo magna ipsum and semper suscipit egestas magna ipsum ligula vitae purus and ipsum primis cubilia magna suscipit "
+        },
+        {
+          "cover": "b.jpg",
+          "name": "Bella Grace",
+          "designation": "Digital Merketer",
+          "comments": "An augue cubilia laoreet undo magna ipsum and semper suscipit egestas magna ipsum ligula vitae purus and ipsum primis cubilia magna suscipit "
+        }
+      ]
+    },
+    "expense": {
+      "contents": [
+        {
+          "title": "It's Just Incredible!",
+          "description": "I am extremely delighted with the exceptional service provided by NioLand. Their expert support system, efficient tools, and strategic solutions have truly transformed my business.",
+          "user": {
+            "name": "Jimmy Bartney",
+            "cover": "images/avatar/a.jpg",
+            "designation": "Product Manager at Picko Lab"
+          }
+        },
+        {
+          "title": "Satisfied User Here!",
+          "description": "As a satisfied user, I can confidently say that my experience with NioLand has been outstanding. The service, support, and solutions provided have exceeded my expectations.",
+          "user": {
+            "name": "Natasha Romanoff",
+            "cover": "images/avatar/b.jpg",
+            "designation": "Black Widow"
+          }
+        },
+        {
+          "title": "No doubt, Spend.In is the best!",
+          "description": "Without a doubt, Spend.In stands out as the absolute best. Their exceptional quality, reliability, and customer service are unmatched. I have complete.",
+          "user": {
+            "name": "Moritika Kazuki",
+            "cover": "images/avatar/c.jpg",
+            "designation": "Finance Manager at Mangan"
+          }
+        },
+        {
+          "title": "It's Just Incredible!",
+          "description": "I am extremely delighted with the exceptional service provided by NioLand. Their expert support system, efficient tools, and strategic solutions have truly transformed my business.",
+          "user": {
+            "name": "Jimmy Bartney",
+            "cover": "images/avatar/a.jpg",
+            "designation": "Product Manager at Picko Lab"
+          }
+        },
+        {
+          "title": "Satisfied User Here!",
+          "description": "As a satisfied user, I can confidently say that my experience with NioLand has been outstanding. The service, support, and solutions provided have exceeded my expectations.",
+          "user": {
+            "name": "Natasha Romanoff",
+            "cover": "images/avatar/b.jpg",
+            "designation": "Black Widow"
+          }
+        },
+        {
+          "title": "No doubt, Spend.In is the best!",
+          "description": "Without a doubt, Spend.In stands out as the absolute best. Their exceptional quality, reliability, and customer service are unmatched. I have complete.",
+          "user": {
+            "name": "Moritika Kazuki",
+            "cover": "images/avatar/c.jpg",
+            "designation": "Finance Manager at Mangan"
+          }
+        }
+      ]
+    },
+    "digital": {
+      "contents": [
+        {
+          "user": {
+            "name": "Darren Dunlap",
+            "cover": "images/avatar/a.jpg",
+            "designation": "CEO & Founder at Flex.co"
+          },
+          "comments": "The best solution for anyone who wants to work a flexible schedule but still earn a fulltime income. They have best support for 24/7."
+        },
+        {
+          "user": {
+            "name": "Will Smith",
+            "cover": "images/avatar/b.jpg",
+            "designation": "CEO & Founder at amazon.co"
+          },
+          "comments": "The best solution for anyone who wants to work a flexible schedule but still earn a fulltime income. They have best support for 24/7."
+        },
+        {
+          "user": {
+            "name": "Elon Musk",
+            "cover": "images/avatar/c.jpg",
+            "designation": "CEO & Founder at tesla.co"
+          },
+          "comments": "The best solution for anyone who wants to work a flexible schedule but still earn a fulltime income. They have best support for 24/7."
+        }
+      ]
+    },
+    "feature": {
+      "contents": [
+        {
+          "cover": "images/avatar/a.jpg",
+          "user": {
+            "name": "Dianne Russell",
+            "designation": "VP of Product Management",
+            "comments": "One of things I love the most about Mixpanel is that it’s easy to learn. If a product manager has never used Mixpanel before, I can give them a 5-10 minute tour and they’re off to the races, building funnels and writing reports."
+          }
+        },
+        {
+          "cover": "images/avatar/b.jpg",
+          "user": {
+            "name": "Jessica Brown",
+            "designation": "Digital Merketer",
+            "comments": "One of things I love the most about Mixpanel is that it’s easy to learn. If a product manager has never used Mixpanel before, I can give them a 5-10 minute tour and they’re off to the races, building funnels and writing reports."
+          }
+        },
+        {
+          "cover": "images/avatar/c.jpg",
+          "user": {
+            "name": "Russell Dianne",
+            "designation": "VP of Product Management",
+            "comments": "One of things I love the most about Mixpanel is that it’s easy to learn. If a product manager has never used Mixpanel before, I can give them a 5-10 minute tour and they’re off to the races, building funnels and writing reports."
+          }
+        }
+      ]
+    },
+    "bsmanagement": {
+      "contents": [
+        {
+          "name": "Emily Carter",
+          "cover": "images/avatar/b.jpg",
+          "designation": "Market Analyst",
+          "comments": "Emily, an entrepreneur, successfully launched her new mobile app with our development services, receiving rave reviews from users and attracting investor interest for future growth. "
+        },
+        {
+          "name": "Sara Leo",
+          "cover": "images/avatar/a.jpg",
+          "designation": "Financial Analyst",
+          "comments": "An augue cubilia laoreet undo magna ipsum and semper suscipit egestas magna ipsum ligula vitae purus and ipsum primis cubilia magna suscipit. "
+        },
+        {
+          "name": "John Grace",
+          "cover": "images/avatar/c.jpg",
+          "designation": "Digital Marketing",
+          "comments": " John, a marketing professional, saw a significant boost in lead generation and conversion rates after implementing our digital marketing strategies, resulting in increased ROI for his company. "
+        },
+        {
+          "name": "Emily Carter",
+          "cover": "images/avatar/b.jpg",
+          "designation": "Market Analyst",
+          "comments": "Emily, an entrepreneur, successfully launched her new mobile app with our development services, receiving rave reviews from users and attracting investor interest for future growth. "
+        }
+      ]
+    },
+    "fintech": {
+      "contents": [
+        {
+          "alt": "logo-title",
+          "logo": "images/brands/a.png"
+        },
+        {
+          "alt": "logo-title",
+          "logo": "images/brands/b.png"
+        },
+        {
+          "alt": "logo-title",
+          "logo": "images/brands/c.png"
+        },
+        {
+          "alt": "logo-title",
+          "logo": "images/brands/d.png"
+        },
+        {
+          "alt": "logo-title",
+          "logo": "images/brands/e.png"
+        },
+        {
+          "alt": "logo-title",
+          "logo": "images/brands/b.png"
+        }
+      ]
+    },
+    "greentech": {
+      "contents": [
+        {
+          "alt": "testimonial-cover",
+          "cover": "images/green-tech/testimonial-cover-1.jpg"
+        },
+        {
+          "alt": "testimonial-cover",
+          "cover": "images/green-tech/testimonial-cover-2.jpg"
+        },
+        {
+          "alt": "testimonial-cover",
+          "cover": "images/green-tech/testimonial-cover-3.jpg"
+        },
+        {
+          "alt": "testimonial-cover",
+          "cover": "images/green-tech/testimonial-cover-1.jpg"
+        },
+        {
+          "alt": "testimonial-cover",
+          "cover": "images/green-tech/testimonial-cover-2.jpg"
+        }
+      ]
+    },
+    "codebase": {
+      "contents": [
+        {
+          "logo": "images/codebase/sitemark.png",
+          "title": "The Best Codebase IDE app",
+          "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+        },
+        {
+          "logo": "images/codebase/luminous.png",
+          "title": "The Best Codebase IDE app",
+          "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+        },
+        {
+          "logo": "images/codebase/cloud.png",
+          "title": "The Best Codebase IDE app",
+          "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+        }
+      ]
+    },
+    "learning": {
+      "contents": [
+        {
+          "name": "Bella Grace",
+          "designation": "designation",
+          "cover": "images/avatar/b.jpg",
+          "title": "I am very happy",
+          "comments": "I'm glad to hear that you're happy! If you have any more questions or need assistance with anything else, feel free to ask."
+        },
+        {
+          "name": "John Carter",
+          "designation": "Financial Analyst",
+          "cover": "images/avatar/a.jpg",
+          "title": "Best Platform To Learn",
+          "comments": "The best learning platform offers comprehensive, engaging, and adaptable resources tailored to individual needs, promoting effective and enjoyable knowledge acquisition."
+        },
+        {
+          "name": "Bella Grace",
+          "designation": "Digital Merketer",
+          "cover": "images/avatar/b.jpg",
+          "title": "Brilliant Solutions",
+          "comments": "Thank you for your kind words! We strive to provide brilliant solutions for our customers. If there's anything else we can assist you with, please let us know."
+        }
+      ]
+    },
+    "careers": {
+      "contents": [
+        {
+          "cover": "images/career/banner-cover-1-a.jpg"
+        },
+        {
+          "cover": "images/career/banner-cover-1-b.jpg"
+        },
+        {
+          "cover": "images/career/banner-cover-1-c.jpg"
+        },
+        {
+          "cover": "images/career/banner-cover-1-a.jpg"
+        },
+        {
+          "cover": "images/career/banner-cover-1-b.jpg"
+        },
+        {
+          "cover": "images/career/banner-cover-1-c.jpg"
+        }
+      ]
+    }
+  },
+  "faqs": {
+    "contents": [
+      {
+        "title": "How long does it take to ship my order?",
+        "description": "The shipping time for your order may vary depending on your location and the shipping method chosen. Please refer to our shipping policy for more information or contact our customer support for specific details regarding your order. "
+      },
+      {
+        "title": "What payment methods do you accept?",
+        "description": "We accept various payment methods, including major credit cards, debit cards, and online payment platforms like PayPal."
+      },
+      {
+        "title": "What shipping options do you have?",
+        "description": "We accept various payment methods, including major credit cards, debit cards, and online payment platforms like PayPal."
+      },
+      {
+        "title": "How do I make changes to an existing order?",
+        "description": "We offer a range of shipping options to accommodate your needs. These options include standard shipping, express shipping, and international shipping. The availability of specific shipping methods may vary depending on your location and the product you are ordering. During the checkout process, you can select the shipping option that best suits your preferences and requirements."
+      },
+      {
+        "title": "When will my order arrive?",
+        "description": "To make changes to an existing order, please contact our customer support team as soon as possible. Provide them with your order details and the specific changes you would like to make. Our team will assist you in updating your order, such as modifying the shipping address, adding or removing items, or adjusting quantities. Please note that order modifications may be subject to certain limitations and availability of the requested changes."
+      }
+    ]
+  },
+  "pricing": {
+    "tracker": {
+      "contents": [
+        {
+          "active": false,
+          "heading": {
+            "title": "Intro",
+            "subtitle": "For most businesses that want to otpimize web queries",
+            "package": {
+              "month": {
+                "price": 20,
+                "title": "month"
+              },
+              "year": {
+                "price": 39,
+                "title": "yearly"
+              }
+            }
+          },
+          "body": [
+            {
+              "active": true,
+              "title": "All limited links"
+            },
+            {
+              "active": true,
+              "title": "Own analytics platform"
+            },
+            {
+              "active": true,
+              "title": "Chat support"
+            },
+            {
+              "active": true,
+              "title": "Optimize hashtags"
+            },
+            {
+              "active": true,
+              "title": "Unlimited users"
+            }
+          ]
+        },
+        {
+          "active": false,
+          "heading": {
+            "title": "Base",
+            "subtitle": "For most businesses that want to otpimize web queries",
+            "package": {
+              "month": {
+                "price": 50,
+                "title": "month"
+              },
+              "year": {
+                "price": 79,
+                "title": "yearly"
+              }
+            }
+          },
+          "body": [
+            {
+              "active": true,
+              "title": "All limited links"
+            },
+            {
+              "active": true,
+              "title": "Own analytics platform"
+            },
+            {
+              "active": true,
+              "title": "Chat support"
+            },
+            {
+              "active": true,
+              "title": "Optimize hashtags"
+            },
+            {
+              "active": true,
+              "title": "Unlimited users"
+            }
+          ]
+        },
+        {
+          "active": true,
+          "heading": {
+            "title": "Pro",
+            "subtitle": "For most businesses that want to otpimize web queries",
+            "package": {
+              "month": {
+                "price": 100,
+                "title": "month"
+              },
+              "year": {
+                "price": 179,
+                "title": "yearly"
+              }
+            }
+          },
+          "body": [
+            {
+              "active": true,
+              "title": "All limited links"
+            },
+            {
+              "active": true,
+              "title": "Own analytics platform"
+            },
+            {
+              "active": true,
+              "title": "Chat support"
+            },
+            {
+              "active": true,
+              "title": "Optimize hashtags"
+            },
+            {
+              "active": true,
+              "title": "Unlimited users"
+            }
+          ]
+        },
+        {
+          "active": false,
+          "heading": {
+            "title": "Enterprise",
+            "subtitle": "For most businesses that want to otpimize web queries",
+            "package": {
+              "month": {
+                "price": 200,
+                "title": "month"
+              },
+              "year": {
+                "price": 379,
+                "title": "yearly"
+              }
+            }
+          },
+          "body": [
+            {
+              "active": true,
+              "title": "All limited links"
+            },
+            {
+              "active": true,
+              "title": "Own analytics platform"
+            },
+            {
+              "active": true,
+              "title": "Chat support"
+            },
+            {
+              "active": true,
+              "title": "Optimize hashtags"
+            },
+            {
+              "active": true,
+              "title": "Unlimited users"
+            }
+          ]
+        }
+      ]
+    },
+    "solution": {
+      "contents": [
+        {
+          "active": false,
+          "heading": {
+            "title": "Small",
+            "subtitle": "Basic Features For Up To 10 Users",
+            "package": {
+              "month": {
+                "price": 10,
+                "title": "month"
+              },
+              "year": {
+                "price": 29,
+                "title": "yearly"
+              }
+            }
+          },
+          "body": [
+            {
+              "active": true,
+              "title": "Complete documentation"
+            },
+            {
+              "active": true,
+              "title": "Working materials in Figma"
+            },
+            {
+              "active": true,
+              "title": "100GB cloud storage"
+            },
+            {
+              "active": true,
+              "title": "500 team members"
+            }
+          ]
+        },
+        {
+          "active": true,
+          "heading": {
+            "title": "Standard",
+            "subtitle": "Basic features for up to 20 users",
+            "package": {
+              "month": {
+                "price": 99,
+                "title": "month"
+              },
+              "year": {
+                "price": 199,
+                "title": "yearly"
+              }
+            }
+          },
+          "body": [
+            {
+              "active": true,
+              "title": "Complete documentation"
+            },
+            {
+              "active": true,
+              "title": "Working materials in Figma"
+            },
+            {
+              "active": true,
+              "title": "100GB cloud storage"
+            },
+            {
+              "active": true,
+              "title": "500 team members"
+            }
+          ]
+        },
+        {
+          "active": false,
+          "heading": {
+            "title": "Large",
+            "subtitle": "Basic features for up to 40 users",
+            "package": {
+              "month": {
+                "price": 799,
+                "title": "month"
+              },
+              "year": {
+                "price": 1099,
+                "title": "yearly"
+              }
+            }
+          },
+          "body": [
+            {
+              "active": true,
+              "title": "Complete documentation"
+            },
+            {
+              "active": true,
+              "title": "Working materials in Figma"
+            },
+            {
+              "active": true,
+              "title": "100GB cloud storage"
+            },
+            {
+              "active": true,
+              "title": "500 team members"
+            }
+          ]
+        }
+      ]
+    },
+    "expense": {
+      "contents": [
+        {
+          "active": false,
+          "heading": {
+            "package": {
+              "month": {
+                "price": 0,
+                "title": "month"
+              },
+              "year": {
+                "price": 0,
+                "title": "year"
+              }
+            },
+            "title": "Free",
+            "icon": "heart-fill",
+            "subtitle": "Perfect plan to get started",
+            "description": "A free plan grants you access to some cool features of Spend.In."
+          },
+          "body": [
+            {
+              "active": true,
+              "title": "Sync accross device"
+            },
+            {
+              "active": true,
+              "title": "5 workspace"
+            },
+            {
+              "active": true,
+              "title": "Collaborate with 5 user"
+            },
+            {
+              "active": false,
+              "title": "Sharing permission"
+            },
+            {
+              "active": false,
+              "title": "Admin tools"
+            },
+            {
+              "active": false,
+              "title": "100+ integrations"
+            }
+          ],
+          "footer": {
+            "title": "Get Your Free Plan"
+          }
+        },
+        {
+          "active": true,
+          "heading": {
+            "package": {
+              "month": {
+                "price": 12,
+                "title": "month"
+              },
+              "year": {
+                "price": 29,
+                "title": "year"
+              }
+            },
+            "title": "Pro",
+            "icon": "offer-fill",
+            "subtitle": "Perfect plan for professionals!",
+            "description": "For professional only! Start arranging your expenses with our best templates."
+          },
+          "body": [
+            {
+              "active": true,
+              "title": "Everything in Free Plan"
+            },
+            {
+              "active": true,
+              "title": "Unlimited workspace"
+            },
+            {
+              "active": true,
+              "title": "Collaborative workspace"
+            },
+            {
+              "active": true,
+              "title": "Sharing permission"
+            },
+            {
+              "active": true,
+              "title": "Admin tools"
+            },
+            {
+              "active": true,
+              "title": "100+ integrations"
+            }
+          ],
+          "footer": {
+            "title": "Get Started"
+          }
+        },
+        {
+          "active": false,
+          "heading": {
+            "package": {
+              "month": {
+                "price": 33,
+                "title": "month"
+              },
+              "year": {
+                "price": 89,
+                "title": "year"
+              }
+            },
+            "title": "Ultimate",
+            "icon": "spark-fill",
+            "subtitle": "Best suits for great company!",
+            "description": "If you a finance manager at big company, this plan is a perfect match."
+          },
+          "body": [
+            {
+              "active": true,
+              "title": "Everything in Pro Plan"
+            },
+            {
+              "active": true,
+              "title": "Daily performance reports"
+            },
+            {
+              "active": true,
+              "title": "Dedicated assistant"
+            },
+            {
+              "active": true,
+              "title": "Artificial intelligence"
+            },
+            {
+              "active": true,
+              "title": "Marketing tools & automations"
+            },
+            {
+              "active": true,
+              "title": "Advanced security"
+            }
+          ],
+          "footer": {
+            "title": "Contact Sales"
+          }
+        }
+      ]
+    },
+    "digital": {
+      "contents": [
+        {
+          "active": false,
+          "heading": {
+            "title": "Small",
+            "subtitle": "Basic Features For Up To 10 Users",
+            "package": {
+              "month": {
+                "price": 10,
+                "title": "month"
+              },
+              "year": {
+                "price": 29,
+                "title": "yearly"
+              }
+            }
+          },
+          "body": [
+            {
+              "active": true,
+              "title": "Complete documentation"
+            },
+            {
+              "active": true,
+              "title": "Working materials in Figma"
+            },
+            {
+              "active": true,
+              "title": "100GB cloud storage"
+            },
+            {
+              "active": true,
+              "title": "500 team members"
+            }
+          ]
+        },
+        {
+          "active": true,
+          "heading": {
+            "title": "Standard",
+            "subtitle": "Basic features for up to 20 users",
+            "package": {
+              "month": {
+                "price": 99,
+                "title": "month"
+              },
+              "year": {
+                "price": 199,
+                "title": "yearly"
+              }
+            }
+          },
+          "body": [
+            {
+              "active": true,
+              "title": "Complete documentation"
+            },
+            {
+              "active": true,
+              "title": "Working materials in Figma"
+            },
+            {
+              "active": true,
+              "title": "100GB cloud storage"
+            },
+            {
+              "active": true,
+              "title": "500 team members"
+            }
+          ]
+        },
+        {
+          "active": false,
+          "heading": {
+            "title": "Large",
+            "subtitle": "Basic features for up to 40 users",
+            "package": {
+              "month": {
+                "price": 799,
+                "title": "month"
+              },
+              "year": {
+                "price": 1099,
+                "title": "yearly"
+              }
+            }
+          },
+          "body": [
+            {
+              "active": true,
+              "title": "Complete documentation"
+            },
+            {
+              "active": true,
+              "title": "Working materials in Figma"
+            },
+            {
+              "active": true,
+              "title": "100GB cloud storage"
+            },
+            {
+              "active": true,
+              "title": "500 team members"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "tabs": {
+    "digital": {
+      "contents": {
+        "nav": [
+          {
+            "icon": "edit-alt",
+            "variant": "danger-soft",
+            "title": "Build Your Website"
+          },
+          {
+            "icon": "trend-up",
+            "variant": "blue-soft",
+            "title": "Custom analytics"
+          },
+          {
+            "icon": "emails",
+            "variant": "purple-soft",
+            "title": "Performance report"
+          },
+          {
+            "icon": "users",
+            "variant": "warning-soft",
+            "title": "Team Management"
+          }
+        ],
+        "pane": [
+          {
+            "cover": "images/business-digital/tab-cover-1.jpg"
+          },
+          {
+            "cover": "images/business-digital/tab-cover-4.jpg"
+          },
+          {
+            "cover": "images/business-digital/tab-cover-3.jpg"
+          },
+          {
+            "cover": "images/business-digital/tab-cover-2.jpg"
+          }
+        ]
+      }
+    }
+  },
+  "posts": {
+    "blogs": {
+      "featured": {
+        "contents": [
+          {
+            "url": "/blog-details",
+            "tags": [
+              "Growth"
+            ],
+            "cover": "images/blog/g.jpg",
+            "title": "Why customer retention is the ultimate growth strategy?",
+            "user": {
+              "name": "John Carter",
+              "cover": "images/avatar/a.jpg"
+            }
+          },
+          {
+            "url": "/blog-details",
+            "tags": [
+              "Marketing"
+            ],
+            "cover": "images/blog/h.jpg",
+            "title": "Optimizing your advertising campaigns for higher ROAS",
+            "user": {
+              "name": "Annette Black",
+              "cover": "images/avatar/b.jpg"
+            }
+          },
+          {
+            "tags": [
+              "Growth"
+            ],
+            "url": "/blog-details",
+            "cover": "images/blog/g.jpg",
+            "title": "How to build the ultimate tech stack for growth",
+            "user": {
+              "name": "Ralph Edwards",
+              "cover": "images/avatar/c.jpg"
+            }
+          },
+          {
+            "url": "/blog-details",
+            "tags": [
+              "Marketing"
+            ],
+            "cover": "images/blog/h.jpg",
+            "title": "Optimizing your advertising campaigns for higher ROAS",
+            "user": {
+              "name": "Annette Black",
+              "cover": "images/avatar/b.jpg"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "landingPage": {
+    "demo": {
+      "contents": [
+        {
+          "category": "saas-page-item",
+          "url": "/index-analytics",
+          "title": "Analytics",
+          "src": "home-page-1.jpg"
+        },
+        {
+          "category": "tech-page-item",
+          "url": "/index-collaboration-tool",
+          "title": "Collaboration Tool",
+          "src": "home-page-2.jpg"
+        },
+        {
+          "category": "app-page-item",
+          "url": "/index-live-chat-app",
+          "title": "Live Chat App",
+          "src": "home-page-3.jpg"
+        },
+        {
+          "category": "business-page-item",
+          "url": "/index-saas",
+          "title": "Business Expense (SAAS )",
+          "src": "home-page-4.jpg"
+        },
+        {
+          "category": "saas-page-item",
+          "url": "/index-kids-course",
+          "title": "Kids Course",
+          "src": "home-page-5.jpg"
+        },
+        {
+          "category": "tech-page-item",
+          "url": "/index-bs-expense-tracker",
+          "title": "Business Expense Tracker",
+          "src": "home-page-6.jpg"
+        },
+        {
+          "category": "business-page-item",
+          "url": "/index-bs-solution",
+          "title": "Business Solutions",
+          "src": "home-page-7.jpg"
+        },
+        {
+          "category": "tech-page-item",
+          "url": "/index-bs-digital",
+          "title": "Digital Business Platform",
+          "src": "home-page-8.jpg"
+        },
+        {
+          "category": "tech-page-item",
+          "url": "/index-crypto-profile",
+          "title": "Crypto Profile",
+          "src": "home-page-9.jpg"
+        },
+        {
+          "category": "business-page-item",
+          "url": "/index-bs-management",
+          "title": "Business Management",
+          "src": "home-page-10.jpg"
+        },
+        {
+          "category": "business-page-item",
+          "url": "/index-bs-subscription",
+          "title": "Business Subscription",
+          "src": "home-page-11.jpg"
+        },
+        {
+          "category": "business-page-item",
+          "url": "/index-data-driven",
+          "title": "Data Driven Business",
+          "src": "home-page-12.jpg"
+        },
+        {
+          "category": "tech-page-item",
+          "url": "/index-language-learning",
+          "title": "Language Learning",
+          "src": "home-page-13.jpg"
+        },
+        {
+          "category": "saas-page-item",
+          "url": "#",
+          "title": "Coaching Service",
+          "src": "home-page-14.jpg"
+        },
+        {
+          "category": "tech-page-item",
+          "url": "#",
+          "title": "Codebase IDE",
+          "src": "home-page-15.jpg"
+        },
+        {
+          "category": "business-page-item",
+          "url": "#",
+          "title": "Business Analytics",
+          "src": "home-page-16.jpg"
+        },
+        {
+          "category": "saas-page-item",
+          "url": "#",
+          "title": "Project Manage",
+          "src": "home-page-17.jpg"
+        },
+        {
+          "category": "saas-page-item",
+          "url": "#",
+          "title": "Project Management",
+          "src": "home-page-18.jpg"
+        },
+        {
+          "category": "saas-page-item",
+          "url": "#",
+          "title": "Help Desk",
+          "src": "home-page-19.jpg"
+        },
+        {
+          "category": "business-page-item",
+          "url": "#",
+          "title": "Business Consulting",
+          "src": "home-page-20.jpg"
+        },
+        {
+          "category": "tech-page-item",
+          "url": "#",
+          "title": "Fintech",
+          "src": "home-page-21.jpg"
+        },
+        {
+          "category": "tech-page-item",
+          "url": "#",
+          "title": "Green Tech",
+          "src": "home-page-22.jpg"
+        },
+        {
+          "category": "app-page-item",
+          "url": "#",
+          "title": "Podcast App",
+          "src": "home-page-23.jpg"
+        }
+      ]
+    },
+    "prebuilt": {
+      "contents": [
+        {
+          "url": "/about",
+          "title": "About 1",
+          "src": "images/landing/inner-page-1.jpg"
+        },
+        {
+          "url": "/about-solution",
+          "title": "About 2",
+          "src": "images/landing/inner-page-2.jpg"
+        },
+        {
+          "url": "/features",
+          "title": "Features 1",
+          "src": "images/landing/inner-page-3.jpg"
+        },
+        {
+          "url": "/features-solution",
+          "title": "Features 2",
+          "src": "images/landing/inner-page-4.jpg"
+        },
+        {
+          "url": "/pricing",
+          "title": "Pricing 1",
+          "src": "images/landing/inner-page-5.jpg"
+        },
+        {
+          "url": "/pricing-solution",
+          "title": "Pricing 2",
+          "src": "images/landing/inner-page-6.jpg"
+        },
+        {
+          "url": "/contact-us",
+          "title": "Contact 1",
+          "src": "images/landing/inner-page-7.jpg"
+        },
+        {
+          "url": "/contact-us-solution",
+          "title": "Contact 2",
+          "src": "images/landing/inner-page-8.jpg"
+        },
+        {
+          "url": "/blogs",
+          "title": "Blogs",
+          "src": "images/landing/inner-page-9.jpg"
+        },
+        {
+          "url": "/blog-details",
+          "title": "Blog Single",
+          "src": "images/landing/inner-page-10.jpg"
+        },
+        {
+          "url": "/customer-testimonials",
+          "title": "Customer Testimonials",
+          "src": "images/landing/inner-page-11.jpg"
+        },
+        {
+          "url": "/help-center",
+          "title": "Help Center",
+          "src": "images/landing/inner-page-12.jpg"
+        },
+        {
+          "url": "/help-center-details",
+          "title": "Help Center Single",
+          "src": "images/landing/inner-page-13.jpg"
+        },
+        {
+          "url": "/careers",
+          "title": "Careers",
+          "src": "images/landing/inner-page-14.jpg"
+        },
+        {
+          "url": "/career-details",
+          "title": "Career Single",
+          "src": "images/landing/inner-page-15.jpg"
+        },
+        {
+          "url": "#",
+          "title": "Careers 2",
+          "src": "images/landing/inner-page-16.jpg"
+        },
+        {
+          "url": "#",
+          "title": "Career Single 2",
+          "src": "images/landing/inner-page-17.jpg"
+        },
+        {
+          "url": "#",
+          "title": "Shop",
+          "src": "images/landing/inner-page-18.jpg"
+        },
+        {
+          "url": "#",
+          "title": "Product Single",
+          "src": "images/landing/inner-page-19.jpg"
+        }
+      ]
+    },
+    "explore": {
+      "contents": [
+        {
+          "url": "https://1.envato.market/e0y3g",
+          "title": "Dashlite ",
+          "src": "images/inside-pages/landing/cover/section-cover-daslite.png"
+        },
+        {
+          "url": "https://goo.gl/rxQRWu",
+          "title": "ICO Crypto ",
+          "src": "images/inside-pages/landing/cover/section-cover-ico.png"
+        }
+      ]
+    }
+  },
+  "Homepages": {
+    "Analytics": {
+      "brands": {
+        "contents": [
+          {
+            "url": "#",
+            "title": "greenish",
+            "src": "images/brand/a.png"
+          },
+          {
+            "url": "#",
+            "title": "cloud",
+            "src": "images/brand/b.png"
+          },
+          {
+            "url": "#",
+            "title": "luminous",
+            "src": "images/brand/c.png"
+          },
+          {
+            "url": "#",
+            "title": "chain",
+            "src": "images/brand/d.png"
+          },
+          {
+            "url": "#",
+            "title": "sitemark",
+            "src": "images/brand/e.png"
+          }
+        ]
+      },
+      "reviews": {
+        "contents": [
+          {
+            "title": "We’re building a better application now, thanks to NioLand.",
+            "description": "Lo rem ips um dolor sit amet, con se ctetur adip iscing elit. Vene natis magna ma ssa sem per tris tique. Lorem ipsum do lor sit amet,",
+            "user": {
+              "author": "Wade Warren",
+              "date": 3
+            }
+          },
+          {
+            "title": "Great Service from a expert support system of NioLand.",
+            "description": "Lorem ipsum do lor sit Lo rem ips um dolor sit amet, con se ctetur adip iscing elit. Vene natis amet, magna ma ssa sem per tris tique.",
+            "user": {
+              "author": "Dianne Russell",
+              "date": 4
+            }
+          },
+          {
+            "title": "Pricing is amazing for the small businesses around the world.",
+            "description": "con se ctetur adip iscing elit. Lo rem ips um dolor sit amet, Vene natis magna ma ssa sem perLorem ipsum do lor sit amet, tris tique.",
+            "user": {
+              "author": "Marvin McKinney",
+              "date": 6
+            }
+          }
+        ]
+      },
+      "ourblog": {
+        "contents": [
+          {
+            "url": "/blog-details",
+            "tags": "Growth",
+            "cover": "images/blog/a.jpg",
+            "title": "Why customer retention is the ultimate growth strategy?",
+            "user": {
+              "name": "John Carter",
+              "cover": "images/avatar/a.jpg"
+            }
+          },
+          {
+            "url": "/blog-details",
+            "tags": "Marketing",
+            "cover": "images/blog/b.jpg",
+            "title": "Optimizing your advertising campaigns for higher ROAS",
+            "user": {
+              "name": "Annette Black",
+              "cover": "images/avatar/b.jpg"
+            }
+          },
+          {
+            "tags": "Growth",
+            "url": "/blog-details",
+            "cover": "images/blog/c.jpg",
+            "title": "How to build the ultimate tech stack for growth",
+            "user": {
+              "name": "Ralph Edwards",
+              "cover": "images/avatar/c.jpg"
+            }
+          }
+        ]
+      }
+    },
+    "Collaboration": {
+      "brands": {
+        "heading": {
+          "title": "More than 100,000+ teams are using NioLand"
+        },
+        "contents": [
+          {
+            "url": "#",
+            "title": "greenish",
+            "src": "images/brand/a.png"
+          },
+          {
+            "url": "#",
+            "title": "cloud",
+            "src": "images/brand/b.png"
+          },
+          {
+            "url": "#",
+            "title": "luminous",
+            "src": "images/brand/c.png"
+          },
+          {
+            "url": "#",
+            "title": "chain",
+            "src": "images/brand/d.png"
+          },
+          {
+            "url": "#",
+            "title": "sitemark",
+            "src": "images/brand/e.png"
+          }
+        ]
+      },
+      "features": {
+        "contents": [
+          {
+            "icon": "bar-chart-fill",
+            "bgcolor": "text-bg-violet-300",
+            "title": "Live Collaboration"
+          },
+          {
+            "icon": "layout-fill",
+            "bgcolor": "text-bg-orange-300",
+            "title": "1M+ Templates"
+          },
+          {
+            "icon": "folder-fill",
+            "bgcolor": "text-bg-gray-300",
+            "title": "Searchable Assets"
+          },
+          {
+            "icon": "star-fill",
+            "bgcolor": "text-bg-success-300",
+            "title": "Unlimited Reviews"
+          },
+          {
+            "icon": "bell-fill",
+            "bgcolor": "text-bg-yellow-300",
+            "title": "Notifications"
+          },
+          {
+            "icon": "heart-fill",
+            "bgcolor": "text-bg-purple-300",
+            "title": "Responsive Design"
+          },
+          {
+            "icon": "layer-fill",
+            "bgcolor": "text-bg-red-300",
+            "title": "Media Support"
+          },
+          {
+            "icon": "user-group-fill",
+            "bgcolor": "text-bg-cyan-300",
+            "title": "Version History"
+          }
+        ]
+      },
+      "testimonial": {
+        "heading": {
+          "hightlight": "about NioLand",
+          "title": "Hear what teams around the world saying",
+          "description": "Maecenas quis integer aenean nisl viverra morbi magna amet viverra sollicitudin posuere scelerisque urna, urna fringilla. "
+        },
+        "contents": [
+          {
+            "user": {
+              "name": "Sheikh Rashed",
+              "designation": "Founder of Airnb",
+              "cover": "images/inside-pages/peoples/people-3.png",
+              "brand": "images/inside-pages/logos/brands/greenish.png",
+              "comments": "I want my team to spend time thinking about high level UX problems, rather than mindlessly repeating busy work. NioLand helps them do that."
+            }
+          },
+          {
+            "user": {
+              "name": "Zahangir Hossain",
+              "designation": "Founder of Airnb",
+              "cover": "images/inside-pages/peoples/people-3.png",
+              "brand": "images/inside-pages/logos/brands/greenish.png",
+              "comments": "I want my team to spend time thinking about high level UX problems, rather than mindlessly repeating busy work. NioLand helps them do that."
+            }
+          },
+          {
+            "user": {
+              "name": "Illiyas Hossain",
+              "designation": "Founder of Airnb",
+              "cover": "images/inside-pages/peoples/people-3.png",
+              "brand": "images/inside-pages/logos/brands/greenish.png",
+              "comments": "I want my team to spend time thinking about high level UX problems, rather than mindlessly repeating busy work. NioLand helps them do that."
+            }
+          }
+        ]
+      },
+      "Articles": {
+        "heading": {
+          "title": "Read Latest",
+          "hightlight": "Articles of Nioland",
+          "description": "Maecenas quis integer aenean nisl viverra morbi magna amet viverra sollicitudin posuere scelerisque urna, urna fringilla."
+        },
+        "contents": [
+          {
+            "url": "/blog-details",
+            "tags": [
+              {
+                "title": "Resources",
+                "badge": "bg-red-300",
+                "url": "/blog-details"
+              }
+            ],
+            "cover": "images/inside-pages/blog/blog-6.jpg",
+            "title": "Color Schemes of 24 Most Visited Websites (2020)"
+          },
+          {
+            "url": "/blog-details",
+            "tags": [
+              {
+                "title": "Tips & Tricks",
+                "badge": "bg-cyan-300",
+                "url": "/blog-details"
+              }
+            ],
+            "cover": "images/inside-pages/blog/blog-5.jpg",
+            "title": "How to Increase Productivity With Evernote iOS Widgets"
+          },
+          {
+            "url": "/blog-details",
+            "tags": [
+              {
+                "title": "Knowledge",
+                "badge": "bg-purple-300",
+                "url": "/blog-details"
+              }
+            ],
+            "cover": "images/inside-pages/blog/blog-4.jpg",
+            "title": "Home at Work, Not Just ‘Work From Home’"
+          }
+        ]
+      }
+    },
+    "BusinessExpense": {
+      "pricing": {
+        "heading": {
+          "title": "Ready to Get Started?",
+          "subtitle": "Pricing",
+          "description": "Adipiscing nisi sem gravida enim eu adipiscing sagittis scelerisque augue nulla massa aliquet fringilla nullam eget"
+        }
+      }
+    },
+    "Kidscourse": {
+      "ourProgram": {
+        "contents": [
+          {
+            "url": "#",
+            "tags": "Museum & Park",
+            "cover": "images/inside-pages/blog/blog-1.jpg",
+            "title": "Virtual museum, national park & Zoo tours",
+            "features": [
+              {
+                "icon": "users",
+                "title": "1200+ Students"
+              },
+              {
+                "icon": "star",
+                "title": "2812 Students"
+              },
+              {
+                "icon": "globe",
+                "title": "English"
+              },
+              {
+                "icon": "tag-alt",
+                "title": "Star60"
+              }
+            ]
+          },
+          {
+            "url": "#",
+            "tags": "Geographic brain",
+            "cover": "images/inside-pages/blog/blog-2.jpg",
+            "title": "National geographic kids fun brain",
+            "features": [
+              {
+                "icon": "users",
+                "title": "340+ Students"
+              },
+              {
+                "icon": "star",
+                "title": "1410 Ratings"
+              },
+              {
+                "icon": "globe",
+                "title": "English"
+              },
+              {
+                "icon": "tag-alt",
+                "title": "Star60"
+              }
+            ]
+          },
+          {
+            "url": "#",
+            "tags": "Museum & Park",
+            "cover": "images/inside-pages/blog/blog-3.jpg",
+            "title": "Fun doodles with mo to learn mathmatics",
+            "features": [
+              {
+                "icon": "users",
+                "title": "120+ Students"
+              },
+              {
+                "icon": "star",
+                "title": "810 Ratings"
+              },
+              {
+                "icon": "globe",
+                "title": "English"
+              },
+              {
+                "icon": "tag-alt",
+                "title": "Star60"
+              }
+            ]
+          }
+        ]
+      },
+      "testimonial": {
+        "contents": [
+          {
+            "author": {
+              "name": "John Morrision",
+              "cover": "images/testimonial/avatar1.png"
+            },
+            "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Gravida a amet feugiat justo dictum in sagittis id. In dui amet amet eget quam dolor. Sit nunc at pretium elementum turpis sit non. Sed semper malesuada odio pulvinar."
+          },
+          {
+            "author": {
+              "name": "Melica Anderson",
+              "cover": "images/testimonial/avatar2.png"
+            },
+            "description": "Lorem ipsum dolor pulvinar sit amet,  adipi scing elit. Gravida a amet feugiat justo dictum in sagittis id. In dui amet amet eget quam dolor. Sit nunc at pretium elementum turpis sit non. Sed semper malesuada cons ectetur odio ."
+          },
+          {
+            "author": {
+              "name": "Andy Robertson",
+              "cover": "images/testimonial/avatar3.png"
+            },
+            "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Gravida a amet feugiat justo dictum in sagittis id. In dui amet amet eget quam dolor. Sit nunc at pretium elementum turpis sit non. Sed semper malesuada odio pulvinar."
+          },
+          {
+            "author": {
+              "name": "John Morrision",
+              "cover": "images/testimonial/avatar1.png"
+            },
+            "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Gravida a amet feugiat justo dictum in sagittis id. In dui amet amet eget quam dolor. Sit nunc at pretium elementum turpis sit non. Sed semper malesuada odio pulvinar."
+          },
+          {
+            "author": {
+              "name": "Melica Anderson",
+              "cover": "images/testimonial/avatar2.png"
+            },
+            "description": "Lorem ipsum dolor pulvinar sit amet,  adipi scing elit. Gravida a amet feugiat justo dictum in sagittis id. In dui amet amet eget quam dolor. Sit nunc at pretium elementum turpis sit non. Sed semper malesuada cons ectetur odio ."
+          },
+          {
+            "author": {
+              "name": "Andy Robertson",
+              "cover": "images/testimonial/avatar3.png"
+            },
+            "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Gravida a amet feugiat justo dictum in sagittis id. In dui amet amet eget quam dolor. Sit nunc at pretium elementum turpis sit non. Sed semper malesuada odio pulvinar."
+          }
+        ]
+      }
+    },
+    "businessTracker": {
+      "brand": {
+        "contents": [
+          {
+            "url": "#",
+            "title": "greenish",
+            "src": "images/brand/a.png"
+          },
+          {
+            "url": "#",
+            "title": "cloud",
+            "src": "images/brand/b.png"
+          },
+          {
+            "url": "#",
+            "title": "luminous",
+            "src": "images/brand/c.png"
+          },
+          {
+            "url": "#",
+            "title": "chain",
+            "src": "images/brand/d.png"
+          },
+          {
+            "url": "#",
+            "title": "sitemark",
+            "src": "images/brand/e.png"
+          }
+        ]
+      },
+      "features": {
+        "heading": {
+          "subtitle": "Powerful features",
+          "title": "Discover Powerful Features",
+          "description": "Aliquam a augue suscipit, luctus neque purus ipsum neque dolor primis a libero tempus, blandit and cursus varius and magnis sapien"
+        },
+        "contents": [
+          {
+            "cover": "images/inside-pages/business-tracker/cover/section-cover-1.png",
+            "title": "Custom analytics",
+            "description": "Get a complete sales dashboard in the cloud. See activity, revenue and social metrics all in one place."
+          },
+          {
+            "cover": "images/inside-pages/business-tracker/cover/section-cover-1-a.png",
+            "title": "Team Management",
+            "description": "Our calendar lets you know what is happening with customer and projects so you"
+          },
+          {
+            "cover": "images/inside-pages/business-tracker/cover/section-cover-1-b.png",
+            "title": "Measure performance",
+            "description": "Stay connected with your team and make quick decisions wherever you are."
+          }
+        ]
+      },
+      "testimonials": {
+        "heading": {
+          "subtitle": "Customer Testimonials",
+          "title": "Stories From Our Customers",
+          "description": "Aliquam a augue suscipit, luctus neque purus ipsum neque dolor primis a libero tempus, blandit and cursus varius and magnis sapien"
+        },
+        "contents": [
+          {
+            "user": {
+              "name": "John Carter",
+              "cover": "images/avatar/a.jpg",
+              "designation": "Financial Analyst"
+            },
+            "comments": "An augue cubi lia lao reet undo magna ipsum and semper susc ipit eges tas ma gna ipsum lig ula vitae purus and ips um primis cub ilia magna susc ipit"
+          },
+          {
+            "user": {
+              "name": "Will Smith",
+              "cover": "images/avatar/b.jpg",
+              "designation": "Data Analyst"
+            },
+            "comments": "magna susc ipit An ipsum lig ula vitae purus augue cubi lia lao reet undo magna ipsum and semper tas ma gna and ips susc ipit eges um primis cub ilia"
+          },
+          {
+            "user": {
+              "name": "Steven Willium",
+              "cover": "images/avatar/c.jpg",
+              "designation": "Financial Analyst"
+            },
+            "comments": "eges tas ma gna ipsum lig ula vitae purus and ips um primis cub ilia magna susc ipit An augue cubi lia lao reet undo magna ipsum and semper susc ipit"
+          },
+          {
+            "user": {
+              "name": "Will Smith",
+              "cover": "images/avatar/b.jpg",
+              "designation": "Data Analyst"
+            },
+            "comments": "magna susc ipit An ipsum lig ula vitae purus augue cubi lia lao reet undo magna ipsum and semper tas ma gna and ips susc ipit eges um primis cub ilia"
+          }
+        ]
+      },
+      "process": {
+        "heading": {
+          "subtitle": "our process",
+          "title": "How To Grow Your Business",
+          "description": "Aliquam a augue suscipit, luctus neque purus ipsum neque dolor primis a libero tempus, blandit and cursus varius and magnis sapien"
+        },
+        "contents": [
+          {
+            "variant": "primary",
+            "cover": {
+              "fd": "images/inside-pages/business-tracker/cover/section-cover-2.png",
+              "bg": "images/inside-pages/business-tracker/cover/section-cover-2-a.png"
+            },
+            "title": "We will gather your empty listed ",
+            "highlight": "Product",
+            "description": "Lorem ipsum dolor sit back amet, consectetura adipiscing elit, sedia doi eiusmod temporary incidita dunt buntut labore et dolore magna aliqua dolot eta."
+          },
+          {
+            "variant": "warning",
+            "cover": {
+              "fd": "images/inside-pages/business-tracker/cover/section-cover-3.png",
+              "bg": "images/inside-pages/business-tracker/cover/section-cover-3-a.png"
+            },
+            "title": "We will try to make a new Business ",
+            "highlight": "Model",
+            "description": "sedia doi eiusmod temporary incidita dunt buntut labore et dolore magna aliqua dolot eta. Lorem ipsum dolor sit back amet, consectetura adipiscing elit."
+          },
+          {
+            "variant": "danger",
+            "cover": {
+              "fd": "images/inside-pages/business-tracker/cover/section-cover-4.png",
+              "bg": "images/inside-pages/business-tracker/cover/section-cover-4-a.png"
+            },
+            "title": "We will try to make a new Business ",
+            "highlight": "Model",
+            "description": "Lorem ipsum dolor sit back amet, consectetura adipiscing elit, sedia doi eiusmod temporary incidita dunt buntut labore et dolore magna aliqua dolot eta."
+          }
+        ]
+      },
+      "faqs": {
+        "heading": {
+          "subtitle": "FAQS",
+          "title": "Frequently Asked Questions",
+          "description": "Aliquam a augue suscipit, luctus neque purus ipsum neque dolor primis a libero tempus, blandit and cursus varius and magnis sapien"
+        },
+        "contents": [
+          {
+            "title": "How long does it take to ship my order?",
+            "description": " Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod maecenas."
+          },
+          {
+            "title": "What payment methods do you accept?",
+            "description": " Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod maecenas."
+          },
+          {
+            "title": "What shipping options do you have?",
+            "description": " Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod maecenas."
+          },
+          {
+            "title": "How do I make changes to an existing order?",
+            "description": " Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod maecenas."
+          },
+          {
+            "title": "When will my order arrive?",
+            "description": " Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod maecenas."
+          }
+        ]
+      },
+      "pricing": {}
+    },
+    "businessSolution": {
+      "process": {
+        "heading": {
+          "title": "How We Do It?",
+          "subtitle": "Our Process",
+          "description": "Adipiscing nisi sem gravida enim eu adipiscing sagittis scelerisque augue nulla massa aliquet fringilla nullam eget"
+        },
+        "contents": [
+          {
+            "title": "Concept",
+            "description": "malesuada Viva mus sagi ttis lacus vel augue laor eet. Etiam porta sem magna."
+          },
+          {
+            "title": "Prepare",
+            "description": "Vivamus sagittis lacus vel augue laoreet. Etiam porta sem malesuada magna."
+          },
+          {
+            "title": "Retouch",
+            "description": "Cras mattis consectetur purus sit amet. Aenean lacinia bibendum nulla sed."
+          },
+          {
+            "title": "Finalize",
+            "description": "Aenean lacinia bibendum nulla sed.Cras mattis consectetur purus sit amet."
+          }
+        ]
+      },
+      "community": {
+        "heading": {
+          "title": "We are trusted by over 5000+ clients. Join them now and grow your business.",
+          "subtitle": "JOIN OUR COMMUNITY"
+        },
+        "contents": [
+          {
+            "number": 235,
+            "title": "Projects Completed"
+          },
+          {
+            "number": 3472,
+            "title": "Happy Customers"
+          },
+          {
+            "number": 2184,
+            "title": "Expert Employees"
+          },
+          {
+            "number": 4523,
+            "title": "Awards Won"
+          }
+        ]
+      },
+      "faqs": {
+        "contents": [
+          {
+            "icon": "trend-up",
+            "variant": "primary-soft",
+            "title": "Is my credit card information kept secure from the back end?",
+            "description": "Fu sce da pibus, tellus ac cursus com modo, tortor mauris cond imen tum nibh, ut ferm entum massa ju sto sit amet risus."
+          },
+          {
+            "icon": "emails",
+            "variant": "success-soft",
+            "title": "What payment methods do you accept?",
+            "description": "pibus com Fu sce da, tortor tellus ac cursus modo, massa imen mauris cond tum nibh, ut ferm entum ju sto sit amet risus."
+          },
+          {
+            "icon": "users",
+            "variant": "warning-soft",
+            "title": "How long does it take to ship my order?",
+            "description": "nibh cursus pibus com Fu sce da,sit tellus ac modo, tortor massa imen risus mauris cond tum , ut ferm entum ju amet sto."
+          },
+          {
+            "icon": "edit-alt",
+            "variant": "danger-soft",
+            "title": "Are there any discounts for people in need?",
+            "description": "modonibh cursus pibus tortor massa imen risus mauris cond tum, com Fu sce da,sit tellus ac , ut ferm entum ju amet sto."
+          },
+          {
+            "icon": "grid",
+            "variant": "primary-soft",
+            "title": "Do you have any feature for downloading the bill receipt?",
+            "description": "amet cursus pibus tortor mauris massa modonibh imen risus cond tellus tum, com Fu sce da, sit ac , ut ferm entum ju sto."
+          },
+          {
+            "icon": "setting",
+            "variant": "info-soft",
+            "title": "How do I reset my account password to recover my wallet?",
+            "description": "massa condim entum dapibus, tellus ac cursus commodo, tortor Fusce mauris nibh, ut fermentum justo sit amet risus."
+          }
+        ]
+      },
+      "testimonials": {
+        "contents": [
+          {
+            "user": {
+              "name": "Jessica Brown",
+              "cover": "images/avatar/a.jpg",
+              "designation": "CEO & Founder at Flex.co"
+            },
+            "comments": "The best solution for anyone who wants to work a flexible schedule but still earn a fulltime income. They have best support for 24/7."
+          },
+          {
+            "user": {
+              "name": "Will Smith",
+              "cover": "images/avatar/b.jpg",
+              "designation": "CEO & Founder at amazon.co"
+            },
+            "comments": "The best solution for anyone who wants to work a flexible schedule but still earn a fulltime income. They have best support for 24/7."
+          },
+          {
+            "user": {
+              "name": "Elon Musk",
+              "cover": "images/avatar/c.jpg",
+              "designation": "CEO & Founder at tesla.co"
+            },
+            "comments": "The best solution for anyone who wants to work a flexible schedule but still earn a fulltime income. They have best support for 24/7."
+          }
+        ]
+      }
+    },
+    "businessDigital": {
+      "brands": {
+        "heading": {
+          "title": "Trusted by 10,000+ companies around the world"
+        },
+        "contents": [
+          {
+            "url": "#",
+            "title": "greenish",
+            "src": "images/brand/a.png"
+          },
+          {
+            "url": "#",
+            "title": "cloud",
+            "src": "images/brand/b.png"
+          },
+          {
+            "url": "#",
+            "title": "luminous",
+            "src": "images/brand/c.png"
+          },
+          {
+            "url": "#",
+            "title": "chain",
+            "src": "images/brand/d.png"
+          },
+          {
+            "url": "#",
+            "title": "sitemark",
+            "src": "images/brand/e.png"
+          }
+        ]
+      },
+      "process": {
+        "contents": [
+          {
+            "title": "Create Account",
+            "description": "Nulla vitae elit libero pharetra augue dapibus. Praesent commodo cursus."
+          },
+          {
+            "title": "Collect Ideas",
+            "description": "Vivamus sagittis lacus vel augue laoreet. Etiam porta sem malesuada magna."
+          },
+          {
+            "title": "Data Analysis",
+            "description": "Cras mattis consectetur purus sit amet. Aenean lacinia bibendum nulla sed.."
+          }
+        ]
+      },
+      "facts": {
+        "contents": [
+          {
+            "number": 3472,
+            "icon": "users-fill",
+            "variant": "primary",
+            "title": "Happy Customers"
+          },
+          {
+            "number": 235,
+            "icon": "grid-fill-c",
+            "variant": "info",
+            "title": "Average Rating"
+          },
+          {
+            "number": 2184,
+            "icon": "user-check-fill",
+            "variant": "danger",
+            "title": "Active Users"
+          }
+        ]
+      },
+      "faqs": {
+        "contents": [
+          {
+            "title": "How long does it take to ship my order?",
+            "description": " Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod maecenas."
+          },
+          {
+            "title": "What payment methods do you accept?",
+            "description": " Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod maecenas."
+          },
+          {
+            "title": "What shipping options do you have?",
+            "description": " Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod maecenas."
+          },
+          {
+            "title": "How do I make changes to an existing order?",
+            "description": " Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod maecenas."
+          },
+          {
+            "title": "When will my order arrive?",
+            "description": " Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod maecenas."
+          }
+        ]
+      }
+    },
+    "chatapp": {
+      "testimonial": {
+        "contents": [
+          {
+            "author": {
+              "name": "Wade Warren",
+              "designation": "@cryptomil",
+              "cover": "images/avatar/a.jpg"
+            },
+            "title": "Thank you @NioLand for helping us stay connected to our clients",
+            "description": "One way we're continuing to serve clients remotely is using online chat software by NioLand. Clients visiting our website can click the chat to get connected to a Navigator in real time. Thank you @NioLand for helping us stay connected to our clients during this time! pic.twitter.com/4SEjAtQ0AR"
+          },
+          {
+            "author": {
+              "name": "Wade Warren",
+              "designation": "@cryptomil",
+              "cover": "images/avatar/a.jpg"
+            },
+            "title": "Really glad to have a call with Dani – super invaluable.",
+            "description": "Hey @LiveChat I just wanted to let you know how great your service worked for me during my recent launch. I was able to connect with my potential students in a way I never have been able to before. And I had my best launch ever. #Thanks"
+          },
+          {
+            "author": {
+              "name": "Kamran Adil",
+              "designation": "@cryptomil",
+              "cover": "images/avatar/c.jpg"
+            },
+            "title": "Hannah helped me cover a lot during a short time!",
+            "description": "Thank you @mariuszcieply iam using @NioLand for more than 2 years it's better than any other NioLand products"
+          },
+          {
+            "author": {
+              "name": "Kamran Adil",
+              "designation": "@cryptomil",
+              "cover": "images/avatar/c.jpg"
+            },
+            "title": "Thank you @NioLand for helping us stay connected to our clients",
+            "description": "One way we're continuing to serve clients remotely is using online chat software by NioLand. Clients visiting our website can click the chat to get connected to a Navigator in real time. Thank you @NioLand for helping us stay connected to our clients during this time! pic.twitter.com/4SEjAtQ0AR"
+          },
+          {
+            "author": {
+              "name": "Jesicca Brown",
+              "designation": "@cryptomil",
+              "cover": "images/avatar/d.jpg"
+            },
+            "title": "Our @NioLand team calls their happiness scores “Chatisfaction”",
+            "description": "We use @NioLand and really love the capabilities and UX! Our @NioLand team calls their happiness scores “Chatisfaction” instead of Satisfaction."
+          },
+          {
+            "author": {
+              "name": "Alex Chance",
+              "designation": "@cryptomil",
+              "cover": "images/avatar/e.jpg"
+            },
+            "title": "The Services provided are really great, we received a genuine advice and at very reasonable cost.",
+            "description": "One of my favorite things in the entire world is randomly jumping into chat on our site (shoutout @NioLand ). It's super nice to just talk to your customers, kind of reminds you why you do what you do. If you have chat and have never been in it, I highly recommend it. #eComTips"
+          },
+          {
+            "author": {
+              "name": "Wade Warren",
+              "designation": "@cryptomil",
+              "cover": "images/avatar/a.jpg"
+            },
+            "title": "Thank you @NioLand for helping us stay connected to our clients",
+            "description": "One way we're continuing to serve clients remotely is using online chat software by NioLand. Clients visiting our website can click the chat to get connected to a Navigator in real time. Thank you @NioLand for helping us stay connected to our clients during this time! pic.twitter.com/4SEjAtQ0AR"
+          },
+          {
+            "author": {
+              "name": "Wade Warren",
+              "designation": "@cryptomil",
+              "cover": "images/avatar/a.jpg"
+            },
+            "title": "Thank you @NioLand for helping us stay connected to our clients",
+            "description": "One way we're continuing to serve clients remotely is using online chat software by NioLand. Clients visiting our website can click the chat to get connected to a Navigator in real time. Thank you @NioLand for helping us stay connected to our clients during this time! pic.twitter.com/4SEjAtQ0AR"
+          },
+          {
+            "author": {
+              "name": "Wade Warren",
+              "designation": "@cryptomil",
+              "cover": "images/avatar/a.jpg"
+            },
+            "title": "Thank you @NioLand for helping us stay connected to our clients",
+            "description": "One way we're continuing to serve clients remotely is using online chat software by NioLand. Clients visiting our website can click the chat to get connected to a Navigator in real time. Thank you @NioLand for helping us stay connected to our clients during this time! pic.twitter.com/4SEjAtQ0AR"
+          }
+        ]
+      },
+      "sections": {
+        "heading": {
+          "title": "",
+          "subtitle": "",
+          "description": ""
+        },
+        "contents": []
+      }
+    },
+    "podcast": {
+      "currations": {
+        "contents": [
+          {
+            "title": "Good Inside with Dr.Decky",
+            "subtitle": " Dr.Becky Kennedy",
+            "cover": "images/podcast-app/card-cover-3.jpg"
+          },
+          {
+            "title": " Planet Money",
+            "subtitle": "NPR",
+            "cover": "images/podcast-app/card-cover-4.jpg"
+          },
+          {
+            "title": "SmartLess",
+            "subtitle": "Wondery",
+            "cover": "images/podcast-app/card-cover-5.jpg"
+          },
+          {
+            "title": "Stuff You Should Know",
+            "subtitle": "iHeartPodcasts",
+            "cover": "images/podcast-app/card-cover-6.jpg"
+          },
+          {
+            "title": "Up First NPR",
+            "subtitle": "NPR",
+            "cover": "images/podcast-app/card-cover-7.jpg"
+          }
+        ]
+      },
+      "sections": {
+        "heading": {
+          "title": "",
+          "subtitle": "",
+          "description": ""
+        },
+        "contents": []
+      }
+    },
+    "pagename": {
+      "sections": {
+        "heading": {
+          "title": "",
+          "subtitle": "",
+          "description": ""
+        },
+        "contents": []
+      }
+    }
+  },
+  "InnerPage": {
+    "about": {
+      "features": {
+        "contents": [
+          {
+            "number": "240%",
+            "unit": "%",
+            "variant": "primary",
+            "title": "Company Growth",
+            "description": "adi pis consec tet ur cing orem ipsum dolor sit amet"
+          },
+          {
+            "number": "175+",
+            "unit": "+",
+            "variant": "warning",
+            "title": "Team Members",
+            "description": " amet consec adi pis Lorem ipsum dolor sit tet ur cing"
+          },
+          {
+            "number": "625+",
+            "unit": "+",
+            "variant": "danger",
+            "title": "Active Projects",
+            "description": " ectetur adipiscing Lo rem ips um dolor sit amet cons"
+          },
+          {
+            "number": "99%",
+            "unit": "%",
+            "variant": "success",
+            "title": "Customer Satisfaction",
+            "description": " sit amet conse ctetur ipsum ipsum Lorem dolor adipisc ing"
+          }
+        ]
+      },
+      "values": {
+        "heading": {
+          "title": "Core Values we define",
+          "subtitle": "OUR VALUES",
+          "description": "Adipiscing nisi sem gravida enim eu adipiscing sagittis scelerisque augue nulla massa aliquet fringilla nullam eget"
+        },
+        "contents": [
+          {
+            "variant": "primary-soft",
+            "icon": "file-text-fill",
+            "title": "Result Matter",
+            "description": "Lorem ipsum dolor sit amet, conse ctet adipi scing elit. Conse quat aliquet soll amet."
+          },
+          {
+            "variant": "info-soft",
+            "icon": "gift",
+            "title": "Commitment",
+            "description": "ipsum Lorem, dolor sit amet ctetur adipis icing elit. Lorem, ipsum dolor."
+          },
+          {
+            "variant": "warning-soft",
+            "icon": "growth-fill",
+            "title": "Growth",
+            "description": " dolor sit amet, cons ectet adipi scing elit. Cons ipsum Lorem equat aliquet soll amet."
+          },
+          {
+            "variant": "danger-soft",
+            "icon": "users-fill",
+            "title": "Team Work",
+            "description": "Consec tetur adipisicing elit. Harum iure consequatur repellat. Cons equat aliq uet soll amet. "
+          },
+          {
+            "variant": "primary-soft",
+            "icon": "bulb-fill",
+            "title": "Innovation",
+            "description": "Lorem ip sum dolor sit amet, cons ectet adipi scing elit. Cons equat aliquet soll amet."
+          },
+          {
+            "variant": "success-soft",
+            "icon": "flag-fill",
+            "title": "Ownership",
+            "description": "Lor em ip sum dolor sit amet, cons ectet adip iscing elit. Cons equat ali quet soll amet"
+          }
+        ]
+      },
+      "members": {
+        "heading": {
+          "title": "The Team Behind NioLand",
+          "subtitle": "TEAM MEMBERS",
+          "description": "Adipiscing nisi sem gravida enim eu adipiscing sagittis scelerisque augue nulla massa aliquet fringilla nullam eget"
+        },
+        "contents": [
+          {
+            "variant": "primary-100",
+            "user": {
+              "icon": "linkedin-round",
+              "name": "John Carter",
+              "cover": "images/team/a.png",
+              "designation": "CEO & Founder at amazon.co"
+            }
+          },
+          {
+            "variant": "green-100",
+            "user": {
+              "icon": "linkedin-round",
+              "name": "Sophie Moor",
+              "cover": "images/team/b.png",
+              "designation": "CEO & Founder at amazon.co"
+            }
+          },
+          {
+            "variant": "yellow-100",
+            "user": {
+              "icon": "linkedin-round",
+              "name": "Will Smith",
+              "cover": "images/team/c.png",
+              "designation": "CEO & Founder at amazon.co"
+            }
+          }
+        ]
+      },
+      "support": {
+        "heading": {
+          "title": "Our Investors",
+          "subtitle": "SUPPORT FROM",
+          "description": "Adipiscing nisi sem gravida enim eu adipiscing sagittis scelerisque augue nulla massa aliquet fringilla nullam eget"
+        },
+        "contents": [
+          {
+            "url": "#",
+            "title": "greenish",
+            "src": "images/brand/a.png"
+          },
+          {
+            "url": "#",
+            "title": "cloud",
+            "src": "images/brand/b.png"
+          },
+          {
+            "url": "#",
+            "title": "luminous",
+            "src": "images/brand/c.png"
+          },
+          {
+            "url": "#",
+            "title": "chain",
+            "src": "images/brand/d.png"
+          },
+          {
+            "url": "#",
+            "title": "sitemark",
+            "src": "images/brand/e.png"
+          }
+        ]
+      }
+    },
+    "aboutSolution": {
+      "banner": {
+        "contents": [
+          {
+            "url": "#",
+            "alt": "cover-bg",
+            "cover": "images/peoples/people-1.jpg"
+          },
+          {
+            "url": "#",
+            "alt": "cover-bg",
+            "cover": "images/peoples/people-2.jpg"
+          },
+          {
+            "url": "#",
+            "alt": "cover-bg",
+            "cover": "images/peoples/people-3.jpg"
+          },
+          {
+            "url": "#",
+            "alt": "cover-bg",
+            "cover": "images/peoples/people-4.jpg"
+          }
+        ]
+      },
+      "features": {
+        "contents": [
+          {
+            "number": 4,
+            "unit": "m",
+            "symbol": "+",
+            "title": "Global Customers",
+            "description": "adip iscing Lorem ipsum dolor sit amet conse ctetur."
+          },
+          {
+            "number": 600,
+            "unit": "",
+            "symbol": "%",
+            "title": "Annual Revenue",
+            "description": "iscing dolor Lorem ipsum sit amet conse ctetu adipr."
+          },
+          {
+            "number": 20,
+            "unit": "k",
+            "symbol": "+",
+            "title": "5 Star Reviews",
+            "description": "conse iscing dolor sit Lor em ipsum amet ctetu adipr."
+          },
+          {
+            "number": 240,
+            "unit": "",
+            "symbol": "%",
+            "title": "Retun on Investment",
+            "description": "conse dolor ctetu isc ing sit Lor em ipsum amet adipr."
+          }
+        ]
+      },
+      "timeline": {
+        "heading": {
+          "title": "Our Journey Defines Us",
+          "subtitle": "timeline",
+          "description": "Erat eleifend lacus mattis at porttitor at mauris vel pharetra. Consequat, dictum et magna augue."
+        },
+        "contents": [
+          {
+            "heading": {
+              "year": 2010,
+              "status": "Company Started"
+            },
+            "body": "psum dolor sit amet, cons ectetur adipi scing elit. El eme ntum dapi bus, leo in ferme ntum iaculis... "
+          },
+          {
+            "heading": {
+              "year": 2011,
+              "status": "Our Startup Goes live"
+            },
+            "body": "amet dolor ipsum iaculis sit , cons ectetur dapibus adipi scing elit. El eme ntum , leo in ferme ntum..."
+          },
+          {
+            "heading": {
+              "year": 2012,
+              "status": "Made $2M+ Profits"
+            },
+            "body": "ectetur ipsum iaculis dolor sit amet, ntum cons scing adipi elit. dapibus El eme , leo in ntum ferme..."
+          },
+          {
+            "heading": {
+              "year": 2013,
+              "status": "Sold For 20M+"
+            },
+            "body": "dapibus ipsum ectetur dolor sit amet, cons adipi scing elit. El eme ntum ,in ferme ntum leo..."
+          }
+        ]
+      },
+      "members": {
+        "heading": {
+          "title": "Meet Our Experts",
+          "subtitle": "Team Members",
+          "description": "Erat eleifend lacus mattis at porttitor at mauris vel pharetra. Consequat, dictum et magna augue."
+        },
+        "contents": [
+          {
+            "url": "#",
+            "icon": "twitter",
+            "name": "Jimy Smith",
+            "designation": "Founder",
+            "cover": "images/team/e.png"
+          },
+          {
+            "url": "#",
+            "icon": "apple",
+            "name": "Steven Smith",
+            "designation": "Co Founder",
+            "cover": "images/team/f.png"
+          },
+          {
+            "url": "#",
+            "icon": "github-circle",
+            "name": "Jimy Smith",
+            "designation": "Founder",
+            "cover": "images/team/g.png"
+          }
+        ]
+      },
+      "faqs": {
+        "contents": [
+          {
+            "title": "How long does it take to ship my order?",
+            "description": " Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod maecenas."
+          },
+          {
+            "title": "What payment methods do you accept?",
+            "description": " Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod maecenas."
+          },
+          {
+            "title": "What shipping options do you have?",
+            "description": " Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod maecenas."
+          },
+          {
+            "title": "How do I make changes to an existing order?",
+            "description": " Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod maecenas."
+          },
+          {
+            "title": "When will my order arrive?",
+            "description": " Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod maecenas."
+          }
+        ]
+      },
+      "sections": {
+        "heading": {
+          "title": "",
+          "subtitle": "",
+          "description": ""
+        },
+        "contents": []
+      }
+    },
+    "features": {
+      "features": {
+        "contents": [
+          {
+            "variant": "line-1",
+            "title": "Visualize & Break Down",
+            "highlight": "engagement trends"
+          },
+          {
+            "variant": "line-2",
+            "title": "Build Funnels & find key",
+            "highlight": "retention drivers"
+          },
+          {
+            "variant": "line-3",
+            "title": "See the impacts of",
+            "highlight": "Product Launches & Experiments"
+          }
+        ]
+      },
+      "values": {
+        "heading": {
+          "subtitle": "Our Values",
+          "title": "Learn About Other Nioland Features",
+          "description": "Adipiscing nisi sem gravida enim eu adipiscing sagittis scelerisque augue nulla massa aliquet fringilla nullam eget"
+        },
+        "contents": [
+          {
+            "variant": "primary-soft",
+            "icon": "file-text-fill",
+            "title": "Retention Report",
+            "description": "Lorem ipsum dolor sit amet, conse ctet adipi scing elit. Conse quat aliquet soll amet."
+          },
+          {
+            "variant": "info-soft",
+            "color": "primary",
+            "icon": "pie-fill",
+            "title": "Deliver Impact Results",
+            "description": "ipsum Lorem, dolor sit amet ctetur adipis icing elit. Lorem, ipsum dolor."
+          },
+          {
+            "variant": "warning-soft",
+            "icon": "color-palette-fill",
+            "title": "A/B Test Variants",
+            "description": " dolor sit amet, cons ectet adipi scing elit. Cons ipsum Lorem equat aliquet soll amet."
+          },
+          {
+            "variant": "danger-soft",
+            "icon": "view-grid-wd",
+            "title": "Limitless Segmentation",
+            "description": "Consec tetur adipisicing elit. Harum iure consequatur repellat. Cons equat aliq uet soll amet. "
+          },
+          {
+            "variant": "primary-soft",
+            "icon": "bell-fill",
+            "title": "Team Dashboard & Alerts",
+            "description": "Lorem ip sum dolor sit amet, cons ectet adipi scing elit. Cons equat aliquet soll amet."
+          },
+          {
+            "variant": "success-soft",
+            "icon": "puzzle-fill",
+            "title": "Integration Directory",
+            "description": "Lor em ip sum dolor sit amet, cons ectet adip iscing elit. Cons equat ali quet soll amet"
+          }
+        ]
+      },
+      "sections": {
+        "heading": {
+          "title": "",
+          "subtitle": "",
+          "description": ""
+        },
+        "contents": []
+      }
+    },
+    "featuresSolution": {
+      "brands": {
+        "contents": [
+          {
+            "url": "#",
+            "title": "greenish",
+            "src": "images/brand/a.png"
+          },
+          {
+            "url": "#",
+            "title": "cloud",
+            "src": "images/brand/b.png"
+          },
+          {
+            "url": "#",
+            "title": "luminous",
+            "src": "images/brand/c.png"
+          },
+          {
+            "url": "#",
+            "title": "chain",
+            "src": "images/brand/d.png"
+          },
+          {
+            "url": "#",
+            "title": "sitemark",
+            "src": "images/brand/e.png"
+          }
+        ]
+      },
+      "categories": {
+        "contents": {
+          "category1": [
+            {
+              "cover": "images/inside-pages/blog/card-cover-6.png",
+              "title": "Automatic Invoice Payment",
+              "description": "We provide automatic invoice payment service. Set a payment schedule and you're done, it's that easy!"
+            },
+            {
+              "cover": "images/inside-pages/blog/card-cover-1.png",
+              "title": "Clear payment history",
+              "description": "Still writing manual expenses? Our platform breaks down every expense you log down to the millisecond!"
+            },
+            {
+              "cover": "images/inside-pages/blog/card-cover-2.png",
+              "title": "Use of multi-card payments",
+              "description": "Our platform is already integrated with many banks around the world, for easier payments!"
+            }
+          ],
+          "category2": [
+            {
+              "cover": "images/inside-pages/blog/card-cover-3.png",
+              "title": "Setup Collaboration Metrics",
+              "description": "Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa just."
+            },
+            {
+              "cover": "images/inside-pages/blog/card-cover-4.png",
+              "title": "Track Development Progress",
+              "description": "Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa just."
+            },
+            {
+              "cover": "images/inside-pages/blog/card-cover-5.png",
+              "title": "Identify Project Backlog",
+              "description": "Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa just."
+            }
+          ]
+        }
+      },
+      "features": {
+        "heading": {
+          "title": "All the tools you need to grow your business",
+          "subtitle": "more features"
+        },
+        "contents": [
+          {
+            "icon": "files-fill",
+            "variant": "layout-primary-4-dark",
+            "title": "Organize Information",
+            "description": "Fusce dap ibus, tellus ac cur sus comm odo, tortor mauris condi mentum nibh, ut ferme ntum massa justo sit am et risus."
+          },
+          {
+            "icon": "clock",
+            "variant": "warning-dark",
+            "title": "Reduce Work Hours",
+            "description": "mauris dap Fusce ibus, ac cur sus comm odo, tortor tellus condi mentum nibh, risus ut ferme ntum massa justo sit am et.."
+          },
+          {
+            "icon": "sign-mxn",
+            "variant": "primary-dark",
+            "title": "Save Expenses",
+            "description": "mentu mmauris ac cur sus comm odo, dap Fusce ibus, tellus tortor condi nibh, risus ut ferme ntum massa"
+          },
+          {
+            "icon": "users",
+            "variant": "danger",
+            "title": "Team Communication",
+            "description": "mentu ac dap Fusce ibus, ut ferme tellus cur sus comm odo, mmauris risus tortor condi nibh ntum massa"
+          },
+          {
+            "icon": "laptop",
+            "variant": "cyan-dark",
+            "title": "Remote Flexibility",
+            "description": "dap Fusce ibus, mmauris risus ut ferme tellus mentu ac cur sus comm odo, tortor condi nibh ntum massa"
+          },
+          {
+            "icon": "layer",
+            "variant": "success",
+            "title": "Simple User Interface",
+            "description": "Fme ntu massa ac dap Fusce ibus, ferme ut tellus cur sus comm risus odo, mmauris tortor condi nibh ntum ."
+          },
+          {
+            "icon": "shield-check",
+            "variant": "blue-300-dark",
+            "title": "Data Security",
+            "description": " ac dap Fusce mmauris tortor condi ntum ibus, nibh ferme ut cur tellus sus comm risus odo."
+          },
+          {
+            "icon": "growth",
+            "variant": "purple",
+            "title": "Progress Tracking",
+            "description": "tortor condi ntum ibus, nibh ferme ut cur tellus sus comm ac dap Fusce mmauris risus odo."
+          },
+          {
+            "icon": "headphone-fill",
+            "variant": "primary-dark",
+            "title": "Customer Support",
+            "description": "Fu sce ac dap mmauris risus odo. tortor condi ntum ibus, nibh ferme ut cur tellus sus comm."
+          }
+        ]
+      },
+      "faqs": {
+        "contents": [
+          {
+            "title": "How long does it take to ship my order?",
+            "description": " Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod maecenas."
+          },
+          {
+            "title": "What payment methods do you accept?",
+            "description": " Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod maecenas."
+          },
+          {
+            "title": "What shipping options do you have?",
+            "description": " Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod maecenas."
+          },
+          {
+            "title": "How do I make changes to an existing order?",
+            "description": " Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod maecenas."
+          },
+          {
+            "title": "When will my order arrive?",
+            "description": " Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod maecenas."
+          }
+        ]
+      },
+      "sections": {
+        "heading": {
+          "title": "",
+          "subtitle": "",
+          "description": ""
+        },
+        "contents": []
+      }
+    },
+    "pricingSolution": {
+      "pricing": {
+        "heading": {
+          "title": "Pricing built to suit",
+          "hightlight": "your needs",
+          "subtitle": "pricing",
+          "description": ""
+        },
+        "contents": [
+          {
+            "active": false,
+            "heading": {
+              "icon": "images/icon/thundar.png",
+              "title": "Standard",
+              "subtitle": "For the beginners",
+              "package": {
+                "month": {
+                  "price": 24,
+                  "title": "user"
+                }
+              }
+            },
+            "body": [
+              {
+                "active": true,
+                "title": "20 Asset Delivery"
+              },
+              {
+                "active": true,
+                "title": "Unlimited Bandwidth"
+              },
+              {
+                "active": false,
+                "title": "Support System"
+              },
+              {
+                "active": false,
+                "title": "120+ Message all Operator"
+              }
+            ]
+          },
+          {
+            "active": true,
+            "heading": {
+              "icon": "images/icon/crown.png",
+              "title": "Pro Business",
+              "subtitle": "For the professionals",
+              "package": {
+                "month": {
+                  "price": 28,
+                  "title": "user"
+                }
+              }
+            },
+            "body": [
+              {
+                "active": true,
+                "title": "20 Asset Delivery"
+              },
+              {
+                "active": true,
+                "title": "Unlimited Bandwidth"
+              },
+              {
+                "active": true,
+                "title": "Support System"
+              },
+              {
+                "active": false,
+                "title": "120+ Message all Operator"
+              }
+            ]
+          },
+          {
+            "active": false,
+            "heading": {
+              "icon": "images/icon/cup.png",
+              "title": "Startup",
+              "subtitle": "For the Startup",
+              "package": {
+                "month": {
+                  "price": 35,
+                  "title": "user"
+                }
+              }
+            },
+            "body": [
+              {
+                "active": true,
+                "title": "20 Asset Delivery"
+              },
+              {
+                "active": true,
+                "title": "Unlimited Bandwidth"
+              },
+              {
+                "active": true,
+                "title": "Support System"
+              },
+              {
+                "active": false,
+                "title": "120+ Message all Operator"
+              }
+            ]
+          }
+        ]
+      },
+      "faqs": {
+        "contents": [
+          {
+            "title": "How long does it take to ship my order?",
+            "description": " Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod maecenas."
+          },
+          {
+            "title": "What payment methods do you accept?",
+            "description": " Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod maecenas."
+          },
+          {
+            "title": "What shipping options do you have?",
+            "description": " Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod maecenas."
+          },
+          {
+            "title": "How do I make changes to an existing order?",
+            "description": " Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod maecenas."
+          },
+          {
+            "title": "When will my order arrive?",
+            "description": " Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod maecenas."
+          }
+        ]
+      }
+    },
+    "customerTestimonial": {
+      "features": {
+        "heading": {
+          "title": "",
+          "subtitle": "",
+          "description": ""
+        },
+        "contents": [
+          {
+            "number": "5",
+            "unit": "",
+            "icon": "star",
+            "variant": "warning",
+            "title": "User Friendly Interface"
+          },
+          {
+            "number": 95,
+            "unit": "%",
+            "icon": "trend-up",
+            "variant": "primary",
+            "title": "Data-informed Decisions"
+          },
+          {
+            "number": 500,
+            "unit": "%",
+            "icon": "arrow-up",
+            "variant": "success",
+            "title": "Business Strategy Results"
+          }
+        ]
+      },
+      "reviews": {
+        "heading": {
+          "title": "Don't Take Our Word For It",
+          "subtitle": "Customer Reviews",
+          "description": "Adipiscing nisi sem gravida enim eu adipiscing sagittis scelerisque augue nulla massa aliquet fringilla nullam eget"
+        },
+        "contents": [
+          {
+            "title": "“Amazing service! Claire helped me to reduce the shipping price and shipped it immediately after purchasing. ”",
+            "comment": "Lor em ipsum dolor sit amet, consec tetur adipi scing elit. Vene natis magna massa semper tris tique. Lor em ips um dolor sit amet, consec tetur adipi scing elit.",
+            "user": {
+              "name": "Guy Hawkins"
+            }
+          },
+          {
+            "title": "“Very quick and easy! Great service, thanks!”",
+            "comment": " consec tetur em ipsum dolor sit amet,elit. Vene natis magna massa adipi scing elit. semper tris tique. Lor Lor consec tetur adipi scing em ips um dolor sit amet",
+            "user": {
+              "name": "Courtney Henry"
+            }
+          },
+          {
+            "title": " “Really glad to have a call with Dani – super invaluable. Thanks” ",
+            "comment": "Vene natis magna massa adipi scing elit. semper tris tique. Lor em ips um dolor Lor consec tetur adipi scing  em ipsum dolor sit amet, sit amet, consec tetur",
+            "user": {
+              "name": "Brooklyn Simmons"
+            }
+          },
+          {
+            "title": "“Just came back to home and should say that it is definitely a great experience.”",
+            "comment": "Lor consec tetur adipi scing  em ipsum dolor sit amet,elit. Vene natis magna massa adipi scing elit. semper tris tique. Lor em ips um dolor sit amet, consec  lore admf adf dafhadf madfm adfkjdf",
+            "user": {
+              "name": "Savannah Nguyen"
+            }
+          },
+          {
+            "title": "“It has been an absolute pleasure dealing with Scan during the lockdown.”",
+            "comment": "semper tris tique. Lor em ips um dolor sit amet, consec tetur Lor consec tetur adipi scing  em ipsum dolor sit amet,elit. Vene natis magna massa adipi scing elit. ",
+            "user": {
+              "name": "Jerome Bell"
+            }
+          },
+          {
+            "title": " “ Great session! Dani was super helpful.” ",
+            "comment": "Lor  scing elit. semper tris tique. Lor em ips um dolor sit amet, consec tetur consec tetur adipi scing  em ipsum dolor sit amet,elit. Vene natis magna massa adipi",
+            "user": {
+              "name": "Kristin Watson"
+            }
+          },
+          {
+            "title": "“I tried the Hair mask first and its the best one I've ever tried love it.”",
+            "comment": "em ipsum dolor sit amet, Lor consec tetur adipi scing elit. Vene natis magna massa adipi scing elit.  Lor em ips um dolor sit amet, consec tetur , semper tris tique.",
+            "user": {
+              "name": "Guy Hawkins"
+            }
+          },
+          {
+            "title": "“I ordered a Balmain T-shirt dress from here and it is fabulous.”",
+            "comment": "semper tris tique. Lor em ips um dolor sit amet, consec tetur Lor consec tetur adipi scing  em ipsum dolor sit amet,elit. Vene natis magna massa adipi scing elit. ",
+            "user": {
+              "name": "Bessie Cooper"
+            }
+          },
+          {
+            "title": "“The Services provided are really great, we received a genuine advice and at very reasonable cost.”",
+            "comment": "m ipsum dolor sit amet,elit. Vene natis magna massa adipi scing elit. Lor consec tetur adipi scing semper tris tique. Lor em ips um dolor sit amet, consec tetur",
+            "user": {
+              "name": "Jane Cooper"
+            }
+          }
+        ]
+      }
+    },
+    "blogs": {
+      "posts": {
+        "contents": [
+          {
+            "url": "#",
+            "cover": "images/blog/a.jpg",
+            "tag": "Growth",
+            "title": "Why customer retention is the ultimate growth strategy?",
+            "author": {
+              "cover": "images/avatar/a.jpg",
+              "name": " John Carter"
+            }
+          },
+          {
+            "url": "#",
+            "cover": "images/blog/b.jpg",
+            "tag": "Marketing",
+            "title": "Optimizing your advertising campaigns for higher ROAS",
+            "author": {
+              "cover": "images/avatar/b.jpg",
+              "name": "Annette Black"
+            }
+          },
+          {
+            "url": "#",
+            "cover": "images/blog/c.jpg",
+            "tag": "Growth",
+            "title": "How to build the ultimate tech stack for growth",
+            "author": {
+              "cover": "images/avatar/c.jpg",
+              "name": "Ralph Edwards"
+            }
+          },
+          {
+            "url": "#",
+            "cover": "images/blog/d.jpg",
+            "tag": "Growth",
+            "title": "How to build and automate a referral program",
+            "author": {
+              "cover": "images/avatar/d.jpg",
+              "name": "Ralph Edwards"
+            }
+          },
+          {
+            "url": "#",
+            "cover": "images/blog/e.jpg",
+            "tag": "Growth",
+            "title": "How to optimize page performance using heatmaps",
+            "author": {
+              "cover": "images/avatar/e.jpg",
+              "name": "John Carter"
+            }
+          },
+          {
+            "url": "#",
+            "cover": "images/blog/f.jpg",
+            "tag": "Marketing",
+            "title": "4 tips to optimize your funnels for conversion",
+            "author": {
+              "cover": "images/avatar/f.jpg",
+              "name": "Annette Black"
+            }
+          }
+        ]
+      },
+      "sections": {
+        "heading": {
+          "title": "",
+          "subtitle": "",
+          "description": ""
+        },
+        "contents": []
+      }
+    },
+    "blogDetails": {
+      "articles": {
+        "heading": {
+          "title": "",
+          "subtitle": "",
+          "description": ""
+        },
+        "contents": [
+          {
+            "url": "#",
+            "cover": "images/blog/a.jpg",
+            "tag": "Growth",
+            "title": "Why customer retention is the ultimate growth strategy?",
+            "author": {
+              "cover": "images/avatar/a.jpg",
+              "name": " John Carter"
+            }
+          },
+          {
+            "url": "#",
+            "cover": "images/blog/b.jpg",
+            "tag": "Growth",
+            "title": "Optimizing your advertising campaigns for higher ROAS",
+            "author": {
+              "cover": "images/avatar/b.jpg",
+              "name": "Annette Black"
+            }
+          },
+          {
+            "url": "#",
+            "cover": "images/blog/c.jpg",
+            "tag": "Growth",
+            "title": "How to build the ultimate tech stack for growth",
+            "author": {
+              "cover": "images/avatar/c.jpg",
+              "name": "Ralph Edwards"
+            }
+          }
+        ]
+      },
+      "sections": {
+        "heading": {
+          "title": "",
+          "subtitle": "",
+          "description": ""
+        },
+        "contents": []
+      }
+    },
+    "contactUs": {
+      "support": {
+        "heading": {
+          "title": "Contact Us",
+          "subtitle": "Need Support",
+          "description": "Adipiscing nisi sem gravida enim eu adipiscing sagittis scelerisque augue nulla massa aliquet fringilla nullam eget"
+        },
+        "contents": [
+          {
+            "variant": "primary",
+            "icon": "cc-alt2-fill",
+            "title": "Billing & Payments",
+            "description": "Adipi scing nisi sem gravida enim eu adipi scing sagi ttis sceler isque augue nul la massa ali quet."
+          },
+          {
+            "variant": "primary",
+            "icon": "users-fill",
+            "title": "Users and Collaboration",
+            "description": " Gravida enim eu Adipi scing nisi sem adipi scing la massa ali quet sagi ttis sceler isque augue nul."
+          },
+          {
+            "variant": "primary",
+            "icon": "puzzle-fill",
+            "title": "Features and Integrations",
+            "description": "sceler isque augue nul. nisi sem adipi scing adipi scing nisi gravida enim eu Adipi scing la massa ali quet sagi ttis sceler isque augue nul."
+          }
+        ]
+      },
+      "sections": {
+        "heading": {
+          "title": "",
+          "subtitle": "",
+          "description": ""
+        },
+        "contents": []
+      }
+    },
+    "contactSolution": {
+      "contacts": {
+        "contents": [
+          {
+            "icon": "headphone-fill",
+            "variant": "primary",
+            "title": "Tech Support",
+            "description": "Ad ipis cing nisi sem gravida enim eu adipi scing sagittis scel erisque a ugue nulla massa ali quet."
+          },
+          {
+            "icon": "bugs-alt-fill",
+            "variant": "primary",
+            "title": "Website Issue",
+            "description": "risque a ugue nulla massa Ad ipis cing nisi sem ali quet. gravida enim eu adipi scing sagittis scel."
+          },
+          {
+            "icon": "telegram",
+            "variant": "primary",
+            "title": "Contact Sales",
+            "description": "ipis cing nisi sem ali quet, risque a ugue nulla massa Ad scing sagittis scel gravida enim eu adipi ."
+          },
+          {
+            "icon": "chat-msg-fill",
+            "variant": "primary",
+            "title": "Live Chat",
+            "description": "sagittis scel gravida ipis cing enim eu adipi. nisi sem ali quet, risque a ugue nulla massa Ad scing."
+          },
+          {
+            "icon": "users-fill",
+            "variant": "primary",
+            "title": "Affiliate Program",
+            "description": "risq massa Ad scing. sagittis ue a ugue nulla scel gravida ipis cing enim eu adipi. nisi sem ali quet."
+          },
+          {
+            "icon": "account-setting-fill",
+            "variant": "primary",
+            "title": "Billing & Accounts",
+            "description": "nulla scel gravida ipis risq massa Ad scing. nisi sem ali quet, sagittis ue a ugue cing enim eu adipi."
+          }
+        ]
+      }
+    },
+    "helpCenter": {
+      "support": {
+        "contents": [
+          {
+            "icon": "wallet-fill",
+            "variant": "primary-soft",
+            "title": "Billing & Payments",
+            "readmore": "#",
+            "readLabel": "See Pricing Questions",
+            "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ac pellentesque diam felis Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ac pellentesque diam felis psum dolor sit amet, consectetur."
+          },
+          {
+            "icon": "users-fill",
+            "variant": "info-soft",
+            "readmore": "#",
+            "readLabel": "All Documentations",
+            "title": "Users & Collaboration",
+            "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ac pellentesque diam felis Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ac pellentesque diam felis psum dolor sit amet, consectetur."
+          },
+          {
+            "icon": "puzzle-fill",
+            "variant": "danger-soft",
+            "readmore": "#",
+            "readLabel": "Browse Articles",
+            "title": "Features and Integrations",
+            "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ac pellentesque diam felis Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ac pellentesque diam felis psum dolor sit amet, consectetur."
+          },
+          {
+            "icon": "chat-circle-fill",
+            "variant": "success-soft",
+            "readmore": "#",
+            "readLabel": "See All Questions",
+            "title": "Frequently Asked Questions",
+            "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ac pellentesque diam felis Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ac pellentesque diam felis psum dolor sit amet, consectetur."
+          }
+        ]
+      }
+    },
+    "pricing": {
+      "pricing": {
+        "heading": {
+          "title": "Choose The Perfect Plan",
+          "subtitle": "Pricing & Plans",
+          "description": "nisi Adipiscing sem gravida scelerisque enim eu aliquet adipi scing sagittis augue nulla massa frin gilla nul lam eget"
+        },
+        "contents": [
+          {
+            "active": false,
+            "heading": {
+              "title": "Startup",
+              "description": "Lovrem ipsum dolor sit amet consevctetur adipiscing elit lobovrtis arcu enivm urna.",
+              "package": {
+                "month": {
+                  "price": 10,
+                  "title": "month"
+                }
+              }
+            },
+            "body": [
+              {
+                "active": true,
+                "title": "Unlimited data history & seats"
+              },
+              {
+                "active": true,
+                "title": "Core reports including Flows"
+              },
+              {
+                "active": true,
+                "title": "Data dictionary"
+              },
+              {
+                "active": true,
+                "title": "Monitoring & alerts"
+              }
+            ]
+          },
+          {
+            "active": true,
+            "heading": {
+              "title": "Growth",
+              "description": "consevc Lovrem ipsum dolor sit amet vrtis tetur adipiscing elit lobo arcu enivm urna.",
+              "package": {
+                "month": {
+                  "price": 199,
+                  "title": "month"
+                }
+              }
+            },
+            "body": [
+              {
+                "active": true,
+                "title": "Everything on Startup plan"
+              },
+              {
+                "active": true,
+                "title": "Unlimited saved reports & cohorts"
+              },
+              {
+                "active": true,
+                "title": "Impact report with causal inference"
+              },
+              {
+                "active": true,
+                "title": "Data modeling"
+              }
+            ]
+          },
+          {
+            "active": false,
+            "heading": {
+              "title": "Enterprise",
+              "description": "elit dolor ipsum sit amet vrtis tetur adipiscing Lovrem lobo arcu enivm urna.",
+              "package": {
+                "month": {
+                  "price": 399,
+                  "title": "month"
+                }
+              }
+            },
+            "body": [
+              {
+                "active": true,
+                "title": "Everything on Growth Plan"
+              },
+              {
+                "active": true,
+                "title": "Advanced access controls"
+              },
+              {
+                "active": true,
+                "title": "Experiments & Signal reports"
+              },
+              {
+                "active": true,
+                "title": "SSO & automated provisioning"
+              }
+            ]
+          }
+        ]
+      },
+      "sections": {
+        "heading": {
+          "title": "",
+          "subtitle": "",
+          "description": ""
+        },
+        "contents": []
+      }
+    },
+    "productdetails": {
+      "view": {
+        "contents": [
+          {
+            "alt": "product-title",
+            "src": "images/shop/slider-cover-1.jpg"
+          },
+          {
+            "alt": "product-title",
+            "src": "images/shop/slider-cover-2.jpg"
+          },
+          {
+            "alt": "product-title",
+            "src": "images/shop/slider-cover-3.jpg"
+          },
+          {
+            "alt": "product-title",
+            "src": "images/shop/slider-cover-4.jpg"
+          },
+          {
+            "alt": "product-title",
+            "src": "images/shop/slider-cover-1.jpg"
+          },
+          {
+            "alt": "product-title",
+            "src": "images/shop/slider-cover-2.jpg"
+          },
+          {
+            "alt": "product-title",
+            "src": "images/shop/slider-cover-3.jpg"
+          },
+          {
+            "alt": "product-title",
+            "src": "images/shop/slider-cover-4.jpg"
+          }
+        ]
+      }
+    },
+    "careermanage": {
+      "posts": {
+        "contents": [
+          {
+            "category": "development-item",
+            "title": "Lead Backend Developer",
+            "description": "A lead backend developer is responsible for designing, developing, and managing server-side components, leading a team, and ensuring efficient and scalable backend systems."
+          },
+          {
+            "category": "design-item",
+            "title": "Senior Product Designer",
+            "description": "A senior product designer is an experienced professional responsible for designing and shaping user-centric product experiences, leading design initiatives, and collaborating with cross-functional teams to deliver exceptional product designs."
+          },
+          {
+            "category": "engineering-item",
+            "title": "UI Engineer",
+            "description": " The UI Engineer is responsible for designing and developing user interfaces, ensuring seamless and intuitive interactions for exceptional digital experiences."
+          },
+          {
+            "category": "engineering-item",
+            "title": "Customer Enginner",
+            "description": "The Customer Engineer role focuses on delivering exceptional technical support and solutions, ensuring customer satisfaction and success through effective communication and problem-solving skills."
+          },
+          {
+            "category": "design-item",
+            "title": "Senior UI/UX Designer",
+            "description": "The Senior UI/UX Designer is a seasoned professional who leads the design process, creating visually stunning and user-friendly interfaces that enhance user experiences and drive business growth."
+          },
+          {
+            "category": "marketing-item",
+            "title": "Senior UI/UX Designer",
+            "description": "The Senior UI/UX Designer is a seasoned professional who leads the design process, creating visually stunning and user-friendly interfaces that enhance user experiences and drive business growth."
+          }
+        ]
+      },
+      "sections": {
+        "heading": {
+          "title": "",
+          "subtitle": "",
+          "description": ""
+        },
+        "contents": []
+      }
+    },
+    "pagename": {
+      "sections": {
+        "heading": {
+          "title": "",
+          "subtitle": "",
+          "description": ""
+        },
+        "contents": []
+      }
+    }
+  }
+}

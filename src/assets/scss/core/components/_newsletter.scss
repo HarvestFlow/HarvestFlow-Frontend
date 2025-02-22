@@ -1,0 +1,62 @@
+.nk-newsletter {
+  &-one {
+    .form-control-wrap {
+      .form-control,
+      input {
+        &:focus {
+          box-shadow: none;
+          border-color: currentColor;
+        }
+      }
+    }
+  }
+
+  &-two {
+    .form-control-wrap {
+      .form-control,
+      input {
+        &:focus {
+          box-shadow: none;
+          border-bottom-color: $primary;
+        }
+
+        &::placeholder {
+          color: $base-text;
+        }
+      }
+    }
+  }
+
+  &-three {
+    .form-control-wrap {
+      .form-control,
+      input {
+        &:focus {
+          border-color: currentColor;
+        }
+
+        &::placeholder {
+          color: $base-text;
+        }
+      }
+
+      button {
+        top: 50%;
+        right: 8px;
+        position: absolute;
+        transform: translateY(-50%);
+      }
+    }
+  }
+
+  // theme Base
+  &-one,
+  &-two,
+  &-three {
+    &.is-theme {
+      .form-control {
+        background-color: #fff;
+      }
+    }
+  }
+}

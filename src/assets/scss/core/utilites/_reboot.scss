@@ -1,0 +1,601 @@
+canvas {
+    width: 100%;
+    max-width: 100%;
+}
+
+body {
+    color: $base-text;
+    font-size: $font-size-base;
+    font-weight: $body-font-weight;
+    font-family: $font-family-sans-serif;
+}
+
+a {
+    transition:
+        color 0.2s,
+        background-color 0.2s,
+        border 0.2s,
+        box-shadow 0.2s;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+    font-weight: bold;
+    color: $base-color;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6,
+p {
+    &:where(:last-child) {
+        margin-bottom: 0;
+    }
+    .is-theme & {
+        color: $white;
+    }
+}
+
+.point-none {
+    &:hover {
+        color: inherit;
+    }
+}
+
+.is-theme {
+    .nk-nav-btns {
+        .btn,
+        .btn:hover {
+            color: $white;
+        }
+        .btn-primary:hover,
+        .btn-danger:hover,
+        .btn-success:hover,
+        .btn-info:hover,
+        .btn-secondary:hover,
+        .btn-white:hover,
+        .btn-outline-primary:hover,
+        .btn-outline-danger:hover,
+        .btn-outline-success:hover,
+        .btn-outline-info:hover,
+        .btn-outline-secondary:hover,
+        .btn-outline-white:hover {
+            color: $base-color;
+        }
+    }
+}
+
+ol,
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+img {
+    max-width: 100%;
+}
+
+hr {
+    border: 0;
+    color: $hr-color;
+    margin: $hr-margin-y 0;
+    opacity: $hr-opacity;
+    border-top: $hr-border-width solid $hr-border-color;
+}
+
+.display-6 {
+    letter-spacing: -0.025em;
+    line-height: 1.35;
+}
+h1,
+.h1 {
+    line-height: 1.35;
+}
+h2,
+.h2 {
+    line-height: $line-height-sm;
+}
+h3,
+.h3 {
+    line-height: 1.6;
+    letter-spacing: -0.02em;
+}
+h4,
+.h4 {
+    line-height: 1.7;
+    letter-spacing: -0.015em;
+}
+h5,
+.h5 {
+    line-height: 1.6;
+    letter-spacing: -0.01em;
+}
+h6,
+.h6 {
+    line-height: 1.6; // 58
+}
+.smaller {
+    line-height: 1.7;
+}
+.small {
+    line-height: 1.6;
+}
+
+.rounded-16 {
+    border-radius: 1rem;
+}
+
+.lh-16 {
+    line-height: 1.6;
+}
+
+// Layouts
+body {
+    &.layout-1 {
+        color: #64728f;
+        line-height: 1.6;
+
+        // typography
+        .display-6 {
+            line-height: 1.32;
+            letter-spacing: -0.025em;
+        }
+
+        h2,
+        .h2 {
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        h4,
+        .h4 {
+            line-height: 1.68;
+            letter-spacing: -0.015em;
+        }
+    }
+
+    &.layout-2 {
+        line-height: 1.6;
+        font-family: $font-family-sans-serif-secondary;
+
+        // typography
+        .display-6 {
+            @include media-breakpoint-up(lg) {
+                font-size: 64px;
+                line-height: 1.31;
+            }
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        .h1,
+        .h2,
+        .h3,
+        .h4,
+        .h5,
+        .h6 {
+            font-weight: bold;
+            font-family: $font-family-sans-serif;
+        }
+
+        h1,
+        .h1 {
+            letter-spacing: -0.02em;
+
+            @include media-breakpoint-up(lg) {
+                font-size: 3.5rem;
+                line-height: 1.6;
+            }
+        }
+        h2,
+        .h2 {
+            @include media-breakpoint-up(lg) {
+                font-size: 3rem;
+                line-height: 1.4;
+            }
+            letter-spacing: -0.02em;
+        }
+
+        h3,
+        .h3,
+        h4,
+        .h4,
+        h5,
+        .h5,
+        h6,
+        .h6 {
+            line-height: 1.6;
+        }
+
+        h3,
+        .h3 {
+            letter-spacing: -0.02em;
+        }
+        h4,
+        .h4 {
+            letter-spacing: -0.015rem;
+        }
+        h5,
+        .h5 {
+            letter-spacing: -0.01em;
+        }
+        h6,
+        .h6 {
+            letter-spacing: -0.01em;
+        }
+    }
+
+    &.layout-3 {
+        line-height: 1.6;
+        color: #64728f;
+
+        // typography
+        .display-6 {
+            line-height: 1.31;
+        }
+
+        h2,
+        .h2 {
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+    }
+
+    &.layout-4 {
+        color: #64728f;
+        line-height: 1.6;
+
+        .display-6 {
+            @include media-breakpoint-up(lg) {
+                font-size: 4rem;
+                line-height: 1.32;
+            }
+            letter-spacing: -0.025em;
+        }
+
+        h1,
+        .h1 {
+            @include media-breakpoint-up(lg) {
+                font-size: 3.5rem;
+                line-height: 1.6;
+            }
+            letter-spacing: -0.02em;
+        }
+        h2,
+        .h2 {
+            @include media-breakpoint-up(lg) {
+                font-size: 3rem;
+                line-height: 1.4;
+            }
+            letter-spacing: -0.02em;
+        }
+        h3,
+        .h3 {
+            @include media-breakpoint-up(lg) {
+                font-size: 2.25rem;
+                line-height: 1.5;
+            }
+            letter-spacing: -0.01em;
+        }
+        h4,
+        .h4 {
+            line-height: 1.5;
+        }
+        h5,
+        .h5 {
+            line-height: 1.6;
+            letter-spacing: -0.01em;
+        }
+        h6,
+        .h6 {
+            line-height: 1.58;
+            letter-spacing: -0.01em;
+        }
+    }
+
+    &.layout-5 {
+        color: #64728f;
+        line-height: 1.6;
+
+        .display-6 {
+            letter-spacing: -0.025em;
+            line-height: 1.12;
+        }
+        h1,
+        .h1 {
+            line-height: 1.3;
+            letter-spacing: -0.02em;
+        }
+        h2,
+        .h2 {
+            line-height: 1.4;
+            letter-spacing: -0.02em;
+        }
+        h3,
+        .h3 {
+            line-height: 1.4;
+        }
+        h4,
+        .h4 {
+            line-height: 1.68;
+        }
+        h5,
+        .h5 {
+            line-height: 1.6;
+            letter-spacing: -0.01em;
+        }
+        h6,
+        .h6 {
+            line-height: 1.58;
+            letter-spacing: -0.01em;
+        }
+    }
+
+    &.layout-6 {
+        color: #64728f;
+        line-height: 1.6;
+
+        // typography
+        h2,
+        .h2 {
+            line-height: 1.5;
+        }
+
+        // swiper
+        .swiper {
+            &-pagination-bullet {
+                background-color: $lighter;
+            }
+            &-pagination-bullet-active {
+                background-color: $indigo;
+            }
+        }
+    }
+
+    &.layout-7 {
+        color: #64728f;
+        line-height: 1.6;
+
+        // typography
+        .display-6 {
+            line-height: 1.32;
+            letter-spacing: -0.025em;
+        }
+
+        h2,
+        .h2 {
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        h4,
+        .h4 {
+            line-height: 1.68;
+            letter-spacing: -0.015em;
+        }
+    }
+
+    &.layout-8 {
+        color: #64728f;
+        line-height: 1.6;
+
+        // typography
+        .display-6 {
+            line-height: 1.32;
+            letter-spacing: -0.025em;
+        }
+
+        h2,
+        .h2 {
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        h4,
+        .h4 {
+            line-height: 1.68;
+            letter-spacing: -0.015em;
+        }
+    }
+
+    &.layout-9 {
+        z-index: 1;
+        color: #c5c5ca;
+        line-height: 1.6;
+        position: relative;
+
+        &::after {
+            content: "";
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            position: absolute;
+            background-size: contain;
+            background-color: $dark;
+            background-repeat: no-repeat;
+            background-image: url("#{$coreRoot}mask/mask-body-1.png");
+        }
+
+        .nk-header {
+            &-main {
+                &.has-fixed {
+                    backdrop-filter: blur(10px);
+                    -webkit-backdrop-filter: blur(10px);
+                }
+            }
+        }
+
+        // typography
+        @include media-breakpoint-up(lg) {
+            .display-6 {
+                @include media-breakpoint-up(lg) {
+                    font-size: 4rem;
+                    line-height: 1.31;
+                }
+
+                letter-spacing: -0.025em !important;
+            }
+        }
+
+        h1,
+        .h1 {
+            line-height: 1.16;
+        }
+
+        h4,
+        .h4 {
+            line-height: 1.33;
+        }
+
+        h5,
+        .h5 {
+            line-height: 1.4;
+            letter-spacing: -0.015em;
+        }
+
+        .nk-table-crypto {
+            thead,
+            tbody,
+            tfoot,
+            tr,
+            td,
+            th {
+                border-color: #2b292c;
+            }
+        }
+
+        .form-control {
+            &::placeholder {
+                color: $gray-300 !important;
+            }
+
+            &:focus {
+                border-color: $purple !important;
+            }
+        }
+    }
+
+    &.layout-10 {
+        color: #64728f;
+        line-height: 1.6;
+
+        .swiper {
+            &-pagination-bullet {
+                background-color: #f4f8ff !important;
+                &-active {
+                    background-color: $cyan !important;
+                }
+            }
+        }
+    }
+
+    &.layout-11 {
+        color: $text-base;
+        line-height: 1.6;
+        // typography
+        .display-6 {
+            line-height: 1.31;
+        }
+
+        h2,
+        .h2 {
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .btn-link {
+            &:hover {
+                color: $primary-alt;
+            }
+        }
+
+        // masks
+        .shape-quote::before,
+        .shape-quote::after {
+            opacity: 0.1;
+            color: $danger;
+        }
+    }
+
+    &.layout-12 {
+        color: #64728f;
+
+        // typography
+        .display-6 {
+            line-height: 1.31;
+        }
+
+        h2 {
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        h4,
+        .h4 {
+            line-height: 1.5;
+        }
+
+        .btn-link {
+            &:hover {
+                color: $primary-alt;
+            }
+        }
+    }
+
+    &.layout-13 {
+        color: #64728f;
+
+        // typography
+        h2,
+        .h2 {
+            font-style: 3rem;
+            line-height: 1.33;
+            margin-bottom: 12px;
+        }
+
+        .swiper {
+            &-pagination-bullet {
+                background-color: $lighter !important;
+                &-active {
+                    background-color: $info-alt !important;
+                }
+            }
+        }
+    }
+}
+
+// pricing Toggle active color
+.nk-pricing {
+    .form-check {
+        &-input {
+            &:checked {
+                background-color: currentColor;
+            }
+        }
+    }
+}

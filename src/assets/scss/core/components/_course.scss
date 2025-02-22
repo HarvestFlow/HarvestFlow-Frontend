@@ -1,0 +1,16 @@
+.#{$course-overview-class} {
+    &-list {
+        display: flex;
+        align-items: center;
+    }
+    &-media + .#{$course-overview-class}-content {
+        margin-left: $course-overview-content-gap-x;
+    }
+
+    &-content {
+        .title {
+            font-weight: $course-overview-title-font-weight;
+            color: $course-overview-title-color;
+        }
+    }
+}

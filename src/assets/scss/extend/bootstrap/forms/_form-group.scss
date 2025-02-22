@@ -1,0 +1,16 @@
+.form-group {
+    .form-control-wrap {
+        input {
+            &::placeholder {
+                font-weight: 500;
+            }
+        }
+
+        .icon {
+            top: 50%;
+            left: 12px;
+            position: absolute;
+            transform: translateY(-50%);
+        }
+    }
+}

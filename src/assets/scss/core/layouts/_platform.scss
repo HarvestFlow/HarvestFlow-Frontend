@@ -1,0 +1,162 @@
+$size: 5rem;
+
+.nk-platform {
+  position: relative;
+
+  &-nav {
+    gap: 24px;
+    z-index: 1;
+    position: relative;
+    padding-bottom: 1.875rem;
+    .nav-link {
+      font-size: 1.5rem;
+      overflow: hidden;
+      border-radius: 50%;
+      align-items: center;
+      display: inline-flex;
+      width: calc($size / 1.5);
+      height: calc($size / 1.5);
+      background-color: #fff;
+      justify-content: center;
+    }
+
+    // tab button bg color
+    &.text-primary,
+    &.text-primary-alt,
+    &.text-sucess,
+    &.text-success-alt,
+    &.text-danger {
+      .nav-link {
+        &.active {
+          color: #fff;
+
+          &:hover {
+            color: #fff;
+          }
+        }
+      }
+    }
+
+    &.text-success {
+      .nav-link {
+        &.active {
+          background-color: $green;
+          &:hover {
+            color: #fff;
+          }
+        }
+
+        &:hover {
+          color: $green;
+        }
+      }
+    }
+
+    &.text-success-alt {
+      .nav-link {
+        &.active {
+          background-color: $green-alt;
+        }
+
+        &:hover {
+          color: $green-alt;
+        }
+      }
+    }
+
+    &.text-primary {
+      .nav-link {
+        &.active {
+          background-color: $primary;
+        }
+
+        &:hover {
+          color: $primary;
+        }
+      }
+    }
+
+    &.text-danger {
+      .nav-link {
+        &.active {
+          background-color: $danger;
+        }
+
+        &:hover {
+          color: $danger;
+        }
+      }
+    }
+  }
+
+  &-tab-content {
+    position: relative;
+  }
+
+  &-tiles {
+    position: relative;
+    text-align: center;
+    border-radius: 0.75rem;
+  }
+}
+
+.platform-content {
+  gap: 16px;
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+
+  @include media-breakpoint-up(sm) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include media-breakpoint-up(md) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @include media-breakpoint-up(xl) {
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  @media (min-width: 1400px) {
+    gap: 32px;
+  }
+}
+
+// responsive breakpoints
+
+@include media-breakpoint-up(md) {
+  .nk-platform {
+    &-nav {
+      gap: 48px;
+      padding-bottom: 3.75rem;
+      .nav-link {
+        width: calc($size / 1.2);
+        height: calc($size / 1.2);
+      }
+    }
+  }
+}
+
+@include media-breakpoint-up(lg) {
+  .nk-platform {
+    &-nav {
+      gap: 48px;
+      padding-bottom: 3.75rem;
+      .nav-link {
+        width: $size;
+        height: $size;
+        font-size: 32px;
+      }
+    }
+  }
+}
+
+@include media-breakpoint-down(md) {
+  .nk-platform {
+    &-tiles {
+      img {
+        height: auto !important;
+      }
+    }
+  }
+}

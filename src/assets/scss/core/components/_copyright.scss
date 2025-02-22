@@ -1,0 +1,20 @@
+.nk-copyright-text {
+    p {
+        color: $base-color;
+        a {
+            color: inherit;
+            &:hover {
+                color: $primary;
+            }
+        }
+    }
+}
+
+.nk-footer-bottom {
+    .nk-list-link li a {
+        color: $base-color;
+        &:hover {
+            color: $primary;
+        }
+    }
+}

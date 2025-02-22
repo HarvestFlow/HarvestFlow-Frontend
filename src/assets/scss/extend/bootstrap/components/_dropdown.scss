@@ -1,0 +1,8 @@
+.#{$dropdown-class} {
+    &-header {
+        font-weight: $dropdown-header-font-weight;
+    }
+    &-menu {
+        box-shadow: $dropdown-box-shadow;
+    }
+}

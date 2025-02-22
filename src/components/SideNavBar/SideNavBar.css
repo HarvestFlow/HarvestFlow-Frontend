@@ -1,0 +1,125 @@
+/* Sidebar styling */
+.sidebar-container {
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 100vh;
+	width: 250px;
+	background: linear-gradient(180deg, #093f2c, #1fa267);
+	box-shadow: 4px 0px 10px rgba(0, 0, 0, 0.1);
+	display: flex;
+	flex-direction: column;
+	transition: width 0.3s ease;
+}
+
+.sidebar-content {
+	padding: 20px;
+	color: white;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.logo-container {
+	text-align: center;
+	margin-bottom: 20px;
+}
+
+.sidebar-menu {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.sidebar-item {
+	margin: 15px 0;
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+}
+
+.sidebar-link {
+	display: flex;
+	align-items: center;
+	color: white;
+	text-decoration: none;
+	font-size: 16px;
+	padding: 10px 15px;
+	border-radius: 10px;
+	transition: background-color 0.3s ease;
+	width: 100%;
+}
+
+.sidebar-link:hover {
+	background-color: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-icon {
+	margin-right: 30px; /* Increased the space between icon and title */
+	font-size: 1rem;
+}
+
+.sidebar-text {
+	font-weight: 400;
+	font-size: 14px;
+	text-align: left;
+}
+
+.sidebar-footer {
+	text-align: center;
+	margin-top: auto;
+}
+
+.logout-button {
+	background: none;
+	border: none;
+	color: white;
+	font-size: 16px;
+	padding: 8px;
+	width: 100%;
+	text-align: left;
+	display: flex;
+	align-items: center;
+	border-radius: 10px;
+	transition: background-color 0.3s ease;
+}
+
+.logout-button:hover {
+	background-color: rgba(21, 148, 82, 0.6);
+}
+
+/* Media query for small screens (mobile) */
+@media (max-width: 768px) {
+	.sidebar-container {
+		width: 70px; /* Reduced width on mobile */
+	}
+
+	.sidebar-menu {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.sidebar-item {
+		width: 100%;
+		text-align: center;
+	}
+
+	.sidebar-link {
+		justify-content: center;
+		padding: 10px;
+	}
+
+	.sidebar-text {
+		display: none; /* Hide text on small screens */
+	}
+
+	.sidebar-icon {
+		font-size: 1.5rem; /* Enlarged icon on mobile */
+	}
+
+	.logout-button {
+		text-align: center;
+	}
+}

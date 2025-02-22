@@ -1,0 +1,1072 @@
+$banner-class: "nk-banner";
+
+%shape-bg {
+    content: "";
+    z-index: -1;
+    opacity: 0.6;
+    user-select: none;
+    position: absolute;
+    pointer-events: none;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.#{$banner-class} {
+    z-index: 1;
+    position: relative;
+
+    &[data-bg-image] {
+        background-size: cover;
+        background-position: center;
+    }
+
+    &-wrap {
+        z-index: 5;
+        padding: 60px 0px;
+        padding-top: 120px;
+        position: relative;
+
+        @include media-breakpoint-up(lg) {
+            padding: 120px 0px;
+            padding-top: 160px;
+        }
+
+        @include media-breakpoint-up(xl) {
+            padding-top: 202px;
+        }
+
+        &-kids-course {
+            padding-top: 3.75rem;
+            padding-bottom: 0px !important;
+        }
+
+        &-2 {
+            padding-bottom: 120px;
+        }
+    }
+
+    &-content {
+        p {
+            @include media-breakpoint-down(md) {
+                font-size: 16px !important;
+            }
+        }
+    }
+
+    &-img {
+        &-s1 {
+            .thumb {
+                position: absolute;
+                &-1 {
+                    left: -14.92%;
+                    bottom: 0;
+                    width: 34.0726%;
+                }
+                &-2 {
+                    right: -14.92%;
+                    bottom: 7.5%;
+                    width: 46.5726%;
+                }
+            }
+        }
+
+        &-s3 {
+            right: 0;
+            top: 0px;
+            user-select: none;
+            position: absolute;
+            pointer-events: none;
+
+            @include media-breakpoint-up(md) {
+                top: 30px;
+            }
+        }
+    }
+
+    // Pages
+
+    &-landing {
+        &::before {
+            content: "";
+            top: 0;
+            left: 0;
+            z-index: -1;
+            width: 100%;
+            height: 100%;
+            opacity: 0.2;
+            position: absolute;
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-image: url("#{$coreRoot}inside-pages/bg/landing-bg.png");
+        }
+
+        .nk-mask {
+            &.blur {
+                &::after,
+                &::before {
+                    content: "";
+                    position: absolute;
+                    background-size: cover;
+                    background-repeat: no-repeat;
+                }
+
+                &::after {
+                    @extend %blur-bg;
+                    right: 0;
+                    bottom: -280px;
+                    width: 819px;
+                    height: 100%;
+                    background-size: auto;
+                    background-image: url("#{$coreRoot}blur/d.png");
+                }
+                &::before {
+                    @extend %blur-bg;
+                    width: 100%;
+                    left: 60px;
+                    bottom: 0px;
+                    height: 49.9375rem;
+                    background-size: contain;
+                    background-image: url("#{$coreRoot}blur/c.png");
+                }
+            }
+
+            &.shape {
+                &::before,
+                &::after {
+                    content: "";
+                    z-index: -1;
+                    opacity: 0.6;
+                    user-select: none;
+                    position: absolute;
+                    pointer-events: none;
+                    background-size: contain;
+                    background-repeat: no-repeat;
+                    mix-blend-mode: luminosity !important;
+                }
+
+                &::before {
+                    top: 50%;
+                    width: 1142px;
+                    height: 569px;
+                    transform: translateY(-50%);
+                    background-image: url("#{$coreRoot}shape/geo-2.png");
+                }
+
+                &::after {
+                    @include media-breakpoint-up(xl) {
+                        right: -30%;
+                        width: 506px;
+                        height: 497px;
+                        top: calc(50% - 170px);
+                        background-size: contain;
+                        transform: translateY(-50%);
+                        background-image: url("#{$coreRoot}shape/geo-1.png");
+                    }
+
+                    @media (min-width: 1400px) {
+                        right: -24%;
+                    }
+                    @media (min-width: 1600px) {
+                        right: -20%;
+                    }
+                }
+            }
+        }
+
+        .nk-frame {
+            &-base {
+                z-index: 1;
+                width: 420px;
+                height: auto;
+
+                @include media-breakpoint-up(md) {
+                    width: 480px;
+                    height: auto;
+                }
+
+                @include media-breakpoint-up(lg) {
+                    width: auto;
+                    height: auto;
+                }
+            }
+
+            &-children {
+                display: none;
+
+                @include media-breakpoint-up(sm) {
+                    bottom: 0;
+                    z-index: -1;
+                    display: block;
+                }
+
+                img {
+                    @include media-breakpoint-up(sm) {
+                        width: auto;
+                        height: 200px;
+                    }
+
+                    @include media-breakpoint-up(md) {
+                        height: 230px;
+                    }
+
+                    @include media-breakpoint-up(lg) {
+                        height: 320px;
+                    }
+
+                    @media (min-width: 1400px) {
+                        height: 460px;
+                    }
+                }
+
+                &-one {
+                    @include media-breakpoint-up(sm) {
+                        left: -20px;
+                    }
+
+                    @include media-breakpoint-up(md) {
+                        left: 0;
+                    }
+
+                    @include media-breakpoint-up(lg) {
+                        left: -150px;
+                    }
+
+                    @media (min-width: 1400px) {
+                        left: -230px;
+                    }
+                }
+
+                &-two {
+                    @include media-breakpoint-up(sm) {
+                        right: -20px;
+                    }
+
+                    @include media-breakpoint-up(md) {
+                        right: 0;
+                    }
+
+                    @include media-breakpoint-up(lg) {
+                        right: -150px;
+                    }
+
+                    @media (min-width: 1400px) {
+                        right: -230px;
+                    }
+                }
+            }
+        }
+
+        .#{$banner-class} {
+            &-wrap {
+                padding-top: 120px;
+
+                @include media-breakpoint-up(lg) {
+                    padding-top: 160px;
+                }
+            }
+        }
+    }
+
+    // Homepages
+
+    &-kd-course {
+        .#{$banner-class} {
+            &-wrap {
+                @include media-breakpoint-up(lg) {
+                    padding-top: 150px;
+                }
+            }
+        }
+
+        .title-shape {
+            &::after,
+            &::before {
+                @include media-breakpoint-up(sm) {
+                    content: "";
+                    top: 50%;
+                    width: 45px;
+                    height: 1px;
+                    position: absolute;
+                    background-color: #e5e7eb;
+                }
+
+                @include media-breakpoint-up(sm) {
+                    width: 90px;
+                }
+            }
+
+            &::before {
+                @include media-breakpoint-up(sm) {
+                    left: -100px;
+                }
+
+                @include media-breakpoint-up(lg) {
+                    content: none;
+                }
+            }
+
+            &::after {
+                @include media-breakpoint-up(sm) {
+                    right: -100px;
+                }
+            }
+        }
+    }
+
+    &-saas {
+        .#{$banner-class} {
+            &-wrap {
+                @include media-breakpoint-up(md) {
+                    padding-top: 160px;
+                }
+                @include media-breakpoint-up(lg) {
+                    padding-top: 220px;
+                }
+            }
+        }
+    }
+
+    &-business-feature {
+        overflow: hidden;
+        padding-top: 11.25rem;
+        padding-top: 160px !important;
+        background-color: #0a1425 !important;
+    }
+
+    &-collab {
+        .#{$banner-class} {
+            &-wrap {
+                @include media-breakpoint-up(md) {
+                    padding-bottom: 120px;
+                }
+
+                @include media-breakpoint-up(xl) {
+                    padding-bottom: 200px;
+                }
+            }
+
+            &-content {
+                p {
+                    @include media-breakpoint-down(md) {
+                        font-size: 16px !important;
+                    }
+                }
+            }
+
+            &-grids {
+                padding-top: 60px;
+                position: relative;
+                text-align: center;
+
+                @include media-breakpoint-up(md) {
+                    z-index: 9;
+                    padding: 0px;
+                    margin-top: -80px;
+                }
+
+                @include media-breakpoint-up(lg) {
+                    margin-top: -100px;
+                }
+
+                @include media-breakpoint-up(xl) {
+                    margin-top: -140px;
+                }
+
+                &-content {
+                    display: none;
+                    @media (min-width: 1400px) {
+                        gap: 32px;
+                        display: inline-flex;
+                    }
+
+                    .left,
+                    .right {
+                        @media (min-width: 1400px) {
+                            gap: 30px;
+                            display: flex;
+                        }
+
+                        img {
+                            @media (min-width: 1400px) {
+                                flex-shrink: 0;
+                            }
+                        }
+                    }
+
+                    .left {
+                        @media (min-width: 1400px) {
+                            width: 30%;
+                            flex-direction: column;
+                        }
+                    }
+
+                    .right {
+                        @media (min-width: 1400px) {
+                            width: 70%;
+                            flex-shrink: 0;
+                            flex-wrap: wrap;
+                        }
+
+                        &-row {
+                            @media (min-width: 1400px) {
+                                gap: 30px;
+                                display: flex;
+                            }
+                        }
+                    }
+                }
+
+                &-alter {
+                    @media (min-width: 1400px) {
+                        display: none;
+                    }
+                }
+            }
+        }
+
+        .nk-mask {
+            &::after {
+                left: 0;
+                bottom: 0;
+                content: "";
+                z-index: -1;
+                width: 100%;
+                opacity: 0.6;
+                height: 140px;
+                user-select: none;
+                position: absolute;
+                pointer-events: none;
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-image: url("#{$coreRoot}shape/b.png");
+
+                @include media-breakpoint-up(md) {
+                    height: 260px;
+                }
+
+                @include media-breakpoint-up(xl) {
+                    height: 390px;
+                }
+            }
+        }
+    }
+
+    &-features {
+        @include media-breakpoint-up(lg) {
+            padding-top: 115px;
+        }
+
+        &-content {
+            position: relative;
+        }
+
+        &-base {
+            z-index: 2;
+            height: auto;
+        }
+
+        &-children {
+            z-index: -1;
+            position: absolute;
+
+            &.one,
+            &.three {
+                z-index: 1;
+            }
+
+            &.one,
+            &.two,
+            &.three {
+                display: none;
+            }
+        }
+    }
+
+    // Business Page
+    &-bs-management {
+        z-index: 1;
+        width: 100%;
+        position: relative;
+
+        &::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-image: url("#{$coreRoot}mask/waves-bg.png");
+        }
+
+        &::after {
+            @media (min-width: 1601px) {
+                content: "";
+                left: 0;
+                width: 100%;
+                height: 116px;
+                bottom: -70px;
+                position: absolute;
+                background-size: cover;
+                background-repeat: no-repeat;
+                background-position: center;
+                background-image: url("#{$coreRoot}mask/waves-bg-1.png");
+            }
+        }
+
+        .#{$banner-class} {
+            &-wrap {
+                padding-top: 120px;
+                padding-bottom: 100px;
+
+                @include media-breakpoint-up(md) {
+                    padding-bottom: 120px;
+                }
+
+                @include media-breakpoint-up(lg) {
+                    padding-top: 160px;
+                    padding-bottom: 190px;
+                }
+            }
+        }
+    }
+
+    &-bs-subscription {
+        z-index: 1;
+        width: 100%;
+        position: relative;
+        background-color: #2e2951;
+        &::after {
+            content: "";
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 530px;
+            position: absolute;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-image: url("#{$coreRoot}mask/skew-banner-1.png");
+        }
+
+        .nk-banner-cover {
+            @media (min-width: 1520px) {
+                top: 50%;
+                right: -60px;
+                position: absolute;
+                transform: translateY(-50%);
+            }
+            @media (min-width: 1680px) {
+                right: -160px;
+            }
+        }
+    }
+
+    &-bs-driven {
+        position: relative;
+        margin-top: 90px;
+
+        @include media-breakpoint-up(lg) {
+            margin-top: 98px;
+        }
+
+        &[data-bg-image] {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        &::after {
+            content: "";
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 2;
+            position: absolute;
+            background: rgba(28, 45, 79, 0.715);
+        }
+
+        .#{$banner-class} {
+            &-wrap {
+                padding-top: 60px;
+                @include media-breakpoint-up(md) {
+                    padding-top: 120px;
+                }
+            }
+        }
+    }
+
+    &-language {
+        position: relative;
+
+        &::before {
+            content: "";
+            z-index: 2;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-image: url("#{$coreRoot}inside-pages/bg/world-map.png");
+        }
+
+        &::after {
+            content: "";
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+            position: absolute;
+            background: #3f53d8;
+        }
+
+        h1 {
+            @include media-breakpoint-down(lg) {
+                white-space: nowrap;
+            }
+            span {
+                padding: 12px;
+                font-weight: 500;
+                border-radius: 16px;
+                display: inline-block;
+
+                @include media-breakpoint-up(sm) {
+                    margin: 0px 5px;
+                    padding: 16px 26px;
+                    border-radius: 24px;
+                }
+
+                &:first-child {
+                    padding: 16px 15px;
+                    margin-bottom: 20px;
+
+                    @include media-breakpoint-down(xl) {
+                        width: 40%;
+                        display: block;
+                        margin: 0px auto;
+                        margin-bottom: 20px;
+                    }
+
+                    @include media-breakpoint-down(lg) {
+                        width: 60%;
+                    }
+
+                    @include media-breakpoint-down(sm) {
+                        width: 100%;
+                        margin-bottom: 12px;
+                    }
+                }
+
+                &:nth-child(2) {
+                    font-weight: 600;
+
+                    @include media-breakpoint-down(sm) {
+                        margin-bottom: 12px;
+                    }
+                }
+
+                &:nth-child(2),
+                &:nth-child(3) {
+                    @include media-breakpoint-down(sm) {
+                        width: 100%;
+                        display: block;
+                    }
+                }
+            }
+        }
+
+        .#{$banner-class} {
+            &-wrap {
+                @include media-breakpoint-down(lg) {
+                    padding-top: 120px;
+                }
+            }
+        }
+    }
+
+    &-dg-business {
+        .#{$banner-class} {
+            &-wrap {
+                @include media-breakpoint-up(lg) {
+                    padding-top: 164px;
+                }
+            }
+
+            &-content {
+                .nk-mask {
+                    z-index: 1;
+
+                    &::before,
+                    &::after {
+                        @extend %shape-bg;
+                        opacity: 1 !important;
+                    }
+
+                    &::before {
+                        @include media-breakpoint-up(lg) {
+                            left: 30px;
+                            bottom: 0px;
+                            width: 160px;
+                            height: 160px;
+                            background-position: center;
+                            background-size: contain !important;
+                            background-image: url("#{$coreRoot}shape/c1.png");
+                        }
+                    }
+
+                    &::after {
+                        @include media-breakpoint-up(lg) {
+                            top: 0px;
+                            right: 30px;
+                            width: 160px;
+                            height: 160px;
+                            background-position: center;
+                            background-size: contain !important;
+                            background-image: url("#{$coreRoot}shape/b1.png");
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    &-coaching-service {
+        .#{$banner-class} {
+            &-wrap {
+                padding-top: 120px;
+
+                @include media-breakpoint-up(xl) {
+                    padding-top: 248px;
+                    padding-bottom: 220px;
+                }
+            }
+        }
+    }
+
+    // SAAS PAGE
+    &-saas {
+        &::after {
+            @extend %shape-bg;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-position: center;
+            background-image: url("#{$coreRoot}shape/k.png");
+        }
+    }
+
+    &-crypto {
+        &::before {
+            content: "";
+            top: 0;
+            left: 0;
+            width: 300px;
+            height: 800px;
+            position: absolute;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-image: url("#{$coreRoot}blur/blur-9-a.png");
+        }
+
+        .#{$banner-class} {
+            &-wrap {
+                @include media-breakpoint-up(xl) {
+                    padding-top: 271px;
+                }
+            }
+        }
+        .nk-frame {
+            right: 0;
+            top: 0px;
+            z-index: -1;
+            user-select: none;
+            position: absolute;
+            pointer-events: none;
+
+            @include media-breakpoint-up(md) {
+                top: 30px;
+            }
+        }
+    }
+
+    &-live-chat-app {
+        z-index: 1;
+        position: relative;
+
+        &::before {
+            content: "";
+            top: 0;
+            left: 0;
+            z-index: -1;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            background-repeat: no-repeat;
+            background-position: bottom;
+            background-image: url("#{$coreRoot}inside-pages/bg/live-chat-bg.svg");
+
+            @media (max-width: 1400px) {
+                background-size: contain;
+            }
+        }
+
+        .#{$banner-class} {
+            &-brands {
+                h6 {
+                    position: relative;
+
+                    &::before,
+                    &::after {
+                        content: "";
+                        top: 50%;
+                        width: 15%;
+                        height: 1px;
+                        position: absolute;
+                        transform: translateY(-50%);
+                        background-color: $border-color;
+
+                        @include media-breakpoint-up(sm) {
+                            width: 25%;
+                        }
+
+                        @include media-breakpoint-up(xl) {
+                            width: 50%;
+                        }
+                    }
+
+                    &::before {
+                        left: 0px;
+                        @include media-breakpoint-up(sm) {
+                            left: 16px;
+                        }
+
+                        @include media-breakpoint-up(md) {
+                            left: 30px;
+                        }
+
+                        @include media-breakpoint-up(lg) {
+                            left: 50px;
+                        }
+
+                        @include media-breakpoint-up(xl) {
+                            content: none;
+                        }
+                    }
+
+                    &::after {
+                        right: 0px;
+
+                        @include media-breakpoint-up(sm) {
+                            right: 16px;
+                        }
+
+                        @include media-breakpoint-up(md) {
+                            right: 30px;
+                        }
+
+                        @include media-breakpoint-up(lg) {
+                            right: 50px;
+                        }
+                        @include media-breakpoint-up(xl) {
+                            right: 30px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.nk-ribbon {
+    align-items: center;
+    border-radius: 30px;
+    display: inline-flex;
+    padding: 4px 10px 4px 4px;
+    background-color: #122544;
+    a {
+        color: $white;
+        text-transform: uppercase;
+        font-size: 14px;
+        span + .icon,
+        .icon + span {
+            margin-left: 6px;
+        }
+    }
+}
+
+.home-saas {
+    .nk-header.is-theme {
+        .banner-text {
+            opacity: 0.7;
+        }
+    }
+}
+
+.features-banner {
+    display: flex;
+    overflow: hidden;
+    position: relative;
+    border-radius: 1rem;
+    align-items: center;
+    background-color: #fff;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    &-info,
+    &-cover {
+        width: 100%;
+    }
+
+    &-info {
+        order: 2;
+    }
+
+    &-cover {
+        order: 1;
+        height: 22.5rem;
+        position: relative;
+        background-color: $primary-100;
+
+        img {
+            top: 50%;
+            right: 0px;
+            position: absolute;
+            transform: translateY(-50%);
+        }
+    }
+}
+
+// responsive query
+
+@include media-breakpoint-up(sm) {
+    .features-banner {
+        &-cover {
+            height: 32rem;
+        }
+    }
+}
+
+@include media-breakpoint-up(md) {
+    .#{$banner-class} {
+        &-img {
+            &-s1 {
+                .thumb {
+                    position: absolute;
+                    &-1 {
+                        bottom: -12%;
+                    }
+                }
+            }
+        }
+
+        &-features {
+            &-children {
+                &.one {
+                    top: -36px;
+                    left: -12px;
+                    display: block;
+                }
+
+                &.three {
+                    right: -70px;
+                    bottom: -70px;
+                    display: block;
+                }
+            }
+        }
+    }
+}
+
+@include media-breakpoint-up(lg) {
+    .#{$banner-class} {
+        &-wrap {
+            &-analytics {
+                padding-top: 210px !important;
+            }
+        }
+
+        &-card {
+            padding: 140px 100px;
+        }
+
+        &-business-feature {
+            padding-top: 208px !important;
+        }
+
+        &-features {
+            &-base {
+                height: 500px;
+            }
+            &-children {
+                &.one {
+                    top: 86px;
+                    left: -24px;
+                }
+
+                &.two {
+                    top: -120px;
+                    right: 0px;
+                    display: block;
+                }
+
+                &.three {
+                    bottom: 0px;
+                    left: -45px;
+                }
+            }
+        }
+    }
+
+    .features-banner {
+        align-items: center;
+        flex-direction: row !important;
+
+        &-info {
+            order: 1;
+            width: 55%;
+        }
+
+        &-cover {
+            order: 2;
+            width: 45%;
+            height: auto;
+            img {
+                position: static;
+                transform: translateY(0);
+            }
+        }
+    }
+}
+
+@include media-breakpoint-up(xl) {
+    .#{$banner-class} {
+        &-features {
+            &-children {
+                &.one {
+                    top: 75px;
+                    left: 190px;
+                }
+
+                &.two {
+                    top: -115px;
+                    right: 80px;
+                }
+
+                &.three {
+                    left: -30px;
+                    bottom: -75px;
+                }
+            }
+        }
+    }
+}

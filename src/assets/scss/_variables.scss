@@ -1,0 +1,1194 @@
+@use "sass:map";
+@use "sass:math";
+
+@import "../../../node_modules/bootstrap/scss/functions";
+
+@function override-map-value($map, $key, $value) {
+  $map: map-merge($map, (#{$key}: #{$value}));
+  @return $map;
+}
+@function add-to-map($map, $key, $color, $position: end) {
+  // Create a new map with the new key-value pair
+  $new-pair: (
+    (
+      "#{$key}": $color
+    )
+  );
+
+  // If position is 'start', add the new pair to the beginning of the map
+  @if $position == start {
+    @return map-merge($new-pair, $map);
+  }
+  // If position is 'end', add the new pair to the end of the map
+  @else if $position == end {
+    @return map-merge($map, $new-pair);
+  }
+}
+
+// 2. Include any default variable overrides here
+
+// BS ( bootstrap ) global style configs
+$enable-negative-margins: true;
+
+////////////////////////////////////////////////////////
+////////     CORE VARIABLES    ///// //////////
+////////////////////////////////////////////////////////
+
+/////////    COLORS    ///////////
+//////////////////////////////////////
+
+// BS ( bootstrap )  gray-color-variables
+
+$white: #fff;
+$gray: #f7f8f9;
+
+$gray-50: tint-color($gray, 90%);
+$gray-100: tint-color($gray, 80%);
+$gray-200: tint-color($gray, 60%);
+$gray-300: tint-color($gray, 40%);
+$gray-400: tint-color($gray, 20%);
+$gray-500: $gray;
+$gray-600: shade-color($gray, 20%);
+$gray-700: shade-color($gray, 40%);
+$gray-800: shade-color($gray, 60%);
+$gray-900: shade-color($gray, 80%);
+$black: #000;
+
+// BS ( bootstrap ) color-variables
+$blue: #0062ff;
+$red: #fa5b68;
+$indigo: #6366f1;
+$indigo-alt: #3f53d8;
+$cyan: #54a8c7;
+$cyan-alt: #45c9c1;
+$green: #22c55e;
+$green-alt: #2a9d8f;
+$yellow: #fdb52a;
+$orange: #fd7e14;
+$purple: #6e61f3;
+$purple-alt: #9097f7;
+
+$dark-blue: #080829;
+$dark: #0f0f12;
+$darker: #0a1425;
+$dark-alt: #181921;
+
+// BS ( bootstrap ) shades-color-variables
+
+$blue-50: tint-color($blue, 90%);
+$blue-500: $blue;
+
+$indigo-50: tint-color($indigo, 90%);
+$indigo-500: $indigo;
+
+$purple-50: tint-color($purple, 90%);
+$purple-500: $purple;
+
+$red-50: tint-color($red, 90%);
+$red-500: $red;
+
+$yellow-50: tint-color($yellow, 90%);
+$yellow-500: $yellow;
+
+$orange-50: tint-color($orange, 90%);
+$orange-500: $orange;
+
+$green-50: tint-color($green, 90%);
+$green-500: $green;
+
+$cyan-50: tint-color($cyan, 50%);
+$cyan-500: $cyan;
+
+// BS ( bootstrap ) scss theme-color variables
+$primary: $blue;
+$primary-alt: #3f78e0;
+$secondary: #1c2b43;
+$success: $green;
+$success-alt: $green-alt;
+$info: $cyan;
+$info-alt: $cyan-alt;
+$danger: $red-500;
+
+// Based - Default Color Used For Text
+$base-text: $darker;
+$base-color: $darker;
+$primary-dark: #6366f1;
+
+$body-bg: $white;
+$body-color: #495057;
+
+$lighter: #e5e7eb;
+$gray-light: $gray-500;
+
+// // primary colors
+$primary-100: #eaefff;
+$primary-200: #f9faff;
+$primary-400: #8c9bff;
+
+$gradient-1: linear-gradient(214.72deg, #0c073f 20.47%, #130b6a 78.66%);
+$gradient-2: linear-gradient(157.5deg, #120183 14.64%, #0066ff 114.76%);
+$gradient-3: linear-gradient(180deg, #4628ff 0%, #6d55ff 100%);
+$gradient-4: linear-gradient(269.03deg, rgba(114, 94, 254, 0) 0%, #725efe 49.86%, rgba(114, 94, 254, 0) 99.72%);
+$gradient-5: linear-gradient(180deg, #fa5b68 0%, #725efe 100%);
+$gradient-6: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #ffffff 100%);
+$gradient-7: linear-gradient(180deg, #6576ff 0%, rgba(255, 255, 255, 0) 100%);
+$gradient-8: linear-gradient(140.41deg, #2b5cfd 27.37%, #1d3faf 72.63%);
+$gradient-9: linear-gradient(23.01deg, #2b5cfd 14.9%, #1d3faf 85.1%);
+$gradient-10: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #ffffff 86.98%);
+$gradient-11: linear-gradient(180deg, #3f53d8 0%, #8c9bff 100%);
+$gradient-12: linear-gradient(180deg, #589bff 0%, #fa5b68 100%);
+$gradient-13: linear-gradient(180deg, #e3edff 0%, rgba(255, 255, 255, 0) 100%);
+$gradient-14: linear-gradient(180deg, #97f2ff 0%, rgba(151, 242, 255, 0) 100%);
+$gradient-15: linear-gradient(180deg, #0acf83 0%, rgba(10, 207, 131, 0) 0.01%, rgba(10, 207, 131, 0.16) 100%);
+$gradient-16: linear-gradient(180deg, #0a1425 0%, #0a1425 0.01%, #1c2d4f 100%);
+$gradient-17: linear-gradient(180deg, #feebed -0.03%, #ffc7cb 99.93%);
+$gradient-18: linear-gradient(0deg, rgba(59, 52, 130, 0) 0%, #3b3482 72.97%);
+$gradient-19: linear-gradient(180deg, #217ea0 0%, #54a8c7 100%);
+$gradient-20: linear-gradient(90deg, #9097f7 0%, #64a2f9 100%);
+$gradient-21: linear-gradient(208.41deg, #8c9dff 0%, #a89bfb 39.92%, #7ec9ff 82.42%);
+$gradient-22: linear-gradient(276.37deg, #5cc1ff 5.91%, #6754f3 50.33%, #c4b9ff 94.75%);
+$gradient-23: linear-gradient(276.7deg, #d627af 4.7%, #fd7258 55.39%);
+$gradient-24: linear-gradient(276.86deg, #65d995 4.93%, #30a390 41.37%);
+$gradient-25: linear-gradient(147.84deg, #faf9f4 42.86%, rgba(190, 247, 252, 0.1) 102.04%);
+$gradient-26: linear-gradient(98.64deg, #524a90 0%, rgba(255, 116, 104, 0.21) 57.39%);
+$gradient-27: linear-gradient(180deg, rgba(255, 255, 255, 0.24) -0.02%, rgba(152, 151, 226, 0.24) 52.6%, #b6e3ff 100%);
+$gradient-28: linear-gradient(
+  101.8deg,
+  rgba(199, 204, 255, 0.9) 0%,
+  rgba(211, 216, 255, 0.9) 50%,
+  rgba(191, 198, 255, 0.9) 100%
+);
+
+// // primary gradient
+$bg-primary-gradient: $gradient-9;
+$bg-primary-gradient-soft: $gradient-13;
+
+$theme-gradient-colors: (
+  "1": $gradient-1,
+  "2": $gradient-2,
+  "3": $gradient-3,
+  "4": $gradient-4,
+  "5": $gradient-5,
+  "6": $gradient-6,
+  "7": $gradient-7,
+  "8": $gradient-8,
+  "9": $gradient-9,
+  "10": $gradient-10,
+  "11": $gradient-11,
+  "12": $gradient-12,
+  "13": $gradient-13,
+  "14": $gradient-14,
+  "15": $gradient-15,
+  "16": $gradient-16,
+  "17": $gradient-17,
+  "18": $gradient-18,
+  "19": $gradient-19,
+  "20": $gradient-20,
+  "21": $gradient-21,
+  "22": $gradient-22,
+  "23": $gradient-23,
+  "24": $gradient-24,
+  "25": $gradient-25,
+  "26": $gradient-26,
+  "27": $gradient-27
+);
+
+/////////    TYPOGRAPHY    //////////
+//////////////////////////////////////
+$font-family-sans-serif: "Plus Jakarta Sans", sans-serif;
+$font-family-sans-serif-secondary: "Roboto", sans-serif;
+
+$font-size-base: 1rem;
+$font-size-sm: $font-size-base * 0.875;
+$font-size-lg: $font-size-base * 1.25;
+
+$body-font-weight: 400;
+
+$line-height-base: 1.5;
+$line-height-sm: 1.25;
+$line-height-lg: 2;
+
+$fw-normal: 400;
+$fw-medium: 500;
+$fw-semibold: 600;
+$fw-bold: bold;
+
+$fw-base: $fw-normal;
+
+$h1-font-size: 3rem; // 48px
+$h2-font-size: 2.5rem; // 40px
+$h3-font-size: 2rem; // 32px
+$h4-font-size: 1.5rem; // 24px
+$h5-font-size: 1.25rem; // 20px
+$h6-font-size: 1.125rem; // 18px
+
+$display-font-family: null;
+$display-font-style: null;
+$display-font-weight: 700;
+$display-line-height: 1.32;
+
+$lead-font-size: 1.25rem;
+$lead-font-weight: 400;
+$lead-line-height: 1.6;
+$lead-letter-spacing: 0.01em;
+
+// scss-docs-start display-headings
+$display-font-sizes: (
+  1: 6.5rem,
+  2: 6rem,
+  3: 5.5rem,
+  4: 5rem,
+  5: 4.5rem,
+  6: 4rem
+);
+
+// text
+$lead-text-color: $base-color;
+$lead-text-font-weight: $fw-bold;
+
+$sub-text-color: $base-text;
+$sub-text-font-size: 0.75rem;
+$sub-text-font-weight: $fw-medium;
+
+$smaller-font-size: 0.75rem;
+$text-base: #64728f;
+$text-light: $base-text;
+
+// BS ( bootstrap ) styleanchor elements
+$link-decoration: none;
+
+// icon size
+$icon-size-md: 1.625rem; // 26px
+$icon-size-lg: 2.25rem; // 36px
+
+// borders
+$border-width: 1px;
+$hr-border-width: $border-width;
+
+$border-widths: (
+  1: 1px,
+  2: 2px,
+  3: 3px,
+  4: 4px,
+  5: 5px
+);
+
+$border-color: #e5e7eb;
+$border-light: #e5e7eb;
+
+$hr-border-color: $border-color;
+
+// border radius
+$border-radius: 0.5rem;
+$border-radius-sm: 0.25rem;
+$border-radius-lg: 1rem;
+$border-radius-xl: 1.5rem;
+$border-radius-2xl: 2rem;
+$border-radius-pill: 50rem;
+
+// sizes
+$sizes: (
+  "xs": 2rem,
+  // 32px
+  "sm": 2.5rem,
+  // 40px
+  "md": 3rem,
+  // 48px
+  "rg": 3.25rem,
+  // 52px
+  "lg": 4rem,
+  // 64px
+  "xl": 5rem,
+  // 90px
+  "xxl": 6.25rem
+    // 100px,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+);
+
+$size-xs: map.get($sizes, xs);
+$size-sm: map.get($sizes, sm);
+$size-md: map.get($sizes, md);
+$size-rg: map.get($sizes, rg);
+$size-lg: map.get($sizes, lg);
+$size-xl: map.get($sizes, xl);
+$size-xxl: map.get($sizes, xxl);
+
+////////// GAP /////////
+$grid-gutter-width: 1.875rem;
+$spacer: 1rem;
+$spacers: (
+  0: 0,
+  1: $spacer * 0.375,
+  2: $spacer * 0.75,
+  3: $spacer,
+  4: $spacer * 1.5,
+  5: $spacer * 1.875,
+  6: $spacer * 3,
+  7: $spacer * 3.75,
+  8: $spacer * 5,
+  9: $spacer * 7,
+  "gs": $grid-gutter-width
+);
+
+// Rotate
+$rotate-0: 0deg;
+$rotate-45: 45deg;
+$rotate-90: 90deg;
+$rotate-180: 180deg;
+
+$rotates: (
+  0: $rotate-0,
+  45: $rotate-45,
+  90: $rotate-90,
+  180: $rotate-180
+);
+
+// Reboot
+$hr-opacity: 1;
+$hr-border-color: $primary-100;
+$hr-border-width: $border-width;
+
+////////// MEDIA  /////////
+$media-text-gap-x: 0.75rem;
+$media-text-gap-x-md: 1.75rem;
+// $media-text-text-gap-x: 1.5rem;
+
+$media-border-radius: 0.5rem;
+$media-border-radius-xl: 1.5rem;
+$media-border-color: $border-light;
+$media-negative-start-gap: 0.75rem;
+
+// box shadow variables
+$box-shadow-xl:
+  4px 4px 36px 0px #c0c0c029,
+  -4px -4px 36px 0px #c0c0c01f;
+
+/////////   LIST    //////////
+//////////////////////////////////////
+$list-meta-item-gap-x: 1.5rem;
+
+/////////   TESTIMONIAL   //////////
+//////////////////////////////////////
+$testimonial-card-bg: $gray-500;
+$testimonial-card-border: 0px solid #faf9ff;
+$testimonial-card-box-shadow:
+  -4px -4px 36px rgba(192, 192, 192, 0.12),
+  4px 4px 36px rgba(192, 192, 192, 0.16);
+$testimonial-card-icon-font-size: 5.25rem;
+$testimonial-card-icon-background-color: linear-gradient(180deg, #3f53d8 0%, #8c9bff 100%);
+
+// testimonial s1
+$testimonial-card-s1-cover-radius: 0.75rem;
+$testimonial-card-s1-quote-icon-color: linear-gradient(180deg, #3f53d8 0%, #8c9bff 100%);
+$testimonial-card-s1-bg: $primary-dark;
+$testimonial-card-s1-theme-color: $white;
+
+/////////    SWIPER    //////////
+//////////////////////////////////////
+$swiper-navigation-font-size: 1.75rem;
+$swiper-navigation-width: 3.375rem;
+$swiper-navigation-height: 3.375rem;
+$swiper-navigation-border-radius: $border-radius-pill;
+$swiper-navigation-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+$swiper-navigation-color: $base-color;
+$swiper-navigation-bg: $white;
+$swiper-navigation-hover-bg: $primary;
+$swiper-navigation-hover-color: $white;
+
+$swiper-navigation-has-bg: #faf9ff;
+$swiper-navigation-has-color: $base-color;
+
+$swiper-pagination-bullet-width: 12px;
+$swiper-pagination-bullet-height: 12px;
+$swiper-pagination-bullet-inactive-color: $base-color;
+$swiper-pagination-bullet-active-color: $primary;
+$swiper-pagination-bullet-opacity: 0.2;
+$swiper-pagination-bullet-active-opacity: 1;
+
+// theme colors
+$swiper-pagination-bullet-inactive-color-on-theme: $gray-500;
+$swiper-pagination-bullet-active-color-on-theme: #6472b9;
+
+$swiper-navigation-has-bg-on-theme: rgba($white, 0.2);
+$swiper-navigation-has-color-on-theme: $white;
+$swiper-navigation-has-bg-on-theme-hover-bg: $white;
+$swiper-navigation-has-bg-on-theme-hover-color: $base-color;
+
+// swiper pagination s1
+$swiper-pagination-s1-bullet-width: 48px;
+$swiper-pagination-s1-bullet-height: 4px;
+$swiper-pagination-s1-bullet-border-radius: 2px;
+$swiper-pagination-s1-bullet-active-color: $primary;
+$swiper-pagination-s1-bullet-inactive-color: $lighter;
+
+// BS ( bootstrap ) btn-variables
+$btn-font-weight: 600;
+
+/////////    INPUT BTN    //////////
+//////////////////////////////////////
+$input-btn-padding-y: 0.688rem;
+$input-btn-padding-x: 1.5rem;
+$input-btn-font-family: null;
+$input-btn-font-size: 1rem;
+$input-btn-line-height: 1.75;
+$input-btn-font-weight: 600;
+
+$input-btn-focus-width: 0.25rem;
+$input-btn-focus-color-opacity: 0.25;
+$input-btn-focus-color: rgba($primary, 0.65);
+$input-btn-focus-blur: 0;
+$input-btn-focus-box-shadow: 0 0 5px 0px rgba(95, 56, 249, 0.2);
+$input-btn-hover-color: $primary;
+
+$input-btn-padding-y-sm: 0.25rem;
+$input-btn-padding-x-sm: 0.5rem;
+$input-btn-font-size-sm: $font-size-sm;
+
+$input-btn-padding-y-lg: 0.5rem;
+$input-btn-padding-x-lg: 1rem;
+$input-btn-font-size-lg: $font-size-lg;
+
+$input-btn-border-width: $border-width;
+$input-btn-border-radius: $border-radius;
+
+/////////   INPUT    //////////
+//////////////////////////////////////
+$input-padding-y: $input-btn-padding-y;
+$input-padding-x: $input-btn-padding-x;
+$input-font-family: $input-btn-font-family;
+$input-font-size: $input-btn-font-size;
+$input-font-weight: $fw-base;
+$input-line-height: $input-btn-line-height;
+
+$input-padding-y-sm: $input-btn-padding-y-sm;
+$input-padding-x-sm: $input-btn-padding-x-sm;
+$input-font-size-sm: $input-btn-font-size-sm;
+
+$input-padding-y-lg: $input-btn-padding-y-lg;
+$input-padding-x-lg: $input-btn-padding-x-lg;
+$input-font-size-lg: $input-btn-font-size-lg;
+
+$input-bg: $body-bg;
+$input-disabled-color: null;
+$input-disabled-bg: $gray-200;
+$input-disabled-border-color: null;
+
+$input-color: $body-color;
+$input-border-color: $border-light;
+$input-border-width: $input-btn-border-width;
+$input-box-shadow: none;
+
+$input-border-radius: $input-btn-border-radius;
+$input-border-radius-sm: $border-radius-sm;
+$input-border-radius-lg: $border-radius-lg;
+
+$input-focus-bg: $input-bg;
+$input-focus-border-color: rgba($primary, 0.65);
+$input-focus-color: $input-color;
+$input-focus-width: $input-btn-focus-width;
+$input-focus-box-shadow: $input-btn-focus-box-shadow;
+
+$input-placeholder-color: $base-text;
+$input-plaintext-color: $base-text;
+
+$input-height-border: $input-border-width * 2;
+
+$input-height-inner:
+  $input-line-height * 1em,
+  $input-padding-y * 2;
+$input-height-inner-half:
+  $input-line-height * 0.5em,
+  $input-padding-y;
+$input-height-inner-quarter:
+  $input-line-height * 0.25em,
+  $input-padding-y * 0.5;
+
+$input-height: $size-rg;
+$input-height-sm: $size-sm;
+$input-height-lg: $size-lg;
+
+$input-transition:
+  border-color 0.15s ease-in-out,
+  box-shadow 0.15s ease-in-out;
+
+$form-color-width: 3rem;
+
+$input-bg-light: $gray-500;
+
+$textarea-height: 210px;
+
+/////////   CARD    //////////
+//////////////////////////////////////
+$card-spacer-y: 1.875rem;
+$card-spacer-x: 1.875rem;
+$card-title-spacer-y: $spacer * 0.5;
+$card-title-line-height: 1.6;
+$card-title-letter-spacing: 0.015rem;
+$card-border-width: $border-width;
+$card-border-color: $border-light;
+$card-border-radius: $border-radius;
+$card-box-shadow: null;
+$card-inner-border-radius: calc(#{$card-border-radius} - 1px);
+$card-cap-padding-y: $card-spacer-y * 0.5;
+$card-cap-padding-x: $card-spacer-x;
+$card-cap-bg: rgba($black, 0.03);
+$card-cap-color: null;
+$card-height: null;
+$card-color: null;
+$card-bg: $white;
+$card-img-overlay-padding: $spacer;
+$card-group-margin: $grid-gutter-width * 0.5;
+$card-title-hover-color: $primary;
+
+$card-title-hover-color-on-theme: $white;
+$card-btn-link-color-on-theme: $white;
+
+/////////   BADGE    //////////
+//////////////////////////////////////
+$badge-bg-color: none;
+$badge-font-size: 0.875rem;
+$badge-line-height: 1.14;
+$badge-font-weight: $fw-semibold;
+$badge-color: $white;
+
+$badge-padding-y: 0.25rem;
+$badge-padding-x: 0.75rem;
+
+$badge-padding-y-md: 0.5rem;
+$badge-padding-x-md: 1rem;
+
+$badge-border-radius: 0.5rem;
+$badge-letter-spacing: 0.04em;
+
+/////////   LAYOUTS    //////////
+//////////////////////////////////////
+// Breakpoint
+$points: "xs", "sm", "md", "lg", "xl", "xxl";
+
+// header
+$header-main-border: $border-light;
+
+// logo
+// $logo-gap: 0.375rem;
+$navbar-overlay: rgba(#495057, 0.4);
+
+// menu link
+$menu-link-color: $base-color;
+$menu-link-gap-y: 0.625rem;
+$menu-link-gap-y-lg: 1.5rem;
+$menu-link-gap-x: 1rem;
+
+$menu-min-width: 232px;
+$menu-min-width-lg: 340px;
+
+$menu-sub-sub-gap-x: 1.5rem;
+$menu-sub-link-color: $base-color;
+$menu-sub-link-font-size: 0.875rem;
+$menu-sub-link-fw: 600;
+$menu-sub-link-line-height: 1.6;
+$menu-sub-link-hover-color: $primary;
+$menu-sub-link-hover-bg: rgba($primary, 0.1);
+
+/////////  SCHEDULE    //////////
+//////////////////////////////////////
+$schedule-content-gap: 1rem;
+$schedule-item-gap-y: 0.25rem;
+$schedule-item-inner-gap: 1.25rem;
+$schedule-symbol-before-bg: $primary;
+$schedule-symbol-before-opacity: 0.4;
+
+// schedule s1
+$schedule-s1-border: 1px solid $border-light;
+$schedule-s1-content-gap: 3rem;
+$schedule-s1-item-gap-y: 1.875rem;
+$schedule-s1-symbol-negative-gap: 2rem;
+
+// schedule s2
+$schedule-s2-item-gap-y: 3rem;
+$schedule-s2-content-gap: 2rem;
+$schedule-s2-item-after-border: 2px dashed $primary;
+$schedule-s2-item-after-opaticy: 0.3;
+$schedule-s2-item-after-left: 22px;
+$schedule-s2-symbol-margin-y: 34px;
+
+/////////  NAV    //////////
+//////////////////////////////////////
+$nav-link-padding-y: 0.5rem;
+$nav-link-padding-x: 1rem;
+$nav-link-font-size: null;
+$nav-link-fw: $fw-medium;
+$nav-link-color: $base-color;
+$nav-link-hover-color: $primary;
+$nav-link-transition:
+  color 0.15s ease-in-out,
+  background-color 0.15s ease-in-out,
+  border-color 0.15s ease-in-out;
+$nav-link-disabled-color: #c5c5ca;
+
+$nav-tabs-border-color: #f9f7fa;
+$nav-tabs-border-width: 1px;
+$nav-tabs-border-radius: $border-radius;
+$nav-tabs-link-hover-border-color: $gray-200 $gray-200 $nav-tabs-border-color;
+$nav-tabs-link-active-color: #adb5bd;
+$nav-tabs-link-active-bg: $body-bg;
+$nav-tabs-link-active-border-color: #f9f7fa #f9f7fa $nav-tabs-link-active-bg;
+
+$nav-pills-border-radius: $border-radius;
+$nav-pills-link-active-color: $white;
+$nav-pills-link-active-bg: $primary;
+
+/////////  DROPDOWN    //////////
+//////////////////////////////////////
+$dropdown-class: "dropdown";
+$dropdown-min-width: 10rem;
+$dropdown-padding-x: 0;
+$dropdown-padding-y: 0.5rem;
+$dropdown-spacer: 0.125rem;
+$dropdown-font-size: 0.875rem;
+$dropdown-color: $body-color;
+$dropdown-bg: $white;
+$dropdown-border-color: $border-light;
+$dropdown-border-radius: $border-radius;
+$dropdown-border-width: 1px;
+$dropdown-inner-border-radius: subtract($dropdown-border-radius, $dropdown-border-width);
+$dropdown-divider-bg: $dropdown-border-color;
+$dropdown-divider-margin-y: 0.5rem;
+$dropdown-box-shadow: 0 2px 12px -1px rgba(#43476b, 0.2);
+
+$dropdown-link-color: $base-text;
+$dropdown-link-hover-color: $primary;
+$dropdown-link-hover-bg: rgba($primary, 0.06);
+
+$dropdown-link-active-color: $primary;
+$dropdown-link-active-bg: rgba($primary, 0.06);
+
+$dropdown-link-disabled-color: #c9c9d4;
+
+$dropdown-item-padding-y: 0.375rem;
+$dropdown-item-padding-x: 1rem;
+
+$dropdown-header-color: $base-color;
+$dropdown-header-font-weight: $fw-medium;
+$dropdown-header-padding-x: $dropdown-item-padding-x;
+$dropdown-header-padding-y: 0.25rem;
+$dropdown-header-padding: $dropdown-padding-y $dropdown-item-padding-x;
+
+/////////   FORM CHECK    //////////
+//////////////////////////////////////
+$form-check-input-width: 1.25rem;
+$form-check-min-height: $font-size-base * $line-height-base;
+$form-check-padding-start: $form-check-input-width;
+$form-check-margin-bottom: 0.125rem;
+$form-check-label-color: null;
+$form-check-label-cursor: null;
+$form-check-transition: null;
+
+$form-check-label-font-size: 1rem;
+$form-check-label-line-height: 1.4rem;
+
+$form-check-label-gap: 0.5rem;
+
+$form-check-label-font-size-lg: 1.125rem;
+$form-check-label-line-height-lg: 2rem;
+
+$form-check-label-gap-lg: 0.875rem;
+$form-check-input-size-lg: 1.5rem;
+
+$form-check-label-font-size-xl: 1.25rem;
+$form-check-label-line-height-xl: 2.25rem;
+
+$form-check-label-gap-xl: 1rem;
+$form-check-input-size-xl: 2.25rem;
+
+$form-check-input-active-filter: brightness(90%);
+
+$form-check-input-bg: $input-bg;
+$form-check-input-border: 2px solid $input-border-color;
+$form-check-input-border-radius: 0.25em;
+$form-check-radio-border-radius: 50%;
+$form-check-input-focus-border: $input-focus-border-color;
+$form-check-input-focus-box-shadow: $input-btn-focus-box-shadow;
+
+$form-check-input-checked-color: $white;
+$form-check-input-checked-bg-color: $primary;
+$form-check-input-checked-border-color: $form-check-input-checked-bg-color;
+$form-check-input-checked-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path fill='none' stroke='#{$form-check-input-checked-color}' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/></svg>");
+$form-check-radio-checked-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='2' fill='#{$form-check-input-checked-color}'/></svg>");
+
+$form-check-input-indeterminate-color: $primary;
+$form-check-input-indeterminate-bg-color: $primary;
+$form-check-input-indeterminate-border-color: $form-check-input-indeterminate-bg-color;
+$form-check-input-indeterminate-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path fill='none' stroke='#{$form-check-input-indeterminate-color}' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10h8'/></svg>");
+
+$form-check-input-disabled-opacity: 0.5;
+$form-check-label-disabled-opacity: $form-check-input-disabled-opacity;
+$form-check-btn-check-disabled-opacity: #c9c9d4;
+
+$form-check-inline-margin-end: 1rem;
+
+// form switch
+$form-switch-color: $input-border-color;
+
+$form-switch-width: 2rem;
+$form-switch-width-lg: 3rem;
+$form-switch-width-xl: 4.375rem;
+
+$form-switch-padding-start: $form-switch-width + 0.5rem;
+$form-switch-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='3' fill='#{$form-switch-color}'/></svg>");
+$form-switch-border-radius: $form-switch-width;
+$form-switch-transition: background-position 0.15s ease-in-out;
+
+$form-switch-focus-color: $input-focus-border-color;
+$form-switch-focus-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='3' fill='#{$form-switch-focus-color}'/></svg>");
+
+$form-switch-checked-color: $white;
+$form-switch-checked-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='3' fill='#{$form-switch-checked-color}'/></svg>");
+$form-switch-checked-bg-position: right center;
+
+/////////  BTN ZOOM    //////////
+//////////////////////////////////////
+// $btn-zoom-color: $base-text;
+$btn-zoom-bg: #faf9ff;
+$btn-zoom-width: 1.25rem;
+$btn-zoom-height: 1.25rem;
+
+/////////  PRICING    //////////
+//////////////////////////////////////
+$pricing-class: "nk-pricing";
+$pricing-bg: $lighter;
+$pricing-border: 1px solid $border-light;
+$pricing-border-active: 2px solid $primary;
+$pricing-gap: 2rem;
+$pricing-border-radius: $border-radius-xl;
+
+$pricing-head-icon-size: 3.875rem;
+$pricing-head-icon-size-active: 4.5rem;
+$pricing-head-icon-color: $primary;
+$pricing-head-icon-gap-x: 0.75rem;
+$pricing-head-text-font-size: 1.125rem;
+$pricing-head-text-font-size-active: 24px;
+$pricing-head-text-font-size-2: 1rem;
+
+$pricing-list-item-active-color: $base-color;
+$pricing-list-item-active-icon-color: $primary;
+
+$pricing-toggle-text-color: $base-color;
+$pricing-toggle-text-font-weight: $fw-bold;
+$pricing-toggle-text-font-size: 1.25rem;
+
+// pricing wrap s1
+$pricing-wrap-s1-bg: $gray-500;
+$pricing-wrap-s1-border: 1px solid #faf9ff;
+$pricing-wrap-s1-border-radius: 0.5rem;
+$pricing-wrap-s1-padding: 3.75rem;
+
+// pricing group
+$pricing-group-bg: $white;
+$pricing-group-border-radius: 0.75rem;
+
+// pricing s1
+$pricing-s1-bg: transparent;
+$pricing-s1-border: 0;
+$pricing-s1-border-radius: 0;
+
+$pricing-s1-icon-width: 18px;
+$pricing-s1-icon-height: 18px;
+$pricing-s1-icon-border-radius: 50%;
+$pricing-s1-icon-bg: mix($primary, $white, 12%);
+$pricing-s1-icon-color: $primary;
+$pricing-s1-icon-font-size: 0.813rem;
+
+// prcing toggle
+$pricing-toggle-s1-bg: $base-color;
+$pricing-toggle-s1-border-radius: 30px;
+$pricing-toggle-s1-padding: 0.5rem;
+
+$pricing-toggle-s1-label-width: 90px;
+$pricing-toggle-s1-label-color: $white;
+$pricing-toggle-s1-label-font-size: 1rem;
+$pricing-toggle-s1-label-line-height: 40px;
+
+$pricing-toggle-s1-switch-highlight-translate: translateX($pricing-toggle-s1-label-width);
+$pricing-toggle-s1-switch-highlight-border-radius: 30px;
+$pricing-toggle-s1-switch-highlight-width: $pricing-toggle-s1-label-width;
+$pricing-toggle-s1-switch-highlight-height: $pricing-toggle-s1-label-line-height;
+$pricing-toggle-s1-switch-highlight-top: $pricing-toggle-s1-padding;
+$pricing-toggle-s1-switch-highlight-left: $pricing-toggle-s1-padding;
+$pricing-toggle-s1-switch-highlight-bg: $primary;
+
+// prcing toggle s2
+$pricing-toggle-s2-bg: $white;
+$pricing-toggle-s2-border: 1px solid $border-light;
+$pricing-toggle-s2-label-color: $base-color;
+$pricing-toggle-s2-label-active-color: $white;
+
+// pricing s2
+$pricing-s2-icon-color: $primary;
+$pricing-s2-icon-active-color: $primary;
+
+$pricing-s2-bg: $white;
+$pricing-s2-border-radius: $border-radius;
+
+$pricing-s2-active-border-color: $primary;
+$pricing-s2-active-btn-bg: $primary;
+$pricing-s2-active-btn-color: $white;
+
+$pricing-s2-text-font-size: 1rem;
+$pricing-s2-sub-font-size: 2rem;
+
+// pricing s3
+$pricing-s3-bg: $white;
+$pricing-s3-border-radius: 1rem;
+
+// pricing active
+$pricing-active-bg: $primary;
+$pricing-active-color: $white;
+$pricing-active-border-color: $primary;
+
+$pricing-active-btn-bg: $white;
+$pricing-active-btn-color: $base-color;
+$pricing-active-btn-border-color: $pricing-active-btn-bg;
+
+$pricing-active-icon-bg: rgba($base-color, 0.4);
+
+// pricing active badge wrap
+$pricing-active-badge-wrap-bg: $pricing-active-bg;
+$pricing-active-badge-wrap-border-radius: $pricing-group-border-radius;
+$pricing-active-badge-wrap-padding: 1.25rem;
+
+/////////  COURSE    //////////
+//////////////////////////////////////
+$course-overview-class: "nk-course-overview";
+$course-overview-icon-color: $primary;
+$course-overview-icon-font-size: 1.125rem;
+$course-overview-title-color: $base-color;
+$course-overview-title-font-weight: 700;
+$course-overview-content-gap-x: 0.5rem;
+
+/////////  ACCORDION    //////////
+//////////////////////////////////////
+$accordion-padding-y: 1rem;
+$accordion-padding-x: 1.25rem;
+$accordion-color: $body-color; // Sass variable because of $accordion-button-icon
+$accordion-bg: $body-bg;
+$accordion-border-width: 1px;
+$accordion-border-color: $border-color;
+$accordion-border-radius: $border-radius;
+$accordion-inner-border-radius: subtract($accordion-border-radius, $accordion-border-width);
+
+$accordion-body-padding-y: $accordion-padding-y;
+$accordion-body-padding-x: $accordion-padding-x;
+
+$accordion-button-padding-y: $accordion-padding-y;
+$accordion-button-padding-x: $accordion-padding-x;
+$accordion-button-color: $accordion-color;
+$accordion-button-bg: $white;
+$accordion-transition: 0.15s ease;
+$accordion-button-active-bg: mix($primary, $white, 12%);
+$accordion-button-active-color: $primary;
+
+$accordion-button-focus-border-color: $input-focus-border-color;
+$accordion-button-focus-box-shadow: none;
+
+$accordion-icon-width: 1.25rem;
+$accordion-icon-color: $accordion-button-color;
+$accordion-icon-active-color: $accordion-button-active-color;
+$accordion-icon-transition: transform 0.2s ease-in-out;
+$accordion-icon-transform: rotate(-180deg);
+
+$accordion-button-icon: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='#{$accordion-icon-color}'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>");
+$accordion-button-active-icon: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='#{$accordion-icon-active-color}'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>");
+
+// accordion s1
+$accordion-class: "accordion";
+
+$accordion-s1-item-bg: $gray-500;
+$accordion-s1-item-border-color: #faf9ff;
+$accordion-s1-item-border-radius: 0.5rem;
+$accordion-s1-item-padding: 2rem;
+
+$accordion-s1-icon-color: $primary;
+$accordion-s1-icon-font-size: 1.25rem;
+
+$accordion-s1-button-padding: 0.25rem;
+
+$accordion-s1-body-padding: 0.5rem 0.25rem 0 0.25rem;
+$accordion-s1-body-color: $base-text;
+
+// accordion s2
+$accordion-s2-border: 1px solid $border-light;
+$accordion-s2-border-radius: 1rem;
+$accordion-s2-padding-x: 1.875rem;
+$accordion-s2-item-border-color: $border-light;
+$accordion-s2-item-padding-y: $accordion-s2-padding-x;
+$accordion-s2-body-padding: 0.75rem 1.875rem 0 0;
+$accordion-s2-body-color: $base-text;
+
+// accordion s3
+$accordion-s3-border: 0px solid $border-color;
+$accordion-s3-border-radius: 0.5rem;
+$accordion-s3-padding-x: 1.875rem;
+$accordion-s3-item-border-color: $border-color;
+$accordion-s3-item-padding-y: $accordion-s3-padding-x;
+$accordion-s3-body-padding: 1.875rem;
+$accordion-s3-body-color: $base-text;
+
+// contact
+$contact-box-bg: $gray-500;
+$contact-box-border: 1px solid #faf9ff;
+$contact-box-border-radius: 0.5rem;
+$contact-box-content-padding: 1.875rem;
+
+/////////  FORM CARD    //////////
+//////////////////////////////////////
+$form-card-title-color: $base-color;
+$form-card-text-color: $base-text;
+
+$input-label-color: $base-color;
+$input-label-font-size: 1rem;
+$input-label-gap-y: 0.75rem;
+$input-label-font-weight: 600;
+
+/////////  TIMELINE GROUP   //////////
+//////////////////////////////////////
+$timeline-group-item-width: 25%;
+
+$timeline-group-item-after-bg: #faf9ff;
+$timeline-group-item-after-top: 2rem;
+$timeline-group-item-after-height: 1px;
+
+/////////  FORM CONTROL ICON   //////////
+//////////////////////////////////////
+$input-control-icon-gap-x: 1rem;
+$input-control-icon-input-control-x: 2.5rem;
+$input-control-icon-color: $base-text;
+
+// --------- CARD -------- \\
+$card-body-padding: 30px;
+$card-border-radius: $border-radius-lg;
+$card-border: $border-width solid $border-color;
+
+/////////  FEATURE CARD   //////////
+//////////////////////////////////////
+$feature-card-bg: linear-gradient(180deg, #feebed -0.03%, #ffc7cb 99.93%);
+$feature-card-padding-y: 3.75rem;
+$feature-card-padding-x: 3.75rem;
+$feature-card-border-radius: 0.5rem;
+
+/////////  FEATURE CARD TEXT   //////////
+//////////////////////////////////////
+$feature-card-text-gap-x: 3.125rem;
+$feature-card-text-line-gap-x: 1.5rem;
+
+$feature-card-text-title-line-height: 1.5;
+
+$feature-card-text-line-after-width: 3px;
+$feature-card-text-line-after-border-radius: 0.25rem;
+$feature-card-text-line-1-bg: $primary;
+$feature-card-text-line-2-bg: $yellow;
+$feature-card-text-line-3-bg: $red;
+
+/////////  LIST DOT   //////////
+//////////////////////////////////////
+$list-dot-item-gap-y: 1.25rem;
+$list-dot-item-gap-x: 1.25rem;
+
+$list-dot-item-after-width: 6px;
+$list-dot-item-after-height: 6px;
+$list-dot-item-after-top: 12px;
+$list-dot-item-after-bg: #c9c9d4;
+$list-dot-item-after-border-radius: 50%;
+
+// list dot sm
+$list-dot-sm-item-gap-x: 0.75rem;
+$list-dot-sm-item-font-size: 0.875rem;
+$list-dot-sm-item-after-top: 20px;
+$list-dot-sm-item-after-width: 3px;
+$list-dot-sm-item-after-height: 3px;
+
+/////////  TABLES  //////////
+//////////////////////////////////////
+$table-cell-padding-y: 0.5rem;
+$table-cell-padding-x: 0.5rem;
+$table-cell-padding-y-sm: 0.25rem;
+$table-cell-padding-x-sm: 0.25rem;
+
+$table-cell-vertical-align: top;
+
+$table-color: $base-color;
+$table-bg: transparent;
+$table-accent-bg: transparent;
+
+$table-th-font-weight: null;
+
+$table-striped-color: $table-color;
+$table-striped-bg-factor: 0.05;
+$table-striped-bg: rgba($black, $table-striped-bg-factor);
+
+$table-active-color: $table-color;
+$table-active-bg-factor: 0.1;
+$table-active-bg: rgba($black, $table-active-bg-factor);
+
+$table-hover-color: $table-color;
+$table-hover-bg-factor: 0.075;
+$table-hover-bg: rgba($black, $table-hover-bg-factor);
+
+$table-border-factor: 0.1;
+$table-border-width: 1px;
+$table-border-color: $border-light;
+
+$table-striped-order: odd;
+$table-striped-columns-order: even;
+
+$table-group-separator-color: currentcolor;
+
+$table-caption-color: $base-text;
+
+$table-bg-scale: -80%;
+
+/////////  COMPARE PRICING  //////////
+//////////////////////////////////////
+$compare-bg: $white;
+$compare-padding-x: 2.5rem;
+$compare-border: 1px solid $border-light;
+$compare-border-radius: $border-radius-lg;
+
+$compare-col-padding-y: 1.5rem;
+$compare-col-width-lg: 600px;
+$compare-col-active-bg: $primary-100;
+
+$compare-col-lead-font-size: 18px;
+$compare-col-lead-color: $base-text;
+
+$compare-head-col-padding-y: 3rem;
+
+/////////  TAGS  //////////
+//////////////////////////////////////
+$tag-item-bg: $gray-light;
+$tag-item-padding-y: 0.5rem;
+$tag-item-padding-x: 1rem;
+$tag-item-border: 1px solid $border-light;
+$tag-item-border-radius: 50px;
+$tag-item-font-size: 0.875rem;
+$tag-item-font-weight: 600;
+$tag-item-color: $base-color;
+$tag-item-text-transform: uppercase;
+$tag-item-hover-bg: $primary;
+$tag-item-hover-color: $white;
+$tag-item-hover-border-color: $tag-item-hover-bg;
+$tag-item-letter-spacing: 0.04em;
+
+/////////  PAGINATION S1  //////////
+//////////////////////////////////////
+$pagination-s1-page-link-min-width: 2.5rem;
+$pagination-s1-page-link-min-height: 2.5rem;
+$pagination-s1-page-link-padding-y: 0.375rem;
+$pagination-s1-page-link-padding-x: 0.938rem;
+$pagination-s1-page-link-color: $base-color;
+$pagination-s1-page-link-border-color: $border-light;
+$pagination-s1-page-link-border-radius: 0.5rem;
+
+$pagination-s1-page-link-hover-bg: $border-light;
+$pagination-s1-page-link-hover-color: $pagination-s1-page-link-hover-bg;
+
+$pagination-s1-page-link-active-bg: $primary;
+$pagination-s1-page-link-active-border-color: $pagination-s1-page-link-active-bg;
+$pagination-s1-page-link-active-color: $white;
+
+$pagination-s1-page-item-gap-x: 0.5rem;
+
+$pagination-s1-page-link-icon-font-size: 1.125rem;
+
+/////////  BREADCRUMB  //////////
+//////////////////////////////////////
+$breadcrumb-font-size: 0.875rem;
+$breadcrumb-padding-y: 0;
+$breadcrumb-padding-x: 0;
+$breadcrumb-item-padding-x: 0.5rem;
+$breadcrumb-margin-bottom: 1rem;
+$breadcrumb-bg: null;
+$breadcrumb-divider-color: $base-color;
+$breadcrumb-active-color: $base-color;
+$breadcrumb-divider: quote("/");
+$breadcrumb-divider-flipped: $breadcrumb-divider;
+$breadcrumb-border-radius: null;
+
+/////////  404  //////////
+//////////////////////////////////////
+$error-number-font-size: 256px;
+$error-number-font-size-sm: 156px;
+$error-number-color: $primary;
+$error-number-font-weight: 700;
+
+/////////  VIDEO BTN S1  //////////
+//////////////////////////////////////
+$video-btn-s1-border: 2px dashed $red;
+$video-btn-s1-border-radius: 50%;
+$video-btn-s1-padding: 7px;
+
+/////////  SEP  //////////
+//////////////////////////////////////
+$sep-bg: #faf9ff;
+$sep-height: 1px;
+$sep-overlap-bg: $white;
+
+$utilities: (
+  "font-weight": (
+    property: font-weight,
+    class: fw,
+    values: (
+      normal: $fw-normal,
+      medium: $fw-medium,
+      semibold: $fw-semibold,
+      bold: $fw-bold
+    )
+  )
+);
+
+// Button Group
+
+// Layouts Section
+$footer-bg-color: $white;
+
+$footer-info-title-font-size: 20px;
+$footer-info-title-line-height: 1.6;
+$footer-info-title-color: $darker;
+$footer-info-title-font-weight: 700;
+$footer-info-title-transform: capitalize;
+$footer-info-title-bottom-space: 24px;
+
+$footer-info-text-size: 1rem;
+$footer-info-text-weight: 400;
+$footer-info-text-line-height: 1.5;
+$footer-info-text-color: #64728f;
+$footer-info-text-transform: capitalize;
+
+$footer-menu-text-color: $darker;
+$footer-menu-text-font-weight: 600;
+$footer-menu-text-font-size: 14px;
+$footer-menu-text-line-height: 1.14;
+$footer-menu-text-transform: uppercase;
+
+$footer-text-size: 1rem;
+$footer-text-font-weight: 500;
+$footer-text-color: $darker;
+$footer-text-line-height: 1.5;
+$footer-text-transform: capitalize;
+
+$footer-content-border: 1px solid $border-color;
+
+$footer-top-content-spacing: 3.75rem;
+$footer-bottom-content-spacing: 1.875rem;
+
+$footer-social-gap: 12px;
+$footer-social-size: 40px;
+$footer-social-raidus: 6px;
+$footer-social-color: $white;
+$footer-social-bg-color: $primary;
+$footer-social-border: 0px solid $border-color;
+
+// Preloader
+$preloader-bg: mix($primary, $white, 20%);
+
+$loader-border-color-one: $primary;
+$loader-border-color-two: mix($primary, $white, 70%);
+$loader-border-color-three: mix($primary, $white, 40%);

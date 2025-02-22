@@ -1,0 +1,41 @@
+.form-control {
+    &-wrap {
+        position: relative;
+    }
+
+    &.has-bg {
+        background-color: $input-bg-light;
+    }
+
+    &-icon {
+        display: flex;
+        align-items: center;
+        position: absolute;
+        top: 0;
+        left: 8px;
+        padding-left: $input-control-icon-gap-x;
+        padding-right: $input-control-icon-gap-x;
+        height: 100%;
+        color: $input-control-icon-color;
+        &.before {
+            left: 12px;
+            + .form-control {
+                padding-left: $input-control-icon-input-control-x;
+            }
+        }
+        &.after {
+            left: auto;
+            right: 12px;
+            + .form-control {
+                padding-right: $input-control-icon-input-control-x;
+            }
+        }
+    }
+
+    &::placeholder {
+        color: currentColor;
+    }
+}
+textarea.form-control {
+    min-height: $textarea-height;
+}
