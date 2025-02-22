@@ -29,7 +29,7 @@ export default function VerifCode() {
       // Combine the code digits to form the complete code
       const combinedCode = verificationCode.join('');
   
-      console.log('Combined code:', combinedCode); // Log du code combiné pour vérification
+      console.log('Combined code:', combinedCode); // Log the combined code for verification
   
       // Send a POST request to your backend endpoint to verify the code
       console.log('Sending verification request...');
@@ -38,21 +38,20 @@ export default function VerifCode() {
         email: localStorage.getItem('resetEmail') || '', // Include the email from local storage
       });
   
-      console.log('Verification response:', response.data); // Log de la réponse de vérification
+      console.log('Verification response:', response.data); // Log the verification response
   
       if (response.status === 200) {
-        // Code de vérification correct, récupérer les données du formulaire du localStorage
+        // Verification code is correct, retrieve the form data from localStorage
         const formData = JSON.parse(localStorage.getItem('formData'));
-        console.log('Form data:', formData); // Log des données du formulaire
+        console.log('Form data:', formData); // Log the form data
   
         // Send a POST request to create the user
         console.log('Sending create user request...');
         const createUserResponse = await axios.post('http://localhost:5000/user', formData, {
           headers: {
-            'Content-Type': 'multipart/form-data',  // Important pour l'envoi de fichiers
+            'Content-Type': 'multipart/form-data',  // Important for file uploads
           },
           withCredentials: true,
-          
         });
   
         if (createUserResponse.status === 200) {
@@ -60,8 +59,23 @@ export default function VerifCode() {
   
           if (createUserResponse.data.role) {
             // Store role in a secure cookie (using HttpOnly, Secure flags in production)
-            document.cookie = `role=${createUserResponse.data.role}; path=/; Secure; HttpOnly`; 
-            navigate(createUserResponse.data.role === "farmer" ? "/index-company-home-page" : "/index-challenged-home-page");
+            document.cookie = `role=${createUserResponse.data.role}; path=/; Secure; HttpOnly`;
+  
+            // Redirect based on role
+            switch (createUserResponse.data.role) {
+              case 'farmer':
+                navigate("/index-company-home-page");
+                break;
+              case 'distributor':
+                navigate("/index-distributor-home-page");
+                break;
+              case 'transporter':
+                navigate("/index-transporter-home-page");
+                break;
+              default:
+                navigate("/");
+                break;
+            }
           } else {
             navigate("/");
           }
@@ -78,6 +92,7 @@ export default function VerifCode() {
       // Handle verification failure, such as network or server errors
     }
   };
+  
   
   
 

@@ -26,20 +26,35 @@ export default function Login() {
         setFormErrors([{ field: "captcha", message: "Please verify the captcha!" }]);
         return;
       }
-      
+  
       const response = await axios.post("http://localhost:5000/user/login", data, {
         withCredentials: true,
       });
-
+  
       console.log("Login Response:", response);
-
+  
       if (response.data.role) {
-        document.cookie = `role=${response.data.role}; path=/`; // Stocker le rôle dans un cookie
-        navigate(response.data.role === "farmer" ? "/index-company-home-page" : "/index-challenged-home-page");
+        document.cookie = `role=${response.data.role}; path=/`; // Store the role in a cookie
+  
+        // Redirect based on the user's role
+        switch (response.data.role) {
+          case "farmer":
+            navigate("/index-company-home-page");
+            break;
+          case "distributor":
+            navigate("/index-distributor-home-page");
+            break;
+          case "transporter":
+            navigate("/index-transporter-home-page");
+            break;
+          default:
+            navigate("/");
+            break;
+        }
       } else {
         navigate("/");
       }
-      
+  
       setLoginAttempts(0);
     } catch (error) {
       console.error("Login failed:", error.response?.data || error.message);
@@ -51,6 +66,7 @@ export default function Login() {
       }
     }
   };
+  
 
 
 
