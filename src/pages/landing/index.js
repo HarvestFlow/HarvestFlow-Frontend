@@ -15,7 +15,7 @@ import PreBuiltContent from '../../components/PageComponents/Landing/PreBuiltCon
 function index() {
 
   return (
-    <AppLayout variant={5} title="SaaS & App Landing" rootClass="layout-1">
+    <AppLayout variant={4} title="Business Expenses" rootClass="layout-10">
   <section
   className="banner-section"
   style={{
@@ -320,6 +320,105 @@ At TektAI, we value your time and inbox space. Rest assured, our communication i
         </NioSection.Content>
       </NioSection>
       {/* Banner Section End */}
+      <NioSection className="nk-section-course pt-7 pt-lg-120">
+  <div className="nk-section-head pb-md-7 nk-block-head-between align-items-lg-end flex-column flex-lg-row">
+    <div className="text-center text-lg-start pb-5 pb-lg-0">
+      <span className="fs-14 fw-semibold text-uppercase d-inline-block text-purple mb-2">
+        Our Class
+      </span>
+      <h2>
+        <span className="d-inline-block d-lg-block">Most</span> Demanding Classes
+      </h2>
+    </div>
+    <div className="text-center text-lg-start">
+      <NioButton href="#" className="btn-purple" label="Browse All Classes" />
+    </div>
+  </div>
+
+  <NioSection.Content>
+    <Row className="gy-5 gy-xl-0">
+      <Col md={6} xl={4}>
+        <NioCard className="position-relative overflow-hidden">
+          <div className="card-image position-relative">
+            <img
+              src="https://images.pexels.com/photos/27778146/pexels-photo-27778146/free-photo-of-a-train-traveling-through-the-desert-on-a-track.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+              alt="Train Journey"
+              className="card-img-top img-fit-cover h-100"
+            />
+            <div className="overlay d-flex align-items-center justify-content-center">
+              <p className="text-white fw-bold m-0">Explore the beauty of desert landscapes by train.</p>
+            </div>
+          </div>
+          <NioCard.Body></NioCard.Body>
+        </NioCard>
+      </Col>
+
+      <Col md={6} xl={4}>
+        <NioCard className="position-relative overflow-hidden mb-4 mb-xl-0">
+          <div className="card-image position-relative">
+            <img
+              src="https://images.pexels.com/photos/4820737/pexels-photo-4820737.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+              alt="City Night"
+              className="card-img-top"
+            />
+            <div className="overlay d-flex align-items-center justify-content-center">
+              <p className="text-white fw-bold m-0">Discover the vibrant nightlife of the city.</p>
+            </div>
+          </div>
+          <NioCard.Body></NioCard.Body>
+        </NioCard>
+      </Col>
+
+      <Col md={6} xl={4}>
+        <NioCard className="position-relative overflow-hidden mb-4 mb-xl-0">
+          <div className="card-image position-relative">
+            <img
+              src="https://images.pexels.com/photos/30808038/pexels-photo-30808038/free-photo-of-farmer-sorting-rice-grains-in-eastern-sri-lanka.png?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+              alt="Agriculture"
+              className="card-img-top"
+            />
+            <div className="overlay d-flex align-items-center justify-content-center">
+              <p className="text-white fw-bold m-0">Learn about traditional rice farming in Sri Lanka.</p>
+            </div>
+          </div>
+          <NioCard.Body></NioCard.Body>
+        </NioCard>
+      </Col>
+    </Row>
+  </NioSection.Content>
+
+  <style>
+    {`
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 10px;
+    }
+
+    .card-image:hover .overlay {
+      opacity: 1;
+    }
+
+    .card-img-top {
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .card-image:hover .card-img-top {
+      transform: scale(1.05);
+    }
+    `}
+  </style>
+</NioSection>
 
       {/* Demos Section Start  */}
       <NioSection className="nk-section-demos pt-7" id="demo">

@@ -34,9 +34,8 @@ export default function HeaderMenu({ data, className, handler, buttonContent }) 
               <li className="w-100">
                 <NioButton
                   as="link"
-                  icon={buttonContent.icon || 'bag'}
-                  to={buttonContent.redirect || '/pricing'}
-                  label={buttonContent.label || 'Purchase Now'}
+                  to={buttonContent.redirect || '/auth/login'}
+                  label={buttonContent.label || 'Sign In'}
                   className={buttonContent.class + ' w-100'}
                 />
               </li>
