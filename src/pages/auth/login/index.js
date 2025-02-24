@@ -71,7 +71,7 @@ export default function Login() {
 
 
   return (
-    <NioSection className="bg-green-100" masks={["shape-1"]}>
+    <NioSection className="bg-green-100" masks={["shape-10"]}>
       <AuthLayout1 title="Login" rootClass="layout-1">
         <NioCard className="nk-form-card rounded-3 card-gutter-md nk-auth-form-card mx-md-9 mx-xl-auto">
           <NioCard.Body className="p-4">

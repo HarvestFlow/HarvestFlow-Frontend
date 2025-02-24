@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/rules-of-hooks */
+
 import React, { useState, useEffect } from 'react';
 import { Col, Row, Form } from 'react-bootstrap';
 import { NioButton, NioBrand, NioCard, NioField } from '../../components';
@@ -7,14 +9,26 @@ import AuthLayout1 from '../../layouts/AuthLayout/AuthLayout1';
 import { countries } from 'countries-list'; // Import countries object directly
 
 const PageOneFarmer = ({ formData, setFormData, onButtonClick }) => {
+  const navigate = useNavigate();
 
  
   const [firstnameError, setFirstnameError] = useState('');
   const [lastnameError, setLastnameError] = useState('');
+  const [role, setRole] = useState('');
 
   
 
   useEffect(() => {
+     // Retrieve the role from localStorage
+     const storedRole = localStorage.getItem('role');
+     console.log('Role from localStorage:', storedRole);
+ 
+     if (storedRole) {
+       setRole(storedRole); // Set the role if it exists
+     } else {
+       // If no role, redirect to the landing page
+       navigate('/landing');
+     }
     const previousScrollPosition = window.pageYOffset;
     document.body.style.overflow = 'hidden';
     window.scrollTo(0, 0);
@@ -69,8 +83,9 @@ const PageOneFarmer = ({ formData, setFormData, onButtonClick }) => {
       <NioCard className="nk-form-card card card-gutter-md nk-auth-form-card mx-md-9 mx-xl-auto" style={{ marginTop: '50px' }}>
         <NioCard.Body>
           <div className="nk-form-card-head text-center pb-5">
-            <h3 className="title mb-2" style={{ marginTop: '70px' }}>Sign up to your account</h3>
-            <p className="text">Already a member? <Link to="/auth/login" className="btn-link text-indigo">Login</Link>.</p>
+          <h3 className="title mb-2" style={{ marginTop: '70px' }}>
+        Sign up to your account as {role || 'a role'}
+      </h3>            <p className="text">Already a member? <Link to="/auth/login" className="btn-link text-indigo">Login</Link>.</p>
           </div>
 
           <Row className="g-gs" style={{ marginTop: '0px' }}>

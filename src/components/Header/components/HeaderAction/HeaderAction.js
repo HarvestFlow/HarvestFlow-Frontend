@@ -14,10 +14,7 @@ export default function HeaderAction({ className, nioBtnClasses, nioToggleClasse
   const location = useLocation();
   
   const [isLoggedIn, setIsLoggedIn] = useState(false); // State to track user login status
-  const [userData, setUserData] = useState({
-    imageUser: 'images/no_pdp.jpg',
-    firstname: ""
-  });
+
   const [isLoading, setIsLoading] = useState(true); // State to track whether user data is being fetched
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -43,10 +40,7 @@ export default function HeaderAction({ className, nioBtnClasses, nioToggleClasse
             },
           });
           const userDataResponse = response.data;
-          setUserData({
-            imageUser: userDataResponse.imageUser || 'images/no_pdp.jpg', // If imageUser is empty, use default image
-            firstname: userDataResponse.firstname || "Unknown", // If firstname is empty, use "Unknown"
-          });
+         
           setIsLoggedIn(true); // Set isLoggedIn to true if user data is successfully fetched
         }
       } catch (error) {
@@ -56,11 +50,9 @@ export default function HeaderAction({ className, nioBtnClasses, nioToggleClasse
       }
     };
     fetchUserData();
-  }, [setUserData]); // Ajoutez setUserData comme dépendance pour mettre à jour lorsque le contexte change
+  }); // Ajoutez setUserData comme dépendance pour mettre à jour lorsque le contexte change
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+  
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -73,29 +65,7 @@ export default function HeaderAction({ className, nioBtnClasses, nioToggleClasse
     handleClose(); // Close the menu after logout
   };
 
-  const [notifications, setNotifications] = useState([]);
-
   
-    
-     const [anchorE2, setAnchorE2] = useState(null);
-  
-     const handleOpenMenu = (event) => {
-       setAnchorE2(event.currentTarget);
-     };
-  
-     const handleCloseMenu = () => {
-      setAnchorE2(null);
-     };
-     const [notificationsInvi, setNotificationsInvi] = useState([]);
-     const [anchorE3, setAnchorE3] = useState(null);
-  
-     const handleOpenMenu2 = (event) => {
-       setAnchorE3(event.currentTarget);
-     };
-  
-     const handleCloseMenu2 = () => {
-      setAnchorE3(null);
-     };
 
      
   
@@ -113,33 +83,12 @@ const discussionClick = async (sender) => {
   if (isLoading) {
     return <div>Loading...</div>;
   }
-  
-  const isChallengedOrCompanyHomePage = () => {
-    return (
-      location.pathname === '/index-challenged-home-page' ||
-      location.pathname === '/index-company-home-page' ||
-      location.pathname === '/index-bs-subscription'
-
-    );
-  };
-
-  const mailIconColor = isChallengedOrCompanyHomePage() ? 'white' : 'action';
-  const userNameColor = isChallengedOrCompanyHomePage() ? 'white' : 'inherit'; // Change color based on the page
   return (
     <div className={className}>
     <ul className="nk-btn-group sm justify-content-center">
       {isLoggedIn ? (
         <>
- <li>
-       
-
-          
-    </li>
-             
-
-          
-      
-
+   
           <li>
         
 
@@ -158,8 +107,9 @@ const discussionClick = async (sender) => {
           <NioButton
   icon="user"
   label="Sign In"
-  className={`${nioBtnClasses} bg-green-300 text-white`}
+  className={`${nioBtnClasses} bg-transparent text-black hover:bg-transparent hover:text-black !bg-transparent !text-black !hover:bg-transparent !hover:text-black`}
 />
+
 
           </Link>
         </li>

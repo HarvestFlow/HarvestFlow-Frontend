@@ -1,6 +1,10 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import React from 'react'
 import { Link } from 'react-router-dom';
 import { Col, Container, Row } from 'react-bootstrap';
+import { useNavigate } from "react-router-dom";
+import  { useState, useEffect } from 'react';
+import { TypeAnimation } from 'react-type-animation';
 
 // layout
 import AppLayout from '../../layouts/AppLayout/AppLayout';
@@ -13,7 +17,29 @@ import PreBuiltContent from '../../components/PageComponents/Landing/PreBuiltCon
 
 
 function index() {
+  const navigate = useNavigate();
 
+  const cards = [
+    {
+      image: "https://images.pexels.com/photos/27778146/pexels-photo-27778146/free-photo-of-a-train-traveling-through-the-desert-on-a-track.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+      alt: "Train Journey",
+      text: "Explore the beauty of desert landscapes by train.",
+      path: "/train-journey"
+    },
+    {
+      image: "https://images.pexels.com/photos/4820737/pexels-photo-4820737.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+      alt: "City Night",
+      text: "Discover the vibrant nightlife of the city.",
+      path: "/city-night"
+    },
+    {
+      image: "https://images.pexels.com/photos/30808038/pexels-photo-30808038/free-photo-of-farmer-sorting-rice-grains-in-eastern-sri-lanka.png?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+      alt: "Agriculture",
+      text: "Learn about traditional rice farming in Sri Lanka.",
+      path: "/agriculture"
+    }
+  ];
+  
   return (
     <AppLayout variant={4} title="Business Expenses" rootClass="layout-10">
   <section
@@ -48,29 +74,82 @@ function index() {
     className="nk-banner nk-banner-landing overflow-hidden"
     style={{
       position: "absolute",
-      top: 0,
+      bottom: 0, // Placez le texte au bas de la section
       left: 0,
       right: 0,
-      bottom: 0,
       zIndex: 2,
       display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      textAlign: "center",
+      flexDirection: "column", // Stack the content vertically
+      alignItems: "flex-start", // Align content to the left
+      justifyContent: "flex-end", // Align at the bottom of the section
+      padding: "20px", // Optional padding for better spacing
+      textAlign: "left", // Align text to the left
       color: "white"
     }}
   >
     <Container>
-      <Row className="justify-content-center">
+      <Row className="justify-content-start">
         <Col lg={8}>
-          <div className="pb-5 pb-lg-7 text-center">
-            <h1 className="text-capitalize display-4 mb-3">
-              Transformez vos idées en <span style={{ color: "#ffcc00" }}>RÉALITÉ</span>
-            </h1>
-            <p className="lead">
-              Construisez des sites Web performants et captivants avec notre expertise.
-            </p>
-            <ul className="d-flex flex-wrap align-items-center justify-content-center gap-3 pt-4">
+          <div className="pb-5 pb-lg-7 text-left">
+          <div style={{ textAlign: 'left', marginTop: '20px', paddingLeft: '20px' }}>
+  {/* Static "Be the next" on the left */}
+  <div
+    style={{
+      fontSize: '5rem', // Slightly larger font size
+      color: 'white',
+      fontWeight: '200', // Lighter font weight for a finer appearance
+      fontFamily: 'Poppins, sans-serif', // Elegant and clean font family
+      letterSpacing: '0.1em', // Increase letter spacing for more elegant feel
+      textShadow: '1px 1px 5px rgba(0, 0, 0, 0.3)', // Subtle shadow for depth
+      transition: 'transform 0.5s ease-in-out',
+    }}
+  >
+    Be the next
+  </div>
+
+  {/* Dynamic animation sequence under "Be the next" */}
+  <TypeAnimation
+    sequence={[
+      'Agricultural innovator', 2500,
+      'Leader in farming technology', 2500,
+      'Game-changer in agriculture', 2500,
+      'Pioneer in sustainable farming', 2500,
+      'Farming solution provider', 2500,
+      'Disruptor in agriculture', 2500,
+      'Influencer in farming practices', 2500,
+      'Digital farming revolution', 2500,
+      'Farming trendsetter', 2500,
+      'Agricultural powerhouse', 2500,
+      'Vision for the farm of tomorrow', 2500,
+      'Farming tech unicorn', 2500,
+      'Global agriculture brand', 2500,
+      'Household name in farming', 2500,
+      'Powerhouse in farm management', 2500,
+      'Global leader in ag-tech', 2500,
+      'Farming tech trailblazer', 2500,
+    ]}
+    wrapper="h1"
+    speed={70}  // Slower speed of typing
+    style={{
+      fontSize: '3.5rem',  // Reduced font size for thinner appearance
+      color: 'white',
+      fontWeight: '200',
+      display: 'inline-block',
+      fontFamily: 'Poppins, sans-serif',
+      letterSpacing: '0.1em',  // Slightly adjusted letter spacing for thinner look
+      textShadow: '1px 1px 3px rgba(0, 0, 0, 0.3)',
+      transition: 'transform 1s ease-in-out',
+      marginTop: '20px'  // Add margin to push it below "Be the next"
+    }}
+    repeat={Infinity}  // Repeat the animation infinitely
+    cursor={false}  // Disable the cursor
+  />
+</div>
+
+
+
+           
+            <ul className="d-flex flex-wrap align-items-center justify-content-start gap-3 pt-4">
               <li>
                 <button className="btn btn-primary">En savoir plus</button>
               </li>
@@ -84,6 +163,7 @@ function index() {
     </Container>
   </div>
 </section>
+
 <section className="banner-section" style={{ width: "100%", height: "100vh", overflow: "hidden", position: "relative" }}>
   <div className="image-slider"></div>
 </section>
@@ -320,7 +400,7 @@ At TektAI, we value your time and inbox space. Rest assured, our communication i
         </NioSection.Content>
       </NioSection>
       {/* Banner Section End */}
-      <NioSection className="nk-section-course pt-7 pt-lg-120">
+      <NioSection  className="nk-section-int-tools bg-green-100 has-mask overflow-hidden" masks={["shape-4"]}>
   <div className="nk-section-head pb-md-7 nk-block-head-between align-items-lg-end flex-column flex-lg-row">
     <div className="text-center text-lg-start pb-5 pb-lg-0">
       <span className="fs-14 fw-semibold text-uppercase d-inline-block text-purple mb-2">
@@ -336,56 +416,80 @@ At TektAI, we value your time and inbox space. Rest assured, our communication i
   </div>
 
   <NioSection.Content>
-    <Row className="gy-5 gy-xl-0">
-      <Col md={6} xl={4}>
-        <NioCard className="position-relative overflow-hidden">
-          <div className="card-image position-relative">
-            <img
-              src="https://images.pexels.com/photos/27778146/pexels-photo-27778146/free-photo-of-a-train-traveling-through-the-desert-on-a-track.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-              alt="Train Journey"
-              className="card-img-top img-fit-cover h-100"
-            />
-            <div className="overlay d-flex align-items-center justify-content-center">
-              <p className="text-white fw-bold m-0">Explore the beauty of desert landscapes by train.</p>
-            </div>
+      <Row className="gy-5 gy-xl-0">
+        <Col md={6} xl={4}>
+        <div 
+    onClick={() => {
+      localStorage.setItem('role', 'transporter');
+      console.log('Role stored:', localStorage.getItem('role')); // Log the stored role
+      navigate("/farmerform");
+    }} 
+    style={{ cursor: "pointer" }}
+  >            <NioCard className="position-relative overflow-hidden" style={{ width: '350px', height: '500px' }}>
+              <div className="card-image position-relative"style={{ height: '100%' }}>
+                <img 
+                  src="https://images.pexels.com/photos/27778146/pexels-photo-27778146/free-photo-of-a-train-traveling-through-the-desert-on-a-track.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
+                  alt="Train Journey" 
+                  className="card-img-top img-fit-cover h-100" 
+                />
+                <div className="overlay d-flex align-items-center justify-content-center">
+                  <p className="text-white fw-bold m-0">Explore the beauty of desert landscapes by train.</p>
+                </div>
+              </div>
+              <NioCard.Body />
+            </NioCard>
           </div>
-          <NioCard.Body></NioCard.Body>
-        </NioCard>
-      </Col>
+        </Col>
 
-      <Col md={6} xl={4}>
-        <NioCard className="position-relative overflow-hidden mb-4 mb-xl-0">
-          <div className="card-image position-relative">
-            <img
-              src="https://images.pexels.com/photos/4820737/pexels-photo-4820737.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-              alt="City Night"
-              className="card-img-top"
-            />
-            <div className="overlay d-flex align-items-center justify-content-center">
-              <p className="text-white fw-bold m-0">Discover the vibrant nightlife of the city.</p>
-            </div>
+        <Col md={6} xl={4}>
+        <div 
+    onClick={() => {
+      localStorage.setItem('role', 'distributor');
+      console.log('Role stored:', localStorage.getItem('role')); // Log the stored role
+      navigate("/farmerform");
+    }} 
+    style={{ cursor: "pointer" }}
+  >            <NioCard className="position-relative overflow-hidden" style={{ width: '350px', height: '500px' }}>
+              <div className="card-image position-relative" style={{ height: '100%' }}>
+                <img 
+                  src="https://images.pexels.com/photos/4820737/pexels-photo-4820737.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
+                  alt="City Night" 
+                  className="card-img-top" 
+                />
+                <div className="overlay d-flex align-items-center justify-content-center">
+                  <p className="text-white fw-bold m-0">Discover the vibrant nightlife of the city.</p>
+                </div>
+              </div>
+              <NioCard.Body />
+            </NioCard>
           </div>
-          <NioCard.Body></NioCard.Body>
-        </NioCard>
-      </Col>
+        </Col>
 
-      <Col md={6} xl={4}>
-        <NioCard className="position-relative overflow-hidden mb-4 mb-xl-0">
-          <div className="card-image position-relative">
-            <img
-              src="https://images.pexels.com/photos/30808038/pexels-photo-30808038/free-photo-of-farmer-sorting-rice-grains-in-eastern-sri-lanka.png?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-              alt="Agriculture"
-              className="card-img-top"
-            />
-            <div className="overlay d-flex align-items-center justify-content-center">
-              <p className="text-white fw-bold m-0">Learn about traditional rice farming in Sri Lanka.</p>
-            </div>
+        <Col md={6} xl={4}>
+        <div 
+    onClick={() => {
+      localStorage.setItem('role', 'farmer');
+      console.log('Role stored:', localStorage.getItem('role')); // Log the stored role
+      navigate("/farmerform");
+    }} 
+    style={{ cursor: "pointer" }}
+  >            <NioCard className="position-relative overflow-hidden"style={{ width: '350px', height: '500px' }}>
+              <div className="card-image position-relative" style={{ height: '100%' }}>
+                <img 
+                  src="https://images.pexels.com/photos/30808038/pexels-photo-30808038/free-photo-of-farmer-sorting-rice-grains-in-eastern-sri-lanka.png?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
+                  alt="Agriculture" 
+                  className="card-img-top" 
+                />
+                <div className="overlay d-flex align-items-center justify-content-center">
+                  <p className="text-white fw-bold m-0">Learn about traditional rice farming in Sri Lanka.</p>
+                </div>
+              </div>
+              <NioCard.Body />
+            </NioCard>
           </div>
-          <NioCard.Body></NioCard.Body>
-        </NioCard>
-      </Col>
-    </Row>
-  </NioSection.Content>
+        </Col>
+      </Row>
+    </NioSection.Content>
 
   <style>
     {`
