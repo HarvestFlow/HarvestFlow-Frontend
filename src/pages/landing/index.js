@@ -50,7 +50,7 @@ function index() {
     height: "100vh",
     overflow: "hidden",
     backgroundColor: "#000", // Fond noir pour éviter les carreaux en arrière-plan
-    backgroundImage: "url('images/capture.png')",
+    backgroundImage: "url('images/bou.jpg')",
     backgroundSize: "cover",
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat"
@@ -64,7 +64,7 @@ function index() {
       left: 0,
       width: "100%",
       height: "100%",
-      backgroundColor: "rgba(0, 0, 0, 0)", // Ajuster l'opacité si nécessaire
+      backgroundColor: "rgba(0, 0, 0, 0.2)", // Ajuster l'opacité si nécessaire
       zIndex: 1
     }}
   ></div>

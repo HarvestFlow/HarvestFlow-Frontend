@@ -55,6 +55,8 @@ import VerifPassword from './pages/auth/verif-password/verif';
 import ForgotPassword from './pages/auth/forgot-password';
 import SideNavBar from './components/SideNavBar/SideNavBar';
 import ResponsiveTable from './components/SideNavBar/responsivetable';
+import MapSelector from './components/weather/carte-google';
+import MapWithComments from './components/LeafletCard/LeafletCard';
 
 function AppRoutes() {
 
@@ -123,6 +125,8 @@ function AppRoutes() {
 
       <Route path='/sidebar' element={<SideNavBar />} />
       <Route path='/table' element={<ResponsiveTable />} />
+      <Route path='/MapSelector' element={<MapSelector />} />
+      <Route path='/Leaflet' element={<MapWithComments />} />
 
 
 
