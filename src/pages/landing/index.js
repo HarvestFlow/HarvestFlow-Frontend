@@ -50,7 +50,7 @@ function index() {
     height: "100vh",
     overflow: "hidden",
     backgroundColor: "#000", // Fond noir pour éviter les carreaux en arrière-plan
-    backgroundImage: "url('images/bou.jpg')",
+    backgroundImage: "url('images/sunset.jpg')",
     backgroundSize: "cover",
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat"
@@ -102,6 +102,8 @@ function index() {
       letterSpacing: '0.1em', // Increase letter spacing for more elegant feel
       textShadow: '1px 1px 5px rgba(0, 0, 0, 0.3)', // Subtle shadow for depth
       transition: 'transform 0.5s ease-in-out',
+      marginTop: '-76px'  // Updated margin-top to 40px
+
     }}
   >
     Be the next
@@ -111,21 +113,14 @@ function index() {
   <TypeAnimation
     sequence={[
       'Agricultural innovator', 2500,
-      'Leader in farming technology', 2500,
-      'Game-changer in agriculture', 2500,
-      'Pioneer in sustainable farming', 2500,
       'Farming solution provider', 2500,
       'Disruptor in agriculture', 2500,
-      'Influencer in farming practices', 2500,
       'Digital farming revolution', 2500,
       'Farming trendsetter', 2500,
       'Agricultural powerhouse', 2500,
-      'Vision for the farm of tomorrow', 2500,
       'Farming tech unicorn', 2500,
       'Global agriculture brand', 2500,
       'Household name in farming', 2500,
-      'Powerhouse in farm management', 2500,
-      'Global leader in ag-tech', 2500,
       'Farming tech trailblazer', 2500,
     ]}
     wrapper="h1"
