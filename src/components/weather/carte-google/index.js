@@ -57,7 +57,7 @@ function Weather() {
         </div>
       
         {/* Main Content Section */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column'  ,marginTop:'70px'}}>
           {/* Carte Section */}
           <div style={{ flex: '1 0 60%', height: '60%' }}>
             <Map

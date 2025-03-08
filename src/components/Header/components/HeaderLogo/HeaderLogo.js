@@ -84,6 +84,8 @@ export default function HeaderLogo({ className, logo = 's1', mode = 'dark' }) {
      
       variant={routeTheme || mode}
       className={compClasses}
+      style={{ width: '200px', height: 'auto' }} // Set logo width to 50px
+
     />
   );
 }

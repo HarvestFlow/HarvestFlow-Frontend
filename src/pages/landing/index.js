@@ -42,21 +42,21 @@ function index() {
   
   return (
     <AppLayout variant={4} title="Business Expenses" rootClass="layout-10">
-  <section
+ <section
   className="banner-section"
   style={{
     position: "relative",
     width: "100%",
     height: "100vh",
     overflow: "hidden",
-    backgroundColor: "#000", // Fond noir pour éviter les carreaux en arrière-plan
+    backgroundColor: "#000",
     backgroundImage: "url('images/sunset.jpg')",
     backgroundSize: "cover",
     backgroundPosition: "center",
-    backgroundRepeat: "no-repeat"
+    backgroundRepeat: "no-repeat",
   }}
 >
-  {/* Overlay pour améliorer la lisibilité */}
+  {/* Overlay pour lisibilité */}
   <div
     style={{
       position: "absolute",
@@ -64,87 +64,101 @@ function index() {
       left: 0,
       width: "100%",
       height: "100%",
-      backgroundColor: "rgba(0, 0, 0, 0.2)", // Ajuster l'opacité si nécessaire
-      zIndex: 1
+      backgroundColor: "rgba(0, 0, 0, 0.2)",
+      zIndex: 1,
     }}
   ></div>
 
   {/* Contenu superposé */}
   <div
-    className="nk-banner nk-banner-landing overflow-hidden"
+    className="nk-banner nk-banner-landing"
     style={{
       position: "absolute",
-      bottom: 0, // Placez le texte au bas de la section
+      top: "50%",
       left: 0,
       right: 0,
       zIndex: 2,
       display: "flex",
-      flexDirection: "column", // Stack the content vertically
-      alignItems: "flex-start", // Align content to the left
-      justifyContent: "flex-end", // Align at the bottom of the section
-      padding: "20px", // Optional padding for better spacing
-      textAlign: "left", // Align text to the left
-      color: "white"
+      flexDirection: "column",
+      alignItems: "flex-start",
+      justifyContent: "center",
+      padding: "20px",
+      textAlign: "left",
+      color: "white",
+      transform: "translateY(-50%)",
+      overflow: "visible", // Prevent clipping of content
     }}
   >
     <Container>
       <Row className="justify-content-start">
-        <Col lg={8}>
+        <Col lg={8} xs={12}>
           <div className="pb-5 pb-lg-7 text-left">
-          <div style={{ textAlign: 'left', marginTop: '20px', paddingLeft: '20px' }}>
-  {/* Static "Be the next" on the left */}
-  <div
-    style={{
-      fontSize: '5rem', // Slightly larger font size
-      color: 'white',
-      fontWeight: '200', // Lighter font weight for a finer appearance
-      fontFamily: 'Poppins, sans-serif', // Elegant and clean font family
-      letterSpacing: '0.1em', // Increase letter spacing for more elegant feel
-      textShadow: '1px 1px 5px rgba(0, 0, 0, 0.3)', // Subtle shadow for depth
-      transition: 'transform 0.5s ease-in-out',
-      marginTop: '-76px'  // Updated margin-top to 40px
+            <div style={{ textAlign: "left", paddingLeft: "20px" }}>
+              {/* Texte statique "Be the next" */}
+              <div
+                style={{
+                  fontSize: "clamp(1.5rem, 8vw, 5rem)", // Smaller minimum size for tiny screens
+                  color: "white",
+                  fontWeight: "200",
+                  fontFamily: "Poppins, sans-serif",
+                  letterSpacing: "0.1em",
+                  textShadow: "1px 1px 5px rgba(0, 0, 0, 0.3)",
+                  transition: "transform 0.5s ease-in-out",
+                  marginTop: "0", // Remove negative margin to prevent disappearance
+                  lineHeight: "1.2", // Ensure readability on small screens
+                }}
+              >
+                Be the next
+              </div>
 
-    }}
-  >
-    Be the next
-  </div>
+              {/* Animation dynamique */}
+              <TypeAnimation
+                sequence={[
+                  "Agricultural innovator",
+                  2500,
+                  "Farming solution provider",
+                  2500,
+                  "Disruptor in agriculture",
+                  2500,
+                  "Digital farming revolution",
+                  2500,
+                  "Farming trendsetter",
+                  2500,
+                  "Agricultural powerhouse",
+                  2500,
+                  "Farming tech unicorn",
+                  2500,
+                  "Global agriculture brand",
+                  2500,
+                  "Household name in farming",
+                  2500,
+                  "Farming tech trailblazer",
+                  2500,
+                ]}
+                wrapper="h1"
+                speed={70}
+                style={{
+                  fontSize: "clamp(1rem, 6vw, 3.5rem)", // Smaller minimum size for tiny screens
+                  color: "white",
+                  fontWeight: "200",
+                  display: "inline-block",
+                  fontFamily: "Poppins, sans-serif",
+                  letterSpacing: "0.1em",
+                  textShadow: "1px 1px 3px rgba(0, 0, 0, 0.3)",
+                  transition: "transform 1s ease-in-out",
+                  marginTop: "10px", // Reduced margin for better spacing
+                  lineHeight: "1.2",
+                }}
+                repeat={Infinity}
+                cursor={false}
+              />
+            </div>
 
-  {/* Dynamic animation sequence under "Be the next" */}
-  <TypeAnimation
-    sequence={[
-      'Agricultural innovator', 2500,
-      'Farming solution provider', 2500,
-      'Disruptor in agriculture', 2500,
-      'Digital farming revolution', 2500,
-      'Farming trendsetter', 2500,
-      'Agricultural powerhouse', 2500,
-      'Farming tech unicorn', 2500,
-      'Global agriculture brand', 2500,
-      'Household name in farming', 2500,
-      'Farming tech trailblazer', 2500,
-    ]}
-    wrapper="h1"
-    speed={70}  // Slower speed of typing
-    style={{
-      fontSize: '3.5rem',  // Reduced font size for thinner appearance
-      color: 'white',
-      fontWeight: '200',
-      display: 'inline-block',
-      fontFamily: 'Poppins, sans-serif',
-      letterSpacing: '0.1em',  // Slightly adjusted letter spacing for thinner look
-      textShadow: '1px 1px 3px rgba(0, 0, 0, 0.3)',
-      transition: 'transform 1s ease-in-out',
-      marginTop: '20px'  // Add margin to push it below "Be the next"
-    }}
-    repeat={Infinity}  // Repeat the animation infinitely
-    cursor={false}  // Disable the cursor
-  />
-</div>
-
-
-
-           
-            <ul className="d-flex flex-wrap align-items-center justify-content-start gap-3 pt-4">
+            {/* Boutons */}
+            <ul
+              className="d-flex flex-wrap align-items-center justify-content-start gap-3 pt-4"
+              style={{ flexDirection: "row" }}
+            >
               <li>
                 <button className="btn btn-primary">En savoir plus</button>
               </li>
@@ -157,7 +171,55 @@ function index() {
       </Row>
     </Container>
   </div>
+
+  {/* Media Queries pour responsivité */}
+  <style jsx>{`
+    @media (max-width: 768px) {
+      .nk-banner {
+        padding: 15px;
+      }
+      .nk-banner ul {
+        flex-direction: column;
+        gap: 15px;
+      }
+      .nk-banner ul li {
+        width: 100%;
+      }
+      .nk-banner ul li button {
+        width: 100%;
+        font-size: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .nk-banner {
+        padding: 10px;
+      }
+      .nk-banner ul {
+        gap: 10px;
+      }
+      .nk-banner ul li button {
+        padding: 8px 12px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      /* Extra small screens */
+      .nk-banner {
+        padding: 5px;
+      }
+      .nk-banner div div div {
+        font-size: clamp(1rem, 7vw, 3rem); /* Even smaller for tiny screens */
+        margin-top: 0;
+      }
+      .nk-banner h1 {
+        font-size: clamp(0.875rem, 5vw, 2rem);
+        margin-top: 5px;
+      }
+    }
+  `}</style>
 </section>
+
 
 <section className="banner-section" style={{ width: "100%", height: "100vh", overflow: "hidden", position: "relative" }}>
   <div className="image-slider"></div>

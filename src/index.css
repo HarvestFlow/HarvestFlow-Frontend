@@ -35,4 +35,27 @@ code {
 	width: 0;
 	animation: typing 1s steps(30) 1s forwards;
   }
+  .app-container {
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+  }
   
+  .main-content {
+	margin-left: 200px;
+	margin-top: 60px;
+	padding: 20px;
+	transition: margin-left 0.3s ease;
+  }
+  
+  @media (max-width: 768px) {
+	.main-content {
+	  margin-left: 60px;
+	}
+  }
+  
+  @media (max-width: 480px) {
+	.main-content {
+	  margin-left: 50px;
+	}
+  }

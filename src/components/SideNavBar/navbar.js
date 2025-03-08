@@ -1,43 +1,60 @@
-import { useState } from "react";
-import { FiMenu, FiX } from "react-icons/fi";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBars, faUser } from "@fortawesome/free-solid-svg-icons";
+import "./SideNavBar.css";
 
-const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
+function Navbar({ toggleSidebar }) {
+  const navigate = useNavigate();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const handleMenuToggle = () => {
+    setIsMenuOpen(!isMenuOpen);
+    toggleSidebar(); // Appelle la fonction de bascule de la sidebar
+  };
 
   return (
-    <nav className="bg-green-200 text-white p-4 shadow-lg">
-      <div className="container mx-auto flex justify-between items-center">
-        {/* Logo */}
-        <a href="/" className="text-2xl font-bold text-white">MySite</a>
+    <nav className="navbar-container">
+      <div className="navbar-content">
+        {/* Hamburger menu pour mobile */}
+        <div className="navbar-toggle" onClick={handleMenuToggle}>
+          <FontAwesomeIcon icon={faBars} />
+        </div>
 
-        {/* Menu Mobile Button */}
-        <button
-          className="md:hidden text-white text-3xl"
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          {isOpen ? <FiX /> : <FiMenu />}
-        </button>
+        {/* Logo ou titre */}
+        <div className="navbar-brand">
+          <span>MyApp</span>
+        </div>
 
-        {/* Menu Desktop */}
-        <ul className="hidden md:flex space-x-6">
-          <li><a href="#" className="text-white hover:text-green-300">Accueil</a></li>
-          <li><a href="#" className="text-white hover:text-green-300">Services</a></li>
-          <li><a href="#" className="text-white hover:text-green-300">À propos</a></li>
-          <li><a href="#" className="text-white hover:text-green-300">Contact</a></li>
+        {/* Liens de navigation (visible sur desktop) */}
+        <ul className={`navbar-menu ${isMenuOpen ? "active" : ""}`}>
+          <li className="navbar-item">
+            <a className="navbar-link" onClick={() => navigate("/dashboard")}>
+              Dashboard
+            </a>
+          </li>
+          <li className="navbar-item">
+            <a className="navbar-link" onClick={() => navigate("/profile")}>
+              Profile
+            </a>
+          </li>
+          <li className="navbar-item">
+            <a className="navbar-link" onClick={() => navigate("/settings")}>
+              Settings
+            </a>
+          </li>
         </ul>
+
+        {/* Bouton utilisateur/déconnexion */}
+        <div className="navbar-user">
+          <button className="navbar-button" onClick={() => navigate("/logout")}>
+            <FontAwesomeIcon icon={faUser} className="navbar-icon" />
+            <span>Logout</span>
+          </button>
+        </div>
       </div>
-
-      {/* Menu Mobile */}
-      {isOpen && (
-        <ul className="md:hidden bg-green-300 text-white space-y-4 p-4">
-          <li><a href="#" className="block text-white">Accueil</a></li>
-          <li><a href="#" className="block text-white">Services</a></li>
-          <li><a href="#" className="block text-white">À propos</a></li>
-          <li><a href="#" className="block text-white">Contact</a></li>
-        </ul>
-      )}
     </nav>
   );
-};
+}
 
 export default Navbar;

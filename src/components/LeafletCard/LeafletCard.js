@@ -1,66 +1,98 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { MapContainer, TileLayer, FeatureGroup, GeoJSON } from "react-leaflet";
 import { EditControl } from "react-leaflet-draw";
 import L from "leaflet";
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField, Typography } from "@mui/material";
+import Sidebar from "../SideNavBar/SideNavBar";
+import axios from "axios";
 
 function MapWithComments() {
   const [shapes, setShapes] = useState([]);
-  const [shapeColor, setShapeColor] = useState("#ff0000"); // Default color
+  const [shapeColor, setShapeColor] = useState("#ff0000");
   const [openDialog, setOpenDialog] = useState(false);
   const [currentShapeId, setCurrentShapeId] = useState(null);
   const [currentComment, setCurrentComment] = useState("");
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const featureGroupRef = useRef(null);
+  const mapWrapperRef = useRef(null);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [userId, setUserId] = useState(null);
 
-  // Load shapes from localStorage on mount
   useEffect(() => {
-    const savedShapes = localStorage.getItem("mapShapes");
-    if (savedShapes) {
+    const checkAuthStatus = async () => {
       try {
-        const parsedShapes = JSON.parse(savedShapes);
-        if (Array.isArray(parsedShapes)) {
-          setShapes(parsedShapes);
-        } else {
-          console.error("Invalid shapes data in localStorage.");
+        const response = await axios.get("http://localhost:5000/user/getProfile", { withCredentials: true });
+        if (response.status === 200) {
+          setIsAuthenticated(true);
+          setUserId(response.data._id);
         }
       } catch (error) {
-        console.error("Failed to parse shapes from localStorage:", error);
+        setIsAuthenticated(false);
+        console.error("Authentication error:", error);
       }
-    }
+    };
+    checkAuthStatus();
   }, []);
 
-  // Save shapes to localStorage
-  const saveShapesToLocalStorage = (updatedShapes) => {
-    localStorage.setItem("mapShapes", JSON.stringify(updatedShapes));
+  useEffect(() => {
+    if (!userId) return;
+
+    const fetchShapes = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/parcelle/parcelle/${userId}`);
+        if (Array.isArray(response.data)) {
+          const allShapes = response.data.flatMap(item => item.shapes || []);
+          setShapes(allShapes);
+        } else {
+          console.error("Unexpected response format", response.data);
+          setShapes([]);
+        }
+      } catch (error) {
+        console.error("Error fetching shapes:", error);
+      }
+    };
+
+    fetchShapes();
+  }, [userId]);
+
+  const updateShapesInBackend = async (updatedShapes) => {
+    try {
+      const validShapes = updatedShapes.filter(shape => shape.geometry && shape.geometry.coordinates.length > 0);
+      const response = await axios.post("http://localhost:5000/parcelle/parcelle", { userId, shapes: validShapes });
+      setShapes(response.data.shapes);
+    } catch (error) {
+      console.error("Error saving shapes:", error);
+    }
   };
 
-  // Handle shape creation
-  const _onCreated = (e) => {
-    let layer = e.layer;
-    let geoJson = layer.toGeoJSON();
+  const deleteShapeInBackend = async (shapeId) => {
+    try {
+      const response = await axios.delete(`http://localhost:5000/parcelle/parcelle/${userId}/${shapeId}`);
+      if (response.data.success) {
+        const updatedShapes = shapes.filter((shape) => shape.properties.id !== parseInt(shapeId));
+        setShapes(updatedShapes);
+      }
+    } catch (error) {
+      console.error("Error deleting shape:", error);
+    }
+  };
 
+  const _onCreated = (e) => {
+    const layer = e.layer;
+    const geoJson = layer.toGeoJSON();
     geoJson.properties = { id: L.stamp(layer), color: shapeColor, comment: "" };
 
-    // Apply color to the newly created shape
     if (layer.setStyle) {
-      layer.setStyle({
-        color: shapeColor,
-        fillColor: shapeColor,
-        fillOpacity: 0.5,
-      });
+      layer.setStyle({ color: shapeColor, fillColor: shapeColor, fillOpacity: 0.5 });
     }
 
-    // Add to the state
-    setShapes((prevShapes) => {
-      const updatedShapes = [...prevShapes, geoJson];
-      saveShapesToLocalStorage(updatedShapes);
-      return updatedShapes;
-    });
-
+    const updatedShapes = [...shapes, geoJson];
+    setShapes(updatedShapes);
+    updateShapesInBackend(updatedShapes);
     featureGroupRef.current?.addLayer(layer);
   };
 
-  // Handle shape deletion
   const _onDeleted = (e) => {
     const deletedIds = new Set();
     e.layers.eachLayer((layer) => {
@@ -68,129 +100,96 @@ function MapWithComments() {
       if (id) deletedIds.add(id);
     });
 
-    setShapes((prevShapes) => {
-      const updatedShapes = prevShapes.filter(
-        (shape) => !deletedIds.has(shape.properties?.id)
-      );
-      saveShapesToLocalStorage(updatedShapes);
-      return updatedShapes;
-    });
+    deletedIds.forEach((id) => deleteShapeInBackend(id));
   };
 
-  // Handle editing comments
+  const handleDeleteFromDialog = () => {
+    deleteShapeInBackend(currentShapeId);
+    setOpenDialog(false);
+  };
+
   const handleEditComment = (id, comment) => {
     setCurrentShapeId(id);
     setCurrentComment(comment);
     setOpenDialog(true);
   };
 
-  // Handle comment change
-  const handleCommentChange = (e) => {
-    setCurrentComment(e.target.value);
-  };
+  const handleCommentChange = (e) => setCurrentComment(e.target.value);
 
-  // Save comment change
   const handleSaveComment = () => {
-    setShapes((prevShapes) => {
-      const updatedShapes = prevShapes.map((shape) =>
-        shape.properties.id === currentShapeId
-          ? { ...shape, properties: { ...shape.properties, comment: currentComment } }
-          : shape
-      );
-      saveShapesToLocalStorage(updatedShapes);
-      return updatedShapes;
-    });
-    setOpenDialog(false); // Close the dialog after saving the comment
+    const updatedShapes = shapes.map((shape) =>
+      shape.properties.id === currentShapeId
+        ? { ...shape, properties: { ...shape.properties, comment: currentComment } }
+        : shape
+    );
+    setShapes(updatedShapes);
+    updateShapesInBackend(updatedShapes);
+    setOpenDialog(false);
   };
 
-  // Function to create a Popup content (with custom comment edit button)
   const onEachFeature = (feature, layer) => {
-    const shapeId = feature.properties.id;
-    const comment = feature.properties.comment || "Aucun commentaire.";
-
-    // Set up click handler for each feature
-    layer.on("click", () => {
-      handleEditComment(shapeId, comment);
-    });
+    if (feature.properties?.id) {
+      layer.on("click", () => handleEditComment(feature.properties.id, feature.properties.comment));
+    }
   };
+
+  const toggleFullscreen = () => {
+    if (isFullscreen) {
+      document.exitFullscreen?.();
+    } else {
+      mapWrapperRef.current?.requestFullscreen?.();
+    }
+    setIsFullscreen(!isFullscreen);
+  };
+
+  const toggleSidebar = () => setSidebarCollapsed(!sidebarCollapsed);
 
   return (
-    <div>
-      <label>Choisir une couleur: </label>
-      <input
-        type="color"
-        value={shapeColor}
-        onChange={(e) => setShapeColor(e.target.value)}
-      />
+    <div style={{ display: "flex", height: "100vh" }}>
+      <div style={{ width: sidebarCollapsed ? "0" : "200px", transition: "width 0.3s", height: "100vh", overflow: "hidden" }}>
+        <Sidebar />
+      </div>
 
-      <MapContainer
-        center={[51.505, -0.09]}
-        zoom={13}
-        style={{ height: "90vh", width: "100%" }}
-      >
-        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", height: "100vh" }}>
+        <div style={{ padding: "10px" }}>
+          <label>Choose a color: </label>
+          <input type="color" value={shapeColor} onChange={(e) => setShapeColor(e.target.value)} />
+          <button onClick={toggleFullscreen}>{isFullscreen ? "Exit Fullscreen" : "Go Fullscreen"}</button>
+          <button onClick={toggleSidebar}>{sidebarCollapsed ? "Open Sidebar" : "Collapse Sidebar"}</button>
+        </div>
 
-        <FeatureGroup ref={featureGroupRef}>
-          {shapes.map((shape) => (
-            <GeoJSON
-              key={shape.properties.id}
-              data={shape}
-              style={() => ({
-                color: shape.properties.color || "blue",
-                fillColor: shape.properties.color || "blue",
-                fillOpacity: 0.5,
-              })}
-              onEachFeature={onEachFeature} // Attach click handler to each feature
-            />
-          ))}
+        <div ref={mapWrapperRef} style={{ flex: 1, height: "100%", width: "100%" }}>
+          <MapContainer center={[51.505, -0.09]} zoom={13} style={{ height: "100%", width: "100%" }}>
+            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+            <FeatureGroup ref={featureGroupRef}>
+              {Array.isArray(shapes) && shapes.map((shape) =>
+                shape.properties?.id ? (
+                  <GeoJSON
+                    key={shape.properties.id}
+                    data={shape}
+                    style={() => ({ color: shape.properties.color, fillColor: shape.properties.color, fillOpacity: 0.5 })}
+                    onEachFeature={onEachFeature}
+                  />
+                ) : null
+              )}
+              <EditControl position="topleft" onCreated={_onCreated} onDeleted={_onDeleted} draw={{ polyline: true, polygon: true, rectangle: true, circle: true, marker: true }} />
+            </FeatureGroup>
+          </MapContainer>
+        </div>
 
-          <EditControl
-            position="topleft"
-            onCreated={_onCreated}
-            onDeleted={_onDeleted}
-            draw={{
-              polyline: true,
-              polygon: true,
-              rectangle: true,
-              circle: true,
-              circlemarker: true,
-              marker: true,
-            }}
-          />
-        </FeatureGroup>
-      </MapContainer>
-
-      {/* Dialog for editing comments */}
-      <Dialog open={openDialog} onClose={() => setOpenDialog(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>Modifier le commentaire</DialogTitle>
-        <DialogContent>
-          {/* Section 1: Display the current comment */}
-          <Typography variant="body1" gutterBottom>
-            <strong>Commentaire actuel :</strong> {currentComment || "Aucun commentaire."}
-          </Typography>
-
-          {/* Section 2: Input field for modifying the comment */}
-          <TextField
-            autoFocus
-            margin="dense"
-            id="comment"
-            label="Modifier le commentaire"
-            type="text"
-            fullWidth
-            variant="outlined"
-            value={currentComment}
-            onChange={handleCommentChange}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenDialog(false)} color="primary">
-            Annuler
-          </Button>
-          <Button onClick={handleSaveComment} color="primary">
-            Enregistrer
-          </Button>
-        </DialogActions>
-      </Dialog>
+        <Dialog open={openDialog} onClose={() => setOpenDialog(false)} maxWidth="sm" fullWidth>
+          <DialogTitle>Edit or Delete Shape</DialogTitle>
+          <DialogContent>
+            <Typography variant="body1"><strong>Current Comment:</strong> {currentComment || "No comment."}</Typography>
+            <TextField autoFocus margin="dense" label="Edit Comment" fullWidth variant="outlined" value={currentComment} onChange={handleCommentChange} />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpenDialog(false)}>Cancel</Button>
+            <Button onClick={handleDeleteFromDialog} color="secondary">Delete</Button>
+            <Button onClick={handleSaveComment} color="primary">Save</Button>
+          </DialogActions>
+        </Dialog>
+      </div>
     </div>
   );
 }
