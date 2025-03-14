@@ -1,0 +1,53 @@
+.main-content {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .table {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .table th,
+  .table td {
+    vertical-align: middle;
+    text-align: center;
+  }
+  
+  .table thead {
+    background-color: #ffffff;
+    color: white;
+  }
+  
+  .btn-info {
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+  }
+  
+  .btn-info:hover {
+    background-color: #138496;
+    border-color: #117a8b;
+  }
+  
+  /* Styles pour la modale */
+  .observation-details .card {
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .observation-details .card-header {
+    font-size: 1.1rem;
+    font-weight: bold;
+  }
+  
+  .observation-details p {
+    margin-bottom: 8px;
+  }
+  
+  .observation-details ul {
+    padding-left: 20px;
+    list-style-type: disc;
+  }

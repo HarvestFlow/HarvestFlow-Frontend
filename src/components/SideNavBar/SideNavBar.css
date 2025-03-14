@@ -2,12 +2,17 @@
 .navbar-container {
 	position: fixed;
 	top: 0;
-	left: 0;
-	width: 100%;
+	left: 200px; /* Matches full sidebar width */
+	width: calc(100% - 200px); /* Takes remaining width */
 	height: 60px;
 	background: linear-gradient(90deg, #093f2c 0%, #1fa267 100%);
 	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 	z-index: 1100;
+  }
+  
+  .sidebar-container.collapsed + .navbar-container {
+	left: 60px; /* Matches collapsed sidebar width */
+	width: calc(100% - 60px);
   }
   
   .navbar-content {
@@ -91,18 +96,22 @@
   /* Sidebar styling */
   .sidebar-container {
 	position: fixed;
-	top: 60px;
+	top: 0;
 	left: 0;
-	width: 200px;
-	height: calc(100vh - 60px);
+	width: 200px; /* Full width */
+	height: 100vh;
 	background: linear-gradient(180deg, #093f2c 0%, #1fa267 100%);
-	box-shadow: 4px 0 15px rgba(0, 0, 0, 0.2);
+	box-shadow: -4px 0 15px rgba(0, 0, 0, 0.2);
 	transition: width 0.3s ease;
 	z-index: 1000;
   }
   
+  .sidebar-container.collapsed {
+	width: 60px; /* Collapsed width */
+  }
+  
   .sidebar-content {
-	padding: 20px;
+	padding: 15px;
 	color: white;
 	height: 100%;
 	display: flex;
@@ -124,6 +133,53 @@
   .logo-container {
 	text-align: center;
 	margin-bottom: 25px;
+	padding: 10px;
+  }
+  
+  .logo-card {
+	background: rgba(255, 255, 255, 0.05);
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	border-radius: 15px;
+	padding: 15px;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+	transition: transform 0.3s ease, box-shadow 0.3s ease;
+	position: relative;
+	overflow: hidden;
+	width: 100%;
+	max-width: 160px;
+	margin: 0 auto;
+  }
+  
+  .logo-card img {
+	width: 100%;
+	max-width: 300px;
+	height: auto;
+	transition: transform 0.3s ease;
+  }
+  
+  .logo-card::before {
+	content: '';
+	position: absolute;
+	top: -50%;
+	left: -50%;
+	width: 200%;
+	height: 200%;
+	background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+	opacity: 0;
+	transition: opacity 0.3s ease;
+  }
+  
+  .logo-card:hover::before {
+	opacity: 1;
+  }
+  
+  .logo-card:hover {
+	transform: scale(1.05);
+	box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  }
+  
+  .logo-card:hover img {
+	transform: rotate(5deg);
   }
   
   .sidebar-menu {
@@ -196,25 +252,36 @@
   /* Responsive Design */
   @media (max-width: 1024px) {
 	.sidebar-container {
-	  width: 180px;
+	  width: 160px;
+	}
+	.navbar-container {
+	  left: 160px;
+	  width: calc(100% - 160px);
+	}
+	.sidebar-container.collapsed + .navbar-container {
+	  left: 60px;
+	  width: calc(100% - 60px);
 	}
   }
   
   @media (max-width: 768px) {
 	.sidebar-container {
-	  width: 60px;
+	  width: 60px; /* Default collapsed width */
 	}
-	.sidebar-container.collapsed {
-	  width: 60px;
+	.navbar-container {
+	  left: 60px;
+	  width: calc(100% - 60px);
 	}
 	.sidebar-container:not(.collapsed) {
-	  width: 180px;
+	  width: 150px;
 	}
-  
+	.sidebar-container:not(.collapsed) + .navbar-container {
+	  left: 150px;
+	  width: calc(100% - 150px);
+	}
 	.navbar-toggle {
 	  display: block;
 	}
-  
 	.navbar-menu {
 	  display: none;
 	  position: fixed;
@@ -227,40 +294,32 @@
 	  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 	  z-index: 1200;
 	}
-  
 	.navbar-menu.active {
 	  display: flex;
 	}
-  
 	.navbar-item {
 	  margin: 10px 0;
 	  text-align: center;
 	  width: 100%;
 	}
-  
 	.navbar-link {
 	  padding: 10px;
 	  width: 100%;
 	  display: block;
 	}
-  
 	.navbar-content {
 	  padding: 0 10px;
 	}
-  
 	.navbar-brand {
 	  margin-left: 10px;
 	}
-  
 	.navbar-brand .nl-logo {
-	  width: 25px !important; /* Taille minimisée pour mobile */
+	  width: 25px !important;
 	  height: auto !important;
 	}
-  
 	.sidebar-toggle {
 	  display: block;
 	}
-  
 	.sidebar-content {
 	  padding: 10px;
 	}
@@ -287,24 +346,41 @@
 	.logout-button {
 	  justify-content: center;
 	}
+	.logo-card {
+	  padding: 12px;
+	  max-width: 130px;
+	}
+	.logo-card img {
+	  max-width: 130px;
+	}
+	.sidebar-container.collapsed .logo-card {
+	  padding: 8px;
+	  max-width: 40px;
+	}
+	.sidebar-container.collapsed .logo-card img {
+	  max-width: 40px;
+	}
   }
   
   @media (max-width: 480px) {
 	.sidebar-container {
-	  width: 50px;
+	  width: 50px; /* Default collapsed width */
 	}
-	.sidebar-container.collapsed {
-	  width: 50px;
+	.navbar-container {
+	  left: 50px;
+	  width: calc(100% - 50px);
 	}
 	.sidebar-container:not(.collapsed) {
-	  width: 160px;
+	  width: 140px;
 	}
-  
+	.sidebar-container:not(.collapsed) + .navbar-container {
+	  left: 140px;
+	  width: calc(100% - 140px);
+	}
 	.navbar-brand .nl-logo {
-	  width: 20px !important; /* Encore plus petit */
+	  width: 20px !important;
 	  height: auto !important;
 	}
-  
 	.navbar-button {
 	  padding: 6px 10px;
 	  font-size: 13px;
@@ -312,7 +388,6 @@
 	.navbar-toggle {
 	  font-size: 1.3rem;
 	}
-  
 	.sidebar-content {
 	  padding: 8px;
 	}
@@ -321,5 +396,12 @@
 	}
 	.sidebar-text {
 	  left: 40px;
+	}
+	.logo-card {
+	  padding: 10px;
+	  max-width: 120px;
+	}
+	.logo-card img {
+	  max-width: 120px;
 	}
   }

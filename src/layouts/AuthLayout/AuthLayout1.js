@@ -35,7 +35,7 @@ function AuthLayout1({ title = "Page Title Goes Here", rootClass = "layout-1", c
             <div style={{ textAlign: 'center' }}>
           <NioBrand logo="s2" variant="dark" imageRoot="../images/" size="00px" />
       </div>
-              <div className="media media-lg media-circle media-middle text-bg-indigo text-white mb-5">
+              <div className="media media-lg media-circle media-middle text-bg-green-500 text-white mb-5">
                 <div className="form-logo mb-3">
                   <NioIcon name="quote-left" />
                 </div>

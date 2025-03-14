@@ -1,69 +1,77 @@
-.weather {
-  width: 300px;
-  border-radius: 6px;
-  box-shadow: 10px -2px 20px 2px rgb(0 0 0 / 30%);
-  color: #fff;
-  background-color: #333;
-  margin: 20px auto 0 auto;
-  padding: 0 20px 20px 20px;
+.current-weather-card {
+  background: linear-gradient(rgba(255, 255, 255, 0.8), rgba(240, 244, 248, 0.8)), 
+              url("https://arynews.tv/wp-content/uploads/2021/09/Met-department-says-Karachi-might-receive-isolated-light-rains-696x342.jpg") no-repeat center center;
+  background-size: cover; /* L'image couvre toute la carte */
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  color: #333; /* Texte sombre pour lisibilité */
 }
 
-.top,
-.bottom {
+.current-weather-card:hover {
+  transform: translateY(-5px);
+}
+
+.top-section {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.city {
+.city-name {
+  font-size: 1.8rem;
   font-weight: 600;
-  font-size: 18px;
-  line-height: 1;
-  margin: 0;
-  letter-spacing: 1px;
+  color: #333;
 }
 
-.weather-description {
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 1;
-  margin: 0;
+.weather-desc {
+  font-size: 1.1rem;
+  color: #666;
+  text-transform: capitalize;
 }
 
 .weather-icon {
-  width: 100px;
+  width: 80px;
+  height: 80px;
+  transition: opacity 0.3s ease;
+}
+
+.weather-icon.loading {
+  opacity: 0.5;
+}
+
+.bottom-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
 }
 
 .temperature {
-  font-weight: 600;
-  font-size: 70px;
-  width: auto;
-  letter-spacing: -5px;
-  margin: 10px 0;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #2c3e50;
 }
 
-.details {
-  width: 100%;
-  padding-left: 20px;
+.weather-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
 }
 
-.parameter-row {
+.stat-row {
   display: flex;
   justify-content: space-between;
 }
 
-.parameter-label {
-  text-align: left;
-  font-weight: 400;
-  font-size: 12px;
+.stat-label {
+  font-size: 1rem;
+  color: #777;
 }
 
-.parameter-value {
-  text-align: right;
-  font-weight: 600;
-  font-size: 12px;
-}
-
-.parameter-label.top {
-  border-bottom: 1px solid #fff;
+.stat-value {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
 }

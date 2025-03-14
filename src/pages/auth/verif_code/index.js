@@ -48,13 +48,10 @@ export default function VerifCode() {
         // Send a POST request to create the user
         console.log('Sending create user request...');
         const createUserResponse = await axios.post('http://localhost:5000/user', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',  // Important for file uploads
-          },
           withCredentials: true,
         });
   
-        if (createUserResponse.status === 200) {
+        if (createUserResponse.status === 201) {
           console.log("User created successfully:", createUserResponse.data);
   
           if (createUserResponse.data.role) {

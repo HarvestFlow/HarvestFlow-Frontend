@@ -1,66 +1,124 @@
-.title {
-  font-size: 23px;
-  font-weight: 700;
+.forecast-container {
+  padding: 20px;
+  max-width: 100%;
+  margin: 0 auto;
 }
 
-.daily-item {
-  background-color: #f5f5f5;
-  border-radius: 15px;
-  height: 40px;
-  margin: 5px;
-  align-items: center;
-  cursor: pointer;
+.forecast-title {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Conteneur des cartes avec défilement horizontal */
+.forecast-cards {
   display: flex;
-  font-size: 14px;
-  padding: 5px 20px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: 15px;
+  padding-bottom: 10px;
+}
+
+/* Style de chaque carte */
+.forecast-card {
+  min-width: 150px;
+  flex: 0 0 auto;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  color: #333; /* Texte sombre pour contraste avec fonds pastel */
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.forecast-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Résumé quotidien */
+.daily-summary {
+  text-align: center;
+  padding: 10px;
 }
 
 .icon-small {
   width: 40px;
+  height: 40px;
+  margin-bottom: 5px;
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.2)); /* Ombre légère pour l'icône */
 }
 
-.daily-item .day {
-  cursor: inherit;
-  color: #212121;
-  flex: 1 1;
-  font-weight: 600;
-  margin-left: 15px;
+.day-name {
+  font-size: 1rem;
+  font-weight: bold;
+  margin: 0;
+  color: #2c3e50; /* Gris foncé pour contraste */
 }
 
-.description {
-  cursor: inherit;
-  flex: 1 1;
-  margin-right: 15px;
-  text-align: right;
+.weather-desc {
+  font-size: 0.8rem;
+  text-transform: capitalize;
+  margin: 3px 0;
+  color: #555;
 }
 
-.min-max {
-  color: #757575;
+.temp-range {
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin: 0;
+  color: #444;
 }
 
-.daily-details-grid {
-  grid-row-gap: 0;
-  grid-column-gap: 15px;
-  -webkit-column-gap: 15px;
-  column-gap: 15px;
-  display: grid;
-  flex: 1 1;
-  grid-template-columns: auto auto;
-  padding: 5px 15px;
-  row-gap: 0;
+/* Styles pour la modale */
+.forecast-details {
+  padding: 10px;
 }
 
-.daily-details-grid-item {
-  align-items: center;
+.daily-summary-modal {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.icon-large {
+  width: 60px;
+  height: 60px;
+  margin-bottom: 10px;
+}
+
+.details-grid {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.grid-item {
   display: flex;
-  height: 30px;
   justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
 }
 
-.daily-details-grid-item label:first-child {
-  color: #757575;
+.grid-item span:first-child {
+  font-weight: bold;
+  color: #333;
 }
 
-.daily-details-grid-item label:last-child {
-  color: #212121;
+.grid-item span:last-child {
+  color: #666;
+}
+
+/* Scrollbar personnalisée */
+.forecast-cards::-webkit-scrollbar {
+  height: 8px;
+}
+
+.forecast-cards::-webkit-scrollbar-thumb {
+  background-color: #007bff;
+  border-radius: 4px;
+}
+
+.forecast-cards::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
 }

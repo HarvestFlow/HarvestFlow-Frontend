@@ -56,7 +56,13 @@ import ForgotPassword from './pages/auth/forgot-password';
 import SideNavBar from './components/SideNavBar/SideNavBar';
 import ResponsiveTable from './components/SideNavBar/responsivetable';
 import MapSelector from './components/weather/carte-google';
-import MapWithComments from './components/LeafletCard/LeafletCard';
+import MapWithComments from './components/FarmerDashboard/LeafletCard/LeafletCard';
+import ParcelInfo from './components/FarmerDashboard/ParcelInfo/ParcelInfo';
+import ShapeViewer from './components/FarmerDashboard/ParcelInfo/ShapeViewer';
+import Observations from './components/FarmerDashboard/ParcelInfo/Observations';
+import AddObservation from './components/FarmerDashboard/ParcelInfo/AddObservation';
+import ChartComponent from './components/FarmerDashboard/charte/charte';
+import UpdateFarmerProfile from './components/FarmerDashboard/farmerprofile';
 
 function AppRoutes() {
 
@@ -127,10 +133,15 @@ function AppRoutes() {
       <Route path='/table' element={<ResponsiveTable />} />
       <Route path='/MapSelector' element={<MapSelector />} />
       <Route path='/Leaflet' element={<MapWithComments />} />
+      <Route path='/parcelinfo' element={<ParcelInfo />} />
+      <Route path='/shapeviewr' element={<ShapeViewer />} />
+      <Route path="/observations/:shapeId" element={<Observations />} />
+      <Route path="/observations/add/:shapeId" element={<AddObservation />} />
 
 
+      <Route path='/charte' element={<ChartComponent />} />
 
-
+      <Route path='/UpdateFarmerProfile' element={<UpdateFarmerProfile />} />
 
 
 
