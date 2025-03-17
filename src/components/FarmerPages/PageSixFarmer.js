@@ -72,7 +72,8 @@ const PageSixFarmer = ({ formData, setFormData, onButtonClick }) => {
         password: formData.password,
        
         securityQuestions: formData.securityQuestions,
-        role: "farmer"
+        role: "farmer",
+        isActivated:false,
       };
 
       const forgetdata = {

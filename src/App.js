@@ -63,6 +63,7 @@ import Observations from './components/FarmerDashboard/ParcelInfo/Observations';
 import AddObservation from './components/FarmerDashboard/ParcelInfo/AddObservation';
 import ChartComponent from './components/FarmerDashboard/charte/charte';
 import UpdateFarmerProfile from './components/FarmerDashboard/farmerprofile';
+import GestionUser from './components/AdminBackoffice/GestionUser';
 
 function AppRoutes() {
 
@@ -144,6 +145,7 @@ function AppRoutes() {
       <Route path='/UpdateFarmerProfile' element={<UpdateFarmerProfile />} />
 
 
+      <Route path='/gestionUser' element={<GestionUser />} />
 
 
     </Routes>

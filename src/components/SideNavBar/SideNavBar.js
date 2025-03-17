@@ -74,6 +74,12 @@ function Sidebar() {
                 <span className="sidebar-text">Parcel Info</span>
               </a>
             </li>
+            <li className="sidebar-item">
+              <a className="sidebar-link" onClick={() => navigate("/UpdateFarmerProfile")}>
+                <FontAwesomeIcon icon={faTachometerAlt} className="sidebar-icon" />
+                <span className="sidebar-text">Dashboard</span>
+              </a>
+            </li>
           </ul>
           <div className="sidebar-footer">
             <button className="logout-button" onClick={() => navigate("/")}>
