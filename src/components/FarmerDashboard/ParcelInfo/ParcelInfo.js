@@ -11,7 +11,6 @@ import L from "leaflet";
 import { Bar } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js";
 import "./ParcelInfo.css";
-import Sidebar from "../../SideNavBar/SideNavBar";
 import ProfileActivationDialog from "../farmerprofile/ProfileActivationDialog";
 
 // Register Chart.js components
@@ -29,8 +28,8 @@ function ParcelInfo() {
   const [shapes, setShapes] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userId, setUserId] = useState(null);
-  const [isActivated, setIsActivated] = useState(true); // New state for activation status
-  const [showActivationDialog, setShowActivationDialog] = useState(false); // State for dialog
+  const [isActivated, setIsActivated] = useState(true);
+  const [showActivationDialog, setShowActivationDialog] = useState(false);
   const [selectedShape, setSelectedShape] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [showMapModal, setShowMapModal] = useState(false);
@@ -47,7 +46,6 @@ function ParcelInfo() {
 
   const navigate = useNavigate();
 
-  // Enums
   const cropTypes = ["Wheat", "Barley", "Oat"];
   const growthStages = [
     "Germination and Emergence",
@@ -69,14 +67,14 @@ function ParcelInfo() {
         if (response.status === 200) {
           setIsAuthenticated(true);
           setUserId(response.data._id);
-          setIsActivated(response.data.isActivated); // Assuming isActivated is in the response
+          setIsActivated(response.data.isActivated);
           if (!response.data.isActivated) {
-            setShowActivationDialog(true); // Show dialog if not activated
+            setShowActivationDialog(true);
           }
         }
       } catch (error) {
         setIsAuthenticated(false);
-        setIsActivated(true); // Default to true to avoid dialog if auth fails
+        setIsActivated(true);
         navigate("/404");
         console.error("Authentication error:", error);
       }
@@ -85,7 +83,7 @@ function ParcelInfo() {
   }, [navigate]);
 
   useEffect(() => {
-    if (!userId || !isActivated) return; // Only fetch shapes if activated
+    if (!userId || !isActivated) return;
 
     const fetchShapes = async () => {
       try {
@@ -107,7 +105,6 @@ function ParcelInfo() {
     fetchShapes();
   }, [userId, isActivated]);
 
-  // Chart data preparation
   const getChartData = () => {
     const stageCounts = growthStages.reduce((acc, stage) => {
       acc[stage] = shapes.filter((shape) => shape.properties.growthStage === stage).length;
@@ -135,28 +132,12 @@ function ParcelInfo() {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
-      legend: {
-        position: "top",
-      },
-      title: {
-        display: true,
-        text: "Growth Stage Distribution",
-      },
+      legend: { position: "top" },
+      title: { display: true, text: "Growth Stage Distribution" },
     },
     scales: {
-      y: {
-        beginAtZero: true,
-        title: {
-          display: true,
-          text: "Number of Parcels",
-        },
-      },
-      x: {
-        title: {
-          display: true,
-          text: "Growth Stages",
-        },
-      },
+      y: { beginAtZero: true, title: { display: true, text: "Number of Parcels" } },
+      x: { title: { display: true, text: "Growth Stages" } },
     },
   };
 
@@ -228,13 +209,12 @@ function ParcelInfo() {
   };
 
   const handleShowDetails = (shape) => {
-    navigate(`/observations/${shape._id}`, { state: { parcelleId: shape.parcelleId, shapeId: shape._id } });
+    navigate(`/dashboard/observations/${shape._id}`, { state: { parcelleId: shape.parcelleId, shapeId: shape._id } });
   };
 
   const renderShapeMap = (shape) => {
-    const shapeCenter = center(shape).geometry.coordinates; // [lng, lat]
-    const [minLng, minLat, maxLng, maxLat] = bbox(shape); // Bounding box
-
+    const shapeCenter = center(shape).geometry.coordinates;
+    const [minLng, minLat, maxLng, maxLat] = bbox(shape);
     const latDiff = maxLat - minLat;
     const lngDiff = maxLng - minLng;
     const maxDiff = Math.max(latDiff, lngDiff);
@@ -329,223 +309,215 @@ function ParcelInfo() {
   };
 
   return (
-    <div className="app-container">
-      <Sidebar />
-      <div className="main-content">
-        <h2 className="text-center mb-4">Parcel Information</h2>
+    // Supprimez le conteneur app-container et main-content, gérés par Sidebar.jsx
+    <div className="parcel-info-container">
+      <h2 className="text-center mb-4">Parcel Information</h2>
 
-        {/* Map Above Table */}
-        <div className="mb-3 map-container">
-          <h4 className="mb-2">Parcel Map</h4>
-          {renderAllShapesMap()}
-        </div>
+      <div className="mb-3 map-container">
+        <h4 className="mb-2">Parcel Map</h4>
+        {renderAllShapesMap()}
+      </div>
 
-        {/* Table in a Card */}
-        <Card className="table-card mb-3">
-          <Card.Header>
-            <h4 className="mb-0">Parcel Details</h4>
-          </Card.Header>
-          <Card.Body>
-            <div className="table-responsive">
-              <Table className="simple-table" bordered hover>
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Map</th>
-                    <th>Color</th>
-                    <th>Comment</th>
-                    <th>Crop Type</th>
-                    <th>Planting Date</th>
-                    <th>Growth Stage</th>
-                    <th>Estimated Yield</th>
-                    <th>Expected Harvest Date</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {currentShapes.length > 0 ? (
-                    currentShapes.map((shape, index) => (
-                      <tr key={index}>
-                        <td>{shape.properties.id}</td>
-                        <td>
-                          <Button
-                            variant="link"
-                            onClick={() => handleShowMap(shape)}
-                            style={{ padding: 0 }}
-                          >
-                            <MapIcon size={20} />
-                          </Button>
-                        </td>
-                        <td>
-                          <span
-                            className="color-dot"
-                            style={{ backgroundColor: shape.properties.color }}
-                          ></span>
-                        </td>
-                        <td>{shape.properties.comment || "N/A"}</td>
-                        <td>{shape.properties.cropType || "N/A"}</td>
-                        <td>{shape.properties.plantingDate || "N/A"}</td>
-                        <td>{shape.properties.growthStage || "N/A"}</td>
-                        <td>{shape.properties.estimatedYield || "N/A"}</td>
-                        <td>{shape.properties.expectedHarvestDate || "N/A"}</td>
-                        <td>
-                          <Button
-                            variant="primary"
-                            size="sm"
-                            onClick={() => handleSelectShape(shape)}
-                            className="me-1 mb-1"
-                          >
-                            Edit
-                          </Button>
-                          <Button
-                            variant="info"
-                            size="sm"
-                            onClick={() => handleShowDetails(shape)}
-                            className="mb-1"
-                          >
-                            Details
-                          </Button>
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="10" className="text-center">
-                        No shapes found
+      <Card className="table-card mb-3">
+        <Card.Header>
+          <h4 className="mb-0">Parcel Details</h4>
+        </Card.Header>
+        <Card.Body>
+          <div className="table-responsive">
+            <Table className="simple-table" bordered hover>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Map</th>
+                  <th>Color</th>
+                  <th>Comment</th>
+                  <th>Crop Type</th>
+                  <th>Planting Date</th>
+                  <th>Growth Stage</th>
+                  <th>Estimated Yield</th>
+                  <th>Expected Harvest Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {currentShapes.length > 0 ? (
+                  currentShapes.map((shape, index) => (
+                    <tr key={index}>
+                      <td>{shape.properties.id}</td>
+                      <td>
+                        <Button
+                          variant="link"
+                          onClick={() => handleShowMap(shape)}
+                          style={{ padding: 0 }}
+                        >
+                          <MapIcon size={20} />
+                        </Button>
+                      </td>
+                      <td>
+                        <span
+                          className="color-dot"
+                          style={{ backgroundColor: shape.properties.color }}
+                        ></span>
+                      </td>
+                      <td>{shape.properties.comment || "N/A"}</td>
+                      <td>{shape.properties.cropType || "N/A"}</td>
+                      <td>{shape.properties.plantingDate || "N/A"}</td>
+                      <td>{shape.properties.growthStage || "N/A"}</td>
+                      <td>{shape.properties.estimatedYield || "N/A"}</td>
+                      <td>{shape.properties.expectedHarvestDate || "N/A"}</td>
+                      <td>
+                        <Button
+                          variant="primary"
+                          size="sm"
+                          onClick={() => handleSelectShape(shape)}
+                          className="me-1 mb-1"
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          variant="info"
+                          size="sm"
+                          onClick={() => handleShowDetails(shape)}
+                          className="mb-1"
+                        >
+                          Details
+                        </Button>
                       </td>
                     </tr>
-                  )}
-                </tbody>
-              </Table>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="10" className="text-center">
+                      No shapes found
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </Table>
 
-              {shapes.length > itemsPerPage && (
-                <Pagination className="justify-content-center mt-3 flex-wrap">
-                  <Pagination.First onClick={() => handlePageChange(1)} disabled={currentPage === 1} />
-                  <Pagination.Prev
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage === 1}
-                  />
-                  {Array.from({ length: totalPages }, (_, index) => (
-                    <Pagination.Item
-                      key={index + 1}
-                      active={index + 1 === currentPage}
-                      onClick={() => handlePageChange(index + 1)}
-                    >
-                      {index + 1}
-                    </Pagination.Item>
-                  ))}
-                  <Pagination.Next
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage === totalPages}
-                  />
-                  <Pagination.Last
-                    onClick={() => handlePageChange(totalPages)}
-                    disabled={currentPage === totalPages}
-                  />
-                </Pagination>
-              )}
-            </div>
-          </Card.Body>
-        </Card>
-
-        {/* Growth Stage Chart */}
-        <Card className="chart-card">
-          <Card.Header>
-            <h4 className="mb-0">Growth Stage Overview</h4>
-          </Card.Header>
-          <Card.Body>
-            <div style={{ height: "300px" }}>
-              <Bar data={getChartData()} options={chartOptions} />
-            </div>
-          </Card.Body>
-        </Card>
-
-        {/* Modal for Editing */}
-        <Modal show={showModal} onHide={handleCloseModal} size="md" centered>
-          <Modal.Header closeButton>
-            <Modal.Title>Update Shape</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Form onSubmit={handleSubmit}>
-              <Form.Group className="mb-3">
-                <Form.Label>Crop Type</Form.Label>
-                <Form.Select name="cropType" value={formData.cropType} onChange={handleChange}>
-                  <option value="">Select Crop Type</option>
-                  {cropTypes.map((type) => (
-                    <option key={type} value={type}>
-                      {type}
-                    </option>
-                  ))}
-                </Form.Select>
-              </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label>Planting Date</Form.Label>
-                <Form.Control
-                  type="date"
-                  name="plantingDate"
-                  value={formData.plantingDate}
-                  onChange={handleChange}
+            {shapes.length > itemsPerPage && (
+              <Pagination className="justify-content-center mt-3 flex-wrap">
+                <Pagination.First onClick={() => handlePageChange(1)} disabled={currentPage === 1} />
+                <Pagination.Prev
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
                 />
-              </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label>Growth Stage</Form.Label>
-                <Form.Select name="growthStage" value={formData.growthStage} onChange={handleChange}>
-                  <option value="">Select Growth Stage</option>
-                  {growthStages.map((stage) => (
-                    <option key={stage} value={stage}>
-                      {stage}
-                    </option>
-                  ))}
-                </Form.Select>
-              </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label>Estimated Yield</Form.Label>
-                <Form.Control
-                  type="number"
-                  name="estimatedYield"
-                  value={formData.estimatedYield}
-                  onChange={handleChange}
+                {Array.from({ length: totalPages }, (_, index) => (
+                  <Pagination.Item
+                    key={index + 1}
+                    active={index + 1 === currentPage}
+                    onClick={() => handlePageChange(index + 1)}
+                  >
+                    {index + 1}
+                  </Pagination.Item>
+                ))}
+                <Pagination.Next
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
                 />
-              </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label>Expected Harvest Date</Form.Label>
-                <Form.Control
-                  type="date"
-                  name="expectedHarvestDate"
-                  value={formData.expectedHarvestDate}
-                  onChange={handleChange}
+                <Pagination.Last
+                  onClick={() => handlePageChange(totalPages)}
+                  disabled={currentPage === totalPages}
                 />
-              </Form.Group>
-            </Form>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleCloseModal}>
-              Cancel
-            </Button>
-            <Button variant="primary" onClick={handleSubmit}>
-              Update
-            </Button>
-          </Modal.Footer>
-        </Modal>
+              </Pagination>
+            )}
+          </div>
+        </Card.Body>
+      </Card>
 
-        {/* Modal for Individual Map Preview */}
-        <Modal show={showMapModal} onHide={handleCloseMapModal} size="lg" centered>
-          <Modal.Header closeButton>
-            <Modal.Title>Map Preview</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            {mapShape && renderShapeMap(mapShape)}
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleCloseMapModal}>
-              Close
-            </Button>
-          </Modal.Footer>
-        </Modal>
+      <Card className="">
+  <Card.Header>
+    <h4 className="mb-0">Growth Stage Overview</h4>
+  </Card.Header>
+  <Card.Body>
+    <div style={{ height: "300px" }}>
+      <Bar data={getChartData()} options={chartOptions} />
+    </div>
+  </Card.Body>
+</Card>
 
-        {/* Profile Activation Dialog */}
-        <ProfileActivationDialog open={showActivationDialog} onClose={handleCloseDialog} />
-      </div>
+      <Modal show={showModal} onHide={handleCloseModal} size="md" centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Update Shape</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={handleSubmit}>
+            <Form.Group className="mb-3">
+              <Form.Label>Crop Type</Form.Label>
+              <Form.Select name="cropType" value={formData.cropType} onChange={handleChange}>
+                <option value="">Select Crop Type</option>
+                {cropTypes.map((type) => (
+                  <option key={type} value={type}>
+                    {type}
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Planting Date</Form.Label>
+              <Form.Control
+                type="date"
+                name="plantingDate"
+                value={formData.plantingDate}
+                onChange={handleChange}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Growth Stage</Form.Label>
+              <Form.Select name="growthStage" value={formData.growthStage} onChange={handleChange}>
+                <option value="">Select Growth Stage</option>
+                {growthStages.map((stage) => (
+                  <option key={stage} value={stage}>
+                    {stage}
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Estimated Yield</Form.Label>
+              <Form.Control
+                type="number"
+                name="estimatedYield"
+                value={formData.estimatedYield}
+                onChange={handleChange}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Expected Harvest Date</Form.Label>
+              <Form.Control
+                type="date"
+                name="expectedHarvestDate"
+                value={formData.expectedHarvestDate}
+                onChange={handleChange}
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseModal}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={handleSubmit}>
+            Update
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal show={showMapModal} onHide={handleCloseMapModal} size="lg" centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Map Preview</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {mapShape && renderShapeMap(mapShape)}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseMapModal}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <ProfileActivationDialog open={showActivationDialog} onClose={handleCloseDialog} />
     </div>
   );
 }

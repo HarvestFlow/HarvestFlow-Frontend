@@ -3,7 +3,6 @@ import { MapContainer, TileLayer, FeatureGroup, GeoJSON } from "react-leaflet";
 import { EditControl } from "react-leaflet-draw";
 import L from "leaflet";
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField, Typography } from "@mui/material";
-import Sidebar from "../../SideNavBar/SideNavBar";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { SketchPicker } from "react-color";
@@ -15,11 +14,8 @@ function MapWithComments() {
   const [openDialog, setOpenDialog] = useState(false);
   const [currentShapeId, setCurrentShapeId] = useState(null);
   const [currentComment, setCurrentComment] = useState("");
-  const [isFullscreen, setIsFullscreen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const featureGroupRef = useRef(null);
-  const mapWrapperRef = useRef(null);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false); // Sync with Sidebar
   const [userId, setUserId] = useState(null);
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -39,7 +35,7 @@ function MapWithComments() {
       }
     };
     checkAuthStatus();
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     if (!userId) return;
@@ -153,97 +149,77 @@ function MapWithComments() {
   const open = Boolean(anchorEl);
   const id = open ? "color-picker-popover" : undefined;
 
-  // Sync sidebar collapse state
-  const toggleSidebar = () => {
-    setSidebarCollapsed(!sidebarCollapsed);
-  };
-
   return (
-    <div style={{ display: "flex", height: "100vh", width: "100vw" }}>
-      <div style={{ width: sidebarCollapsed ? "60px" : "200px", transition: "width 0.3s", height: "100vh", overflow: "hidden" }}>
-        <Sidebar onToggleSidebar={toggleSidebar} isCollapsed={sidebarCollapsed} />
+    <>
+      <div style={{ padding: "20px 20px 20px 0", display: "flex", alignItems: "center", gap: "10px" }}>
+        <Button variant="contained" onClick={handleClick} style={{ backgroundColor: shapeColor, color: "#fff" }}>
+          Choose a Color
+        </Button>
+        <Popover
+          id={id}
+          open={open}
+          anchorEl={anchorEl}
+          onClose={handleClose}
+          anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+        >
+          <SketchPicker color={shapeColor} onChangeComplete={handleColorChange} />
+        </Popover>
       </div>
 
       <div
         style={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          padding: "20px",
-          marginTop: "70px", // Space for navbar
+          height: "calc(100vh - 120px)", // Adjust height for header/buttons and leave space
+          width: "100%",
+          border: "1px solid #ccc",
         }}
       >
-        <div style={{ padding: "10px 0", display: "flex", alignItems: "center", gap: "10px" }}>
-          <Button variant="contained" onClick={handleClick} style={{ backgroundColor: shapeColor, color: "#fff" }}>
-            Choose a Color
-          </Button>
-          <Popover
-            id={id}
-            open={open}
-            anchorEl={anchorEl}
-            onClose={handleClose}
-            anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-          >
-            <SketchPicker color={shapeColor} onChangeComplete={handleColorChange} />
-          </Popover>
-        </div>
-
-        <div
-          ref={mapWrapperRef}
-          style={{
-            height: "calc(100% - 60px)", // Adjust height to fill remaining space minus controls
-            width: "100%",
-            border: "1px solid #ccc",
-          }}
-        >
-          <MapContainer center={[51.505, -0.09]} zoom={13} style={{ height: "100%", width: "100%" }}>
-            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-            <FeatureGroup ref={featureGroupRef}>
-              {Array.isArray(shapes) &&
-                shapes.map((shape) =>
-                  shape.properties?.id ? (
-                    <GeoJSON
-                      key={shape.properties.id}
-                      data={shape}
-                      style={() => ({ color: shape.properties.color, fillColor: shape.properties.color, fillOpacity: 0.5 })}
-                      onEachFeature={onEachFeature}
-                    />
-                  ) : null
-                )}
-              <EditControl
-                position="topleft"
-                onCreated={_onCreated}
-                onDeleted={_onDeleted}
-                draw={{ polyline: true, polygon: true, rectangle: true, circle: true, marker: true }}
-              />
-            </FeatureGroup>
-          </MapContainer>
-        </div>
-
-        <Dialog open={openDialog} onClose={() => setOpenDialog(false)} maxWidth="sm" fullWidth>
-          <DialogTitle>Edit or Delete Shape</DialogTitle>
-          <DialogContent>
-            <Typography variant="body1">
-              <strong>Current Comment:</strong> {currentComment || "No comment."}
-            </Typography>
-            <TextField
-              autoFocus
-              margin="dense"
-              label="Edit Comment"
-              fullWidth
-              variant="outlined"
-              value={currentComment}
-              onChange={handleCommentChange}
+        <MapContainer center={[51.505, -0.09]} zoom={13} style={{ height: "100%", width: "100%" }}>
+          <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+          <FeatureGroup ref={featureGroupRef}>
+            {Array.isArray(shapes) &&
+              shapes.map((shape) =>
+                shape.properties?.id ? (
+                  <GeoJSON
+                    key={shape.properties.id}
+                    data={shape}
+                    style={() => ({ color: shape.properties.color, fillColor: shape.properties.color, fillOpacity: 0.5 })}
+                    onEachFeature={onEachFeature}
+                  />
+                ) : null
+              )}
+            <EditControl
+              position="topleft"
+              onCreated={_onCreated}
+              onDeleted={_onDeleted}
+              draw={{ polyline: true, polygon: true, rectangle: true, circle: true, marker: true }}
             />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => setOpenDialog(false)}>Cancel</Button>
-            <Button onClick={handleDeleteFromDialog} color="secondary">Delete</Button>
-            <Button onClick={handleSaveComment} color="primary">Save</Button>
-          </DialogActions>
-        </Dialog>
+          </FeatureGroup>
+        </MapContainer>
       </div>
-    </div>
+
+      <Dialog open={openDialog} onClose={() => setOpenDialog(false)} maxWidth="sm" fullWidth>
+        <DialogTitle>Edit or Delete Shape</DialogTitle>
+        <DialogContent>
+          <Typography variant="body1">
+            <strong>Current Comment:</strong> {currentComment || "No comment."}
+          </Typography>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Edit Comment"
+            fullWidth
+            variant="outlined"
+            value={currentComment}
+            onChange={handleCommentChange}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenDialog(false)}>Cancel</Button>
+          <Button onClick={handleDeleteFromDialog} color="secondary">Delete</Button>
+          <Button onClick={handleSaveComment} color="primary">Save</Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 }
 

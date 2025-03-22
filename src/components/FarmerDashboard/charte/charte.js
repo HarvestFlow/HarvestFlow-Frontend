@@ -12,8 +12,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import { Container, Row, Col, Card, Button, Badge } from 'react-bootstrap';
-import Sidebar from "../../SideNavBar/SideNavBar";
+import { Row, Col, Card, Button, Badge } from 'react-bootstrap';
 import { 
   FaUsers, 
   FaDollarSign, 
@@ -23,7 +22,7 @@ import {
   FaExclamationTriangle, 
   FaClock 
 } from 'react-icons/fa';
-import './AdminDashboard.css'; // Fichier CSS mis à jour
+import './AdminDashboard.css';
 
 ChartJS.register(
   CategoryScale,
@@ -99,142 +98,135 @@ const AdminDashboard = () => {
   const handleFilterChange = (filter) => setTimeFilter(filter);
 
   return (
-    <Container fluid className="min-vh-100 dashboard-container">
-      <Row>
-        <Col md={2} className="p-0">
-          <Sidebar />
+    <>
+      {/* En-tête */}
+      <Row className="mb-4 align-items-center">
+        <Col md={6}>
+          <h2 className="dashboard-title">Tableau de Bord Admin</h2>
         </Col>
-        <Col md={10} className="py-4 px-5" style={{ marginTop: '60px' }}>
-          {/* En-tête */}
-          <Row className="mb-4 align-items-center">
-            <Col md={6}>
-              <h2 className="dashboard-title">Tableau de Bord Admin</h2>
-            </Col>
-            <Col md={6} className="text-end">
-              <Button variant="outline-success" className="filter-btn me-2" onClick={() => handleFilterChange('Hebdomadaire')}>
-                Hebdomadaire
-              </Button>
-              <Button variant="outline-success" className="filter-btn me-2" onClick={() => handleFilterChange('Mensuel')}>
-                Mensuel
-              </Button>
-              <Button variant="outline-success" className="filter-btn" onClick={() => handleFilterChange('Annuel')}>
-                Annuel
-              </Button>
-            </Col>
-          </Row>
-
-          {/* Cartes de statistiques */}
-          <Row className="mb-4">
-            <Col xs={12} sm={6} md={3} className="mb-3">
-              <Card className="stats-card">
-                <Card.Body className="d-flex align-items-center">
-                  <FaUsers size={35} className="me-3 icon-3d" />
-                  <div>
-                    <Card.Title as="h3" className="card-title">Utilisateurs Actifs</Card.Title>
-                    <Card.Text className="card-value">1,245</Card.Text>
-                    <Badge bg="light" text="dark" className="stats-badge">+5% ce mois</Badge>
-                  </div>
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col xs={12} sm={6} md={3} className="mb-3">
-              <Card className="stats-card">
-                <Card.Body className="d-flex align-items-center">
-                  <FaDollarSign size={35} className="me-3 icon-3d" />
-                  <div>
-                    <Card.Title as="h3" className="card-title">Ventes Totales</Card.Title>
-                    <Card.Text className="card-value">$12,300</Card.Text>
-                    <Badge bg="light" text="dark" className="stats-badge">+12% vs dernier mois</Badge>
-                  </div>
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col xs={12} sm={6} md={3} className="mb-3">
-              <Card className="stats-card">
-                <Card.Body className="d-flex align-items-center">
-                  <FaShoppingCart size={35} className="me-3 icon-3d" />
-                  <div>
-                    <Card.Title as="h3" className="card-title">Commandes en Cours</Card.Title>
-                    <Card.Text className="card-value">89</Card.Text>
-                    <Badge bg="warning" text="dark" className="stats-badge">3 en attente</Badge>
-                  </div>
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col xs={12} sm={6} md={3} className="mb-3">
-              <Card className="stats-card">
-                <Card.Body className="d-flex align-items-center">
-                  <FaChartLine size={35} className="me-3 icon-3d" />
-                  <div>
-                    <Card.Title as="h3" className="card-title">Taux de Conversion</Card.Title>
-                    <Card.Text className="card-value">3.5%</Card.Text>
-                    <Badge bg="light" text="dark" className="stats-badge">Stable</Badge>
-                  </div>
-                </Card.Body>
-              </Card>
-            </Col>
-          </Row>
-
-          {/* Graphiques */}
-          <Row className="mb-4">
-            <Col xs={12} md={6} lg={4} className="mb-4">
-              <Card className="chart-card">
-                <Card.Body>
-                  <Line data={lineData} options={lineOptions} />
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col xs={12} md={6} lg={4} className="mb-4">
-              <Card className="chart-card">
-                <Card.Body>
-                  <Bar data={barData} options={barOptions} />
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col xs={12} md={6} lg={4} className="mb-4">
-              <Card className="chart-card">
-                <Card.Body>
-                  <Doughnut data={doughnutData} options={doughnutOptions} />
-                </Card.Body>
-              </Card>
-            </Col>
-          </Row>
-
-          {/* Alertes et Tâches */}
-          <Row>
-            <Col xs={12} md={6} className="mb-4">
-              <Card className="extra-card">
-                <Card.Header className="extra-header">
-                  <FaExclamationTriangle className="me-2" /> Alertes Système
-                </Card.Header>
-                <Card.Body>
-                  <ul className="list-unstyled">
-                    <li className="mb-2"><Badge bg="danger">Stock faible</Badge> Produit A (10 unités)</li>
-                    <li className="mb-2"><Badge bg="warning">Délai</Badge> Commande #1234 en retard</li>
-                    <li><Badge bg="info">Maintenance</Badge> Serveur prévu demain</li>
-                  </ul>
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col xs={12} md={6} className="mb-4">
-              <Card className="extra-card">
-                <Card.Header className="extra-header">
-                  <FaTasks className="me-2" /> Tâches en Attente
-                </Card.Header>
-                <Card.Body>
-                  <ul className="list-unstyled">
-                    <li className="mb-2"><FaClock className="me-2" /> Vérifier les retours (3)</li>
-                    <li className="mb-2"><FaClock className="me-2" /> Approuver nouveaux produits (5)</li>
-                    <li><FaClock className="me-2" /> Répondre aux tickets (2)</li>
-                  </ul>
-                  <Button variant="success" size="sm" className="mt-2 action-btn">Voir Toutes</Button>
-                </Card.Body>
-              </Card>
-            </Col>
-          </Row>
+        <Col md={6} className="text-end">
+          <Button variant="outline-success" className="filter-btn me-2" onClick={() => handleFilterChange('Hebdomadaire')}>
+            Hebdomadaire
+          </Button>
+          <Button variant="outline-success" className="filter-btn me-2" onClick={() => handleFilterChange('Mensuel')}>
+            Mensuel
+          </Button>
+          <Button variant="outline-success" className="filter-btn" onClick={() => handleFilterChange('Annuel')}>
+            Annuel
+          </Button>
         </Col>
       </Row>
-    </Container>
+
+      {/* Cartes de statistiques */}
+      <Row className="mb-4">
+        <Col xs={12} sm={6} md={3} className="mb-3">
+          <Card className="stats-card">
+            <Card.Body className="d-flex align-items-center">
+              <FaUsers size={35} className="me-3 icon-3d" />
+              <div>
+                <Card.Title as="h3" className="card-title">Utilisateurs Actifs</Card.Title>
+                <Card.Text className="card-value">1,245</Card.Text>
+                <Badge bg="light" text="dark" className="stats-badge">+5% ce mois</Badge>
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col xs={12} sm={6} md={3} className="mb-3">
+          <Card className="stats-card">
+            <Card.Body className="d-flex align-items-center">
+              <FaDollarSign size={35} className="me-3 icon-3d" />
+              <div>
+                <Card.Title as="h3" className="card-title">Ventes Totales</Card.Title>
+                <Card.Text className="card-value">$12,300</Card.Text>
+                <Badge bg="light" text="dark" className="stats-badge">+12% vs dernier mois</Badge>
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col xs={12} sm={6} md={3} className="mb-3">
+          <Card className="stats-card">
+            <Card.Body className="d-flex align-items-center">
+              <FaShoppingCart size={35} className="me-3 icon-3d" />
+              <div>
+                <Card.Title as="h3" className="card-title">Commandes en Cours</Card.Title>
+                <Card.Text className="card-value">89</Card.Text>
+                <Badge bg="warning" text="dark" className="stats-badge">3 en attente</Badge>
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col xs={12} sm={6} md={3} className="mb-3">
+          <Card className="stats-card">
+            <Card.Body className="d-flex align-items-center">
+              <FaChartLine size={35} className="me-3 icon-3d" />
+              <div>
+                <Card.Title as="h3" className="card-title">Taux de Conversion</Card.Title>
+                <Card.Text className="card-value">3.5%</Card.Text>
+                <Badge bg="light" text="dark" className="stats-badge">Stable</Badge>
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+
+      {/* Graphiques */}
+      <Row className="mb-4">
+        <Col xs={12} md={6} lg={4} className="mb-4">
+          <Card className="chart-card">
+            <Card.Body>
+              <Line data={lineData} options={lineOptions} />
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col xs={12} md={6} lg={4} className="mb-4">
+          <Card className="chart-card">
+            <Card.Body>
+              <Bar data={barData} options={barOptions} />
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col xs={12} md={6} lg={4} className="mb-4">
+          <Card className="chart-card">
+            <Card.Body>
+              <Doughnut data={doughnutData} options={doughnutOptions} />
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+
+      {/* Alertes et Tâches */}
+      <Row>
+        <Col xs={12} md={6} className="mb-4">
+          <Card className="extra-card E">
+            <Card.Header className="extra-header">
+              <FaExclamationTriangle className="me-2" /> Alertes Système
+            </Card.Header>
+            <Card.Body>
+              <ul className="list-unstyled">
+                <li className="mb-2"><Badge bg="danger">Stock faible</Badge> Produit A (10 unités)</li>
+                <li className="mb-2"><Badge bg="warning">Délai</Badge> Commande #1234 en retard</li>
+                <li><Badge bg="info">Maintenance</Badge> Serveur prévu demain</li>
+              </ul>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col xs={12} md={6} className="mb-4">
+          <Card className="extra-card">
+            <Card.Header className="extra-header">
+              <FaTasks className="me-2" /> Tâches en Attente
+            </Card.Header>
+            <Card.Body>
+              <ul className="list-unstyled">
+                <li className="mb-2"><FaClock className="me-2" /> Vérifier les retours (3)</li>
+                <li className="mb-2"><FaClock className="me-2" /> Approuver nouveaux produits (5)</li>
+                <li><FaClock className="me-2" /> Répondre aux tickets (2)</li>
+              </ul>
+              <Button variant="success" size="sm" className="mt-2 action-btn">Voir Toutes</Button>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </>
   );
 };
 

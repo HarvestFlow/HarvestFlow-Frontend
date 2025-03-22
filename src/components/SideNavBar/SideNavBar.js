@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faTemperatureHigh,
@@ -18,15 +17,22 @@ import {
   faHome,
 } from "@fortawesome/free-solid-svg-icons";
 import NioBrand from "../NioBrand/NioBrand";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import "./SideNavBar.css";
+import Observations from "../FarmerDashboard/ParcelInfo/Observations";
+import ParcelInfo from "../FarmerDashboard/ParcelInfo/ParcelInfo";
+import MapWithComments from "../FarmerDashboard/LeafletCard/LeafletCard";
+import AddObservation from "../FarmerDashboard/ParcelInfo/AddObservation";
+import AdminDashboard from "../FarmerDashboard/charte/charte";
+
 
 function Sidebar() {
-  const navigate = useNavigate();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileCollapsed, setIsMobileCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleResize = () => {
@@ -57,17 +63,27 @@ function Sidebar() {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+    console.log("Recherche:", e.target.value);
+  };
+
+  const handleNavigation = (path) => {
+    navigate(`/dashboard${path}`); // Préfixe avec /dashboard
+    if (isMobile) setIsMobileCollapsed(false);
+  };
+
   const menuItems = [
-    { path: "/charte", icon: faTachometerAlt, text: "Dashboard" },
-    { path: "/mapselector", icon: faTemperatureHigh, text: "Temperature" },
-    { path: "/leaflet", icon: faMapMarked, text: "Farm Map" },
-    { path: "/parcelinfo", icon: faInfoCircle, text: "Parcel Info" },
+    { name: "Parcel Info", icon: faInfoCircle, path: "/parcelinfo" },
+    { name: "Observations", icon: faInfoCircle, path: "/observations/:shapeId" },
+    { name: "AdminDashboard", icon: faInfoCircle, path: "/AdminDashboard" },
+
   ];
 
   const toolbarItems = [
-    { path: "/dashboard", icon: faHome, text: "Dashboard" },
-    { path: "/profile", icon: faUser, text: "Profile" },
-    { path: "/settings", icon: faCog, text: "Settings" },
+    { name: "Dashboard", icon: faHome, path: "/parcelinfo" },
+    { name: "Profile", icon: faUser, path: "/UpdateFarmerProfile" },
+    { name: "Settings", icon: faCog, path: "/gestionUser" },
   ];
 
   const notifications = [
@@ -75,14 +91,9 @@ function Sidebar() {
     { id: 2, text: "Nouvelle mise à jour disponible", icon: faBell },
   ];
 
-  const handleSearch = (e) => {
-    setSearchQuery(e.target.value);
-    console.log("Recherche:", e.target.value);
-  };
-
   return (
-    <>
-      {/* Sidebar inchangée */}
+    <div className="app-container">
+      {/* Sidebar */}
       <div
         className={`sidebar-container ${
           isMobile
@@ -106,7 +117,11 @@ function Sidebar() {
                 />
               </div>
             </div>
-            
+            <button className="toggle-btn" onClick={toggleSidebar}>
+              <FontAwesomeIcon
+                icon={isCollapsed || !isMobileCollapsed ? faChevronRight : faChevronLeft}
+              />
+            </button>
           </div>
 
           {!isCollapsed && (
@@ -124,16 +139,13 @@ function Sidebar() {
 
           <ul className="sidebar-menu">
             {menuItems.map((item) => (
-              <li className="sidebar-item" key={item.path}>
+              <li className="sidebar-item" key={item.name}>
                 <a
                   className="sidebar-link"
-                  onClick={() => {
-                    navigate(item.path);
-                    if (isMobile) setIsMobileCollapsed(false);
-                  }}
+                  onClick={() => handleNavigation(item.path)}
                 >
                   <FontAwesomeIcon icon={item.icon} className="sidebar-icon" />
-                  <span className="sidebar-text">{item.text}</span>
+                  <span className="sidebar-text">{item.name}</span>
                 </a>
               </li>
             ))}
@@ -155,7 +167,7 @@ function Sidebar() {
           )}
 
           <div className="sidebar-footer">
-            <button className="logout-button" onClick={() => navigate("/")}>
+            <button className="logout-button" onClick={() => console.log("Logout")}>
               <FontAwesomeIcon icon={faSignOutAlt} className="sidebar-icon" />
               <span className="sidebar-text">Logout</span>
             </button>
@@ -163,11 +175,9 @@ function Sidebar() {
         </div>
       </div>
 
-      {/* Floating Toolbar remplaçant la Navbar */}
+      {/* Floating Toolbar */}
       <div
-        className={`floating-toolbar ${
-          isCollapsed && !isMobile ? "shifted" : ""
-        }`}
+        className={`floating-toolbar ${isCollapsed && !isMobile ? "shifted" : ""}`}
       >
         <div className="toolbar-content">
           <button className="toolbar-toggle" onClick={toggleSidebar}>
@@ -176,17 +186,15 @@ function Sidebar() {
 
           <div className="toolbar-items">
             {toolbarItems.map((item) => (
-              <div className="toolbar-item" key={item.path}>
+              <div className="toolbar-item" key={item.name}>
                 <button
                   className="toolbar-button"
-                  onClick={() => navigate(item.path)}
-                  title={item.text}
+                  onClick={() => handleNavigation(item.path)}
+                  title={item.name}
                 >
                   <FontAwesomeIcon icon={item.icon} />
                 </button>
-                {isMenuOpen && (
-                  <span className="toolbar-tooltip">{item.text}</span>
-                )}
+                {isMenuOpen && <span className="toolbar-tooltip">{item.name}</span>}
               </div>
             ))}
           </div>
@@ -194,7 +202,7 @@ function Sidebar() {
           <div className="toolbar-user">
             <button
               className="toolbar-button logout-btn"
-              onClick={() => navigate("/logout")}
+              onClick={() => console.log("Logout")}
               title="Logout"
             >
               <FontAwesomeIcon icon={faSignOutAlt} />
@@ -202,8 +210,24 @@ function Sidebar() {
           </div>
         </div>
       </div>
-      
-    </>
+
+      {/* Zone de contenu avec routage */}
+      <div
+        className={`main-content ${
+          isCollapsed && !isMobile ? "collapsed" : ""
+        } ${isMobile && !isMobileCollapsed ? "mobile-expanded" : ""}`}
+      >
+        <Routes>
+          <Route path="/parcelinfo" element={<ParcelInfo />} />
+          <Route path="/observations/:shapeId" element={<Observations />} />
+          <Route path='/MapSelector' element={<MapWithComments />} />
+          <Route path="/observations/add/:shapeId" element={<AddObservation />} />
+          <Route path="/AdminDashboard" element={<AdminDashboard />} />
+
+          <Route path="*" element={<div>Dashboard Page non trouvée</div>} />
+        </Routes>
+      </div>
+    </div>
   );
 }
 

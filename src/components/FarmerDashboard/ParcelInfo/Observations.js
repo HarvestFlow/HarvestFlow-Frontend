@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Table, Button, Modal, Card, Row, Col, Form } from "react-bootstrap";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
-import Sidebar from "../../SideNavBar/SideNavBar";
 import { Line } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from "chart.js";
 import CurrentWeather from "../../weather/current-weather/current-weather";
@@ -96,7 +95,7 @@ function Observations() {
   }, [shapeCoordinates]);
 
   const handleAddObservation = () => {
-    navigate(`/observations/add/${shapeId}`, { state: { parcelleId: state.parcelleId } });
+    navigate(`/dashboard/observations/add/${shapeId}`, { state: { parcelleId: state.parcelleId } });
   };
 
   const handleShowDetails = (observation) => {
@@ -189,262 +188,257 @@ function Observations() {
   };
 
   return (
-    <div className="app-container">
-      <Sidebar />
-      <div className="main-content">
-        <h4 className="text-center mb-4">Observations quotidienne {shapeId}</h4>
+    <>
+      <h4 className="text-center mb-4">Observations quotidienne {shapeId}</h4>
 
-       
-
-        {/* Première rangée : Météo Actuelle et Observations Quotidiennes */}
-        <Row>
-          <Col md={4} className="mb-4">
-            <Card>
-              <Card.Header className="simple-header">
-                <h4 className="mb-0">Météo Actuelle</h4>
-              </Card.Header>
-              <Card.Body>
-                {error && <p className="text-danger">{error}</p>}
-                {currentWeather ? (
-                  <CurrentWeather data={currentWeather} />
-                ) : (
-                  <p>Chargement des données météo actuelles...</p>
-                )}
-              </Card.Body>
-            </Card>
-          </Col>
-          <Col md={8} className="mb-4">
-            <Card>
+      {/* Première rangée : Météo Actuelle et Observations Quotidiennes */}
+      <Row>
+        <Col md={4} className="mb-4">
+          <Card>
+            <Card.Header className="simple-header">
+              <h4 className="mb-0">Météo Actuelle</h4>
+            </Card.Header>
+            <Card.Body>
+              {error && <p className="text-danger">{error}</p>}
+              {currentWeather ? (
+                <CurrentWeather data={currentWeather} />
+              ) : (
+                <p>Chargement des données météo actuelles...</p>
+              )}
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col md={8} className="mb-4">
+          <Card>
             <Card.Header className="simple-header d-flex justify-content-between align-items-center">
-        <h4 className="mb-0">Observations Quotidiennes</h4>
-        <Button className="bg-green-400" size="sm" onClick={handleAddObservation}>
-          Ajouter une observation
-        </Button>
-              </Card.Header>
-              <Card.Body>
-                <Table bordered hover>
-                  <thead>
-                    <tr>
-                      <th>Date</th>
-                      <th>Stade de croissance</th>
-                      <th>Couleur des feuilles</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {observations.length > 0 ? (
-                      observations.map((obs) => (
-                        <tr key={obs._id}>
-                          <td>{new Date(obs.date).toLocaleDateString()}</td>
-                          <td>
-                            {editingId === obs._id ? (
-                              <Form.Select
-                                value={obs.cropHealth?.growthStage || ""}
-                                onChange={(e) => handleSaveGrowthStage(obs._id, e.target.value)}
-                              >
-                                <option value="">Sélectionner un stade</option>
-                                {growthStages.map((stage) => (
-                                  <option key={stage} value={stage}>
-                                    {stage}
-                                  </option>
-                                ))}
-                              </Form.Select>
-                            ) : (
-                              obs.cropHealth?.growthStage || "N/A"
-                            )}
-                          </td>
-                          <td>{obs.cropHealth?.leafColor || "N/A"}</td>
-                          <td>
-                            <Button
-                              variant="info"
-                              size="sm"
-                              onClick={() => handleShowDetails(obs)}
-                              className="me-2"
+              <h4 className="mb-0">Observations Quotidiennes</h4>
+              <Button className="bg-green-400" size="sm" onClick={handleAddObservation}>
+                Ajouter une observation
+              </Button>
+            </Card.Header>
+            <Card.Body>
+              <Table bordered hover>
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Stade de croissance</th>
+                    <th>Couleur des feuilles</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {observations.length > 0 ? (
+                    observations.map((obs) => (
+                      <tr key={obs._id}>
+                        <td>{new Date(obs.date).toLocaleDateString()}</td>
+                        <td>
+                          {editingId === obs._id ? (
+                            <Form.Select
+                              value={obs.cropHealth?.growthStage || ""}
+                              onChange={(e) => handleSaveGrowthStage(obs._id, e.target.value)}
                             >
-                              Détails
-                            </Button>
-                            <Button
-                              variant="primary"
-                              size="sm"
-                              onClick={() => handleEditGrowthStage(obs._id)}
-                            >
-                              Modifier
-                            </Button>
-                          </td>
-                        </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td colSpan="4" className="text-center">
-                          Aucune observation trouvée
+                              <option value="">Sélectionner un stade</option>
+                              {growthStages.map((stage) => (
+                                <option key={stage} value={stage}>
+                                  {stage}
+                                </option>
+                              ))}
+                            </Form.Select>
+                          ) : (
+                            obs.cropHealth?.growthStage || "N/A"
+                          )}
+                        </td>
+                        <td>{obs.cropHealth?.leafColor || "N/A"}</td>
+                        <td>
+                          <Button
+                            variant="info"
+                            size="sm"
+                            onClick={() => handleShowDetails(obs)}
+                            className="me-2"
+                          >
+                            Détails
+                          </Button>
+                          <Button
+                            variant="primary"
+                            size="sm"
+                            onClick={() => handleEditGrowthStage(obs._id)}
+                          >
+                            Modifier
+                          </Button>
                         </td>
                       </tr>
-                    )}
-                  </tbody>
-                </Table>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="4" className="text-center">
+                        Aucune observation trouvée
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </Table>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
 
-        {/* Deuxième rangée : Prévisions Météo */}
-        <Row>
-          <Col md={12} className="mb-4">
-            <Card>
-              <Card.Header className="simple-header">
-                <h4 className="mb-0">Prévisions Météo</h4>
-              </Card.Header>
-              <Card.Body>
-                {forecast ? (
-                  <Forecast data={forecast} />
-                ) : (
-                  <p>Chargement des prévisions météo...</p>
-                )}
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
+      {/* Deuxième rangée : Prévisions Météo */}
+      <Row>
+        <Col md={12} className="mb-4">
+          <Card>
+            <Card.Header className="simple-header">
+              <h4 className="mb-0">Prévisions Météo</h4>
+            </Card.Header>
+            <Card.Body>
+              {forecast ? (
+                <Forecast data={forecast} />
+              ) : (
+                <p>Chargement des prévisions météo...</p>
+              )}
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
 
-        {/* Troisième rangée : Graphique */}
-        <Row>
-          <Col md={6} className="mb-4">
-            <Card className="chart-card">
-              <Card.Header className="simple-header">
-                <h4 className="mb-0">Progression des Stades de Croissance</h4>
-              </Card.Header>
-              <Card.Body>
-                {observations.length > 0 ? (
-                  <div style={{ height: "300px" }}>
-                    <Line data={getChartData()} options={chartOptions} />
-                  </div>
-                ) : (
-                  <p className="text-center">Aucune observation disponible pour afficher le graphique.</p>
-                )}
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
+      {/* Troisième rangée : Graphique */}
+      <Row>
+        <Col md={6} className="mb-4">
+          <Card className="char">
+            <Card.Header className="simple-header">
+              <h4 className="mb-0">Progression des Stades de Croissance</h4>
+            </Card.Header>
+            <Card.Body>
+              {observations.length > 0 ? (
+                <div style={{ height: "300px" }}>
+                  <Line data={getChartData()} options={chartOptions} />
+                </div>
+              ) : (
+                <p className="text-center">Aucune observation disponible pour afficher le graphique.</p>
+              )}
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
 
-        {/* Modal pour les détails */}
-        <Modal show={showModal} onHide={handleCloseModal} size="lg">
-          <Modal.Header closeButton>
-            <Modal.Title>
-              Détails de l'observation -{" "}
-              {selectedObservation?.date && new Date(selectedObservation.date).toLocaleDateString()}
-            </Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            {selectedObservation && (
-              <div className="observation-details">
-                <Row>
-                  <Col md={6}>
-                    <Card className="mb-3">
-                      <Card.Header className="simple-header">Météo</Card.Header>
-                      <Card.Body>
-                        <p>
-                          <strong>Température :</strong>{" "}
-                          {selectedObservation.weather?.temperature?.min || "N/A"} -{" "}
-                          {selectedObservation.weather?.temperature?.max || "N/A"}°C
-                        </p>
-                        <p>
-                          <strong>Précipitations :</strong>{" "}
-                          {selectedObservation.weather?.precipitation || "N/A"} mm
-                        </p>
-                        <p>
-                          <strong>Humidité :</strong> {selectedObservation.weather?.humidity || "N/A"}%
-                        </p>
-                        <p>
-                          <strong>Vitesse du vent :</strong>{" "}
-                          {selectedObservation.weather?.windSpeed || "N/A"} km/h
-                        </p>
-                        <p>
-                          <strong>Direction du vent :</strong>{" "}
-                          {selectedObservation.weather?.windDirection || "N/A"}
-                        </p>
-                      </Card.Body>
-                    </Card>
-                  </Col>
-                  <Col md={6}>
-                    <Card className="mb-3">
-                      <Card.Header className="simple-header">Sol</Card.Header>
-                      <Card.Body>
-                        <p>
-                          <strong>Humidité :</strong> {selectedObservation.soil?.moisture || "N/A"}%
-                        </p>
-                        <p>
-                          <strong>Température :</strong>{" "}
-                          {selectedObservation.soil?.temperature || "N/A"}°C
-                        </p>
-                        <p>
-                          <strong>pH :</strong> {selectedObservation.soil?.pH || "N/A"}
-                        </p>
-                        <p>
-                          <strong>Niveau de compaction :</strong>{" "}
-                          {selectedObservation.soil?.compactionLevel || "N/A"}
-                        </p>
-                      </Card.Body>
-                    </Card>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col md={6}>
-                    <Card className="mb-3">
-                      <Card.Header className="simple-header">Santé des cultures</Card.Header>
-                      <Card.Body>
-                        <p>
-                          <strong>Stade de croissance :</strong>{" "}
-                          {selectedObservation.cropHealth?.growthStage || "N/A"}
-                        </p>
-                        <p>
-                          <strong>Hauteur des plantes :</strong>{" "}
-                          {selectedObservation.cropHealth?.plantHeight || "N/A"} cm
-                        </p>
-                        <p>
-                          <strong>Couleur des feuilles :</strong>{" "}
-                          {selectedObservation.cropHealth?.leafColor || "N/A"}
-                        </p>
-                        <p>
-                          <strong>Présence de mauvaises herbes :</strong>{" "}
-                          {selectedObservation.cropHealth?.weedPresence || "N/A"}
-                        </p>
-                        <p>
-                          <strong>Présence de nuisibles :</strong>
-                          {selectedObservation.cropHealth?.pestPresence?.length > 0 ? (
-                            <ul>
-                              {selectedObservation.cropHealth.pestPresence.map((pest, index) => (
-                                <li key={index}>
-                                  {pest.pestType} (Sévérité : {pest.severity}, Zone affectée :{" "}
-                                  {pest.affectedArea}%)
-                                </li>
-                              ))}
-                            </ul>
-                          ) : (
-                            "Aucun"
-                          )}
-                        </p>
-                      </Card.Body>
-                    </Card>
-                  </Col>
-                  <Col md={6}>
-                    <Card className="mb-3">
-                      <Card.Header className="simple-header">Notes</Card.Header>
-                      <Card.Body>
-                        <p>{selectedObservation.notes || "Aucune note disponible"}</p>
-                      </Card.Body>
-                    </Card>
-                  </Col>
-                </Row>
-              </div>
-            )}
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleCloseModal}>
-              Fermer
-            </Button>
-          </Modal.Footer>
-        </Modal>
-      </div>
-    </div>
+      {/* Modal pour les détails */}
+      <Modal show={showModal} onHide={handleCloseModal} size="lg">
+        <Modal.Header closeButton>
+          <Modal.Title>
+            Détails de l'observation -{" "}
+            {selectedObservation?.date && new Date(selectedObservation.date).toLocaleDateString()}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {selectedObservation && (
+            <div className="observation-details">
+              <Row>
+                <Col md={6}>
+                  <Card className="mb-3">
+                    <Card.Header className="simple-header">Météo</Card.Header>
+                    <Card.Body>
+                      <p>
+                        <strong>Température :</strong>{" "}
+                        {selectedObservation.weather?.temperature?.min || "N/A"} -{" "}
+                        {selectedObservation.weather?.temperature?.max || "N/A"}°C
+                      </p>
+                      <p>
+                        <strong>Précipitations :</strong>{" "}
+                        {selectedObservation.weather?.precipitation || "N/A"} mm
+                      </p>
+                      <p>
+                        <strong>Humidité :</strong> {selectedObservation.weather?.humidity || "N/A"}%
+                      </p>
+                      <p>
+                        <strong>Vitesse du vent :</strong>{" "}
+                        {selectedObservation.weather?.windSpeed || "N/A"} km/h
+                      </p>
+                      <p>
+                        <strong>Direction du vent :</strong>{" "}
+                        {selectedObservation.weather?.windDirection || "N/A"}
+                      </p>
+                    </Card.Body>
+                  </Card>
+                </Col>
+                <Col md={6}>
+                  <Card className="mb-3">
+                    <Card.Header className="simple-header">Sol</Card.Header>
+                    <Card.Body>
+                      <p>
+                        <strong>Humidité :</strong> {selectedObservation.soil?.moisture || "N/A"}%
+                      </p>
+                      <p>
+                        <strong>Température :</strong>{" "}
+                        {selectedObservation.soil?.temperature || "N/A"}°C
+                      </p>
+                      <p>
+                        <strong>pH :</strong> {selectedObservation.soil?.pH || "N/A"}
+                      </p>
+                      <p>
+                        <strong>Niveau de compaction :</strong>{" "}
+                        {selectedObservation.soil?.compactionLevel || "N/A"}
+                      </p>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              </Row>
+              <Row>
+                <Col md={6}>
+                  <Card className="mb-3">
+                    <Card.Header className="simple-header">Santé des cultures</Card.Header>
+                    <Card.Body>
+                      <p>
+                        <strong>Stade de croissance :</strong>{" "}
+                        {selectedObservation.cropHealth?.growthStage || "N/A"}
+                      </p>
+                      <p>
+                        <strong>Hauteur des plantes :</strong>{" "}
+                        {selectedObservation.cropHealth?.plantHeight || "N/A"} cm
+                      </p>
+                      <p>
+                        <strong>Couleur des feuilles :</strong>{" "}
+                        {selectedObservation.cropHealth?.leafColor || "N/A"}
+                      </p>
+                      <p>
+                        <strong>Présence de mauvaises herbes :</strong>{" "}
+                        {selectedObservation.cropHealth?.weedPresence || "N/A"}
+                      </p>
+                      <p>
+                        <strong>Présence de nuisibles :</strong>
+                        {selectedObservation.cropHealth?.pestPresence?.length > 0 ? (
+                          <ul>
+                            {selectedObservation.cropHealth.pestPresence.map((pest, index) => (
+                              <li key={index}>
+                                {pest.pestType} (Sévérité : {pest.severity}, Zone affectée :{" "}
+                                {pest.affectedArea}%)
+                              </li>
+                            ))}
+                          </ul>
+                        ) : (
+                          "Aucun"
+                        )}
+                      </p>
+                    </Card.Body>
+                  </Card>
+                </Col>
+                <Col md={6}>
+                  <Card className="mb-3">
+                    <Card.Header className="simple-header">Notes</Card.Header>
+                    <Card.Body>
+                      <p>{selectedObservation.notes || "Aucune note disponible"}</p>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              </Row>
+            </div>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseModal}>
+            Fermer
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
   );
 }
 

@@ -1,125 +1,114 @@
-.app-container {
-  display: flex;
-  flex-direction: row;
-  min-height: 100vh;
-}
-
-.main-content {
-  flex: 1;
-  padding: 15px;
+.parcel-info-container {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
 }
 
 .map-container {
   width: 100%;
+  margin-bottom: 20px;
 }
 
-.leaflet-container {
+.map-container h4 {
+  font-size: 1.25rem;
+  margin-bottom: 10px;
+}
+
+.table-card, .chart-card {
   width: 100%;
-  height: 250px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  overflow-x: auto;
 }
 
-.table-card,
-.chart-card {
-  margin-bottom: 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.simple-table th,
-.simple-table td {
-  vertical-align: middle;
-  text-align: center;
-  padding: 8px;
+.simple-table {
+  width: 100%;
+  min-width: 800px;
 }
 
 .color-dot {
   display: inline-block;
-  width: 15px;
-  height: 15px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
   margin-right: 5px;
 }
 
-.leaflet-popup-content-wrapper {
-  border-radius: 5px;
-  font-size: 14px;
+.chart-card .card-body {
+  padding: 15px;
 }
 
-.leaflet-popup-tip {
-  background-color: #fff;
+.chart-card div {
+  width: 100%;
+  height: 300px;
 }
 
-/* Responsive adjustments */
+.modal-content {
+  max-width: 100%;
+}
+
 @media (max-width: 768px) {
-  .app-container {
-    flex-direction: column;
-  }
-
-  .main-content {
-    padding: 10px;
-  }
-
-  .leaflet-container {
-    height: 200px;
+  .parcel-info-container {
+    padding: 0 10px;
   }
 
   .simple-table {
-    font-size: 12px;
+    min-width: 100%;
   }
 
-  .simple-table th,
-  .simple-table td {
-    padding: 5px;
+  .map-container, .table-card, .chart-card {
+    margin-bottom: 15px;
   }
 
-  .table-responsive {
+  .chart-card div {
+    height: 250px;
+  }
+
+  /* Ajustements pour mobile-expanded (sidebar visible) */
+  .main-content.mobile-expanded .parcel-info-container {
+    padding: 0 5px;
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .main-content.mobile-expanded .simple-table {
+    font-size: 0.9rem;
+  }
+
+  .main-content.mobile-expanded .map-container,
+  .main-content.mobile-expanded .table-card,
+  .main-content.mobile-expanded .chart-card {
+    width: 100%;
     overflow-x: auto;
   }
 
-  .simple-table td:last-child {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
-  }
-
-  .simple-table .btn {
+  /* Lorsque la sidebar est cachée */
+  .sidebar-container.mobile-collapsed ~ .main-content .parcel-info-container {
+    padding: 0 10px; /* Restaure le padding normal */
     width: 100%;
-    margin: 0;
-  }
-
-  .pagination {
-    font-size: 12px;
-    padding: 5px 0;
-  }
-
-  .pagination .page-item {
-    margin: 0 2px;
-  }
-
-  .chart-card canvas {
-    max-height: 250px;
+    margin-left: 0;
   }
 }
 
-@media (max-width: 576px) {
-  .leaflet-container {
-    height: 150px;
+@media (max-width: 480px) {
+  .main-content.mobile-expanded .parcel-info-container {
+    width: 100%;
   }
 
-  .simple-table {
-    font-size: 10px;
+  .sidebar-container.mobile-collapsed ~ .main-content .parcel-info-container {
+    width: 100%;
   }
+}
+.chart-card .card-header {
+  padding: 0.5rem 1rem;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  background-color: #f8f9fa; /* Optionnel : garder une couleur de fond légère */
+}
 
-  .simple-table th,
-  .simple-table td {
-    padding: 3px;
-  }
-
-  .chart-card canvas {
-    max-height: 200px;
-  }
+.chart-card h4 {
+  font-size: 1.25rem;
+  margin: 0;
 }
