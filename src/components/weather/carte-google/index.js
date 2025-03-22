@@ -63,7 +63,8 @@ function Weather() {
       .then(async (response) => {
         const weatherResponse = await response[0].json();
         const forecastResponse = await response[1].json();
-
+        console.log("Données météo actuelles de la localisation sélectionnée :", weatherResponse);
+        console.log("Données prévisions de la localisation sélectionnée :", forecastResponse);
         if (response[0].ok && response[1].ok) {
           setCurrentWeather({ city: "Selected Location", ...weatherResponse });
           setForecast({ city: "Selected Location", ...forecastResponse });

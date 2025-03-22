@@ -10,7 +10,6 @@ const UpdateFarmerProfile = () => {
   });
   const [initialData, setInitialData] = useState(null);
   const [userId, setUserId] = useState(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -34,12 +33,10 @@ const UpdateFarmerProfile = () => {
           setInitialData(farmerData);
           setUserId(response.data._id);
           // Set isAuthenticated based on isActivated status
-          setIsAuthenticated(farmerData.isActivated === true);
         }
       } catch (err) {
         if (mounted) {
           setError(err.message);
-          setIsAuthenticated(false);
         }
       } finally {
         if (mounted) setLoading(false);
@@ -76,7 +73,7 @@ const UpdateFarmerProfile = () => {
     e.preventDefault();
     setError(null);
 
-    if (!userId || !isAuthenticated) {
+    if (!userId ) {
       setError('Authentication required');
       return;
     }
@@ -174,7 +171,7 @@ const UpdateFarmerProfile = () => {
     );
   }
 
-  if (!isAuthenticated || !userId) {
+  if (  !userId) {
     return null;
   }
 

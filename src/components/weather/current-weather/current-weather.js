@@ -18,7 +18,7 @@ const CurrentWeather = ({ data }) => {
         <img
           alt="weather"
           className={`weather-icon ${loading ? "loading" : ""}`}
-          src={`icons/${data.weather[0].icon}.png`}
+          src={`/icons/${data.weather[0].icon}.png`} // Chemin absolu avec /icons/
         />
       </div>
       <div className="bottom-section">

@@ -1,53 +1,106 @@
+.app-container {
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh;
+}
+
 .main-content {
-    padding: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
+  flex: 1;
+  padding: 15px;
+}
+
+.table {
+  font-size: 14px;
+}
+
+.table th,
+.table td {
+  vertical-align: middle;
+  text-align: center;
+  padding: 8px;
+}
+
+.chart-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 15px;
+}
+
+.observation-details .card {
+  border-radius: 8px;
+}
+
+.observation-details .card-header {
+  font-weight: bold;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .app-container {
+    flex-direction: column;
   }
-  
+
+  .main-content {
+    padding: 10px;
+  }
+
   .table {
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-size: 12px;
   }
-  
+
   .table th,
   .table td {
-    vertical-align: middle;
-    text-align: center;
+    padding: 5px;
   }
-  
-  .table thead {
-    background-color: #ffffff;
-    color: white;
+
+  .table-responsive {
+    overflow-x: auto;
   }
-  
-  .btn-info {
-    background-color: #17a2b8;
-    border-color: #17a2b8;
+
+  .table td:last-child {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
   }
-  
-  .btn-info:hover {
-    background-color: #138496;
-    border-color: #117a8b;
+
+  .table .btn {
+    width: 100%;
+    margin: 0;
   }
-  
-  /* Styles pour la modale */
-  .observation-details .card {
-    border: none;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  .chart-card canvas {
+    max-height: 250px; /* Adjust chart height on tablet */
   }
-  
-  .observation-details .card-header {
-    font-size: 1.1rem;
-    font-weight: bold;
+}
+
+@media (max-width: 576px) {
+  .table {
+    font-size: 10px;
   }
-  
-  .observation-details p {
-    margin-bottom: 8px;
+
+  .table th,
+  .table td {
+    padding: 3px;
   }
-  
-  .observation-details ul {
-    padding-left: 20px;
-    list-style-type: disc;
+
+  .chart-card canvas {
+    max-height: 200px; /* Smaller chart on phone */
   }
+
+  .observation-details .row {
+    flex-direction: column;
+  }
+
+  .observation-details .col-md-6 {
+    margin-bottom: 10px;
+  }
+}
+
+
+/* Cible spécifiquement le h4 dans simple-header */
+.simple-header h4 {
+  font-size: 1.2rem; /* Taille de police plus petite (16px) */
+  font-weight: 600; /* Police plus fine (normal) */
+  margin: 0; /* Supprime les marges par défaut du h4 */
+}

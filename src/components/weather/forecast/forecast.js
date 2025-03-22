@@ -21,31 +21,25 @@ const Forecast = ({ data }) => {
     setSelectedDay(null);
   };
 
-  // Fonction pour déterminer le dégradé atténué en fonction de la température
   const getTemperatureGradient = (tempMax) => {
     const temp = Math.round(tempMax);
     let startColor, endColor;
 
     if (temp <= 0) {
-      // Très froid : bleu pastel doux
-      startColor = "#B0E0E6"; // PowderBlue
-      endColor = "#E6F0FA";   // LightSkyBlue pâle
+      startColor = "#B0E0E6";
+      endColor = "#E6F0FA";
     } else if (temp <= 15) {
-      // Froid : bleu clair à vert pastel
-      startColor = "#E6F0FA"; // LightSkyBlue pâle
-      endColor = "#D4EDDA";   // Vert menthe pâle
+      startColor = "#E6F0FA";
+      endColor = "#D4EDDA";
     } else if (temp <= 25) {
-      // Tempéré : vert pastel à jaune pâle
-      startColor = "#D4EDDA"; // Vert menthe pâle
-      endColor = "#FFF3CD";   // Jaune très pâle
+      startColor = "#D4EDDA";
+      endColor = "#FFF3CD";
     } else if (temp <= 35) {
-      // Chaud : jaune pâle à orange doux
-      startColor = "#FFF3CD"; // Jaune très pâle
-      endColor = "#FFDAB9";   // PeachPuff (orange pâle)
+      startColor = "#FFF3CD";
+      endColor = "#FFDAB9";
     } else {
-      // Très chaud : orange doux à rouge atténué
-      startColor = "#FFDAB9"; // PeachPuff
-      endColor = "#F4CCCC";   // Rouge pâle
+      startColor = "#FFDAB9";
+      endColor = "#F4CCCC";
     }
 
     return `linear-gradient(135deg, ${startColor}, ${endColor})`;
@@ -64,7 +58,7 @@ const Forecast = ({ data }) => {
           >
             <Card.Body className="daily-summary">
               <img
-                src={`icons/${item.weather[0].icon}.png`}
+                src={`/icons/${item.weather[0].icon}.png`} // Chemin absolu avec /icons/
                 className="icon-small"
                 alt="weather"
               />
@@ -78,7 +72,6 @@ const Forecast = ({ data }) => {
         ))}
       </div>
 
-      {/* Modale pour les détails */}
       <Modal show={showModal} onHide={handleCloseModal} centered>
         <Modal.Header closeButton>
           <Modal.Title>
@@ -90,7 +83,7 @@ const Forecast = ({ data }) => {
             <div className="forecast-details">
               <div className="daily-summary-modal">
                 <img
-                  src={`icons/${selectedDay.weather[0].icon}.png`}
+                  src={`/icons/${selectedDay.weather[0].icon}.png`} // Chemin absolu avec /icons/
                   className="icon-large"
                   alt="weather"
                 />

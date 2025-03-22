@@ -361,7 +361,192 @@ At HarvestFlow, we value your time and inbox space. Rest assured, our communicat
         </NioSection.Content>
       </NioSection>
       {/*  Integrate Section End  */}
-
+      <NioSection 
+  className="nk-section-farm-efficiency py-7 py-lg-120" 
+  style={{ 
+    backgroundImage: `url('https://images.pexels.com/photos/8846150/pexels-photo-8846150.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')`, 
+    backgroundSize: 'cover', 
+    backgroundPosition: 'center',
+    minHeight: '70vh',
+    position: 'relative'
+  }}
+>
+  {/* Div superposé pour le fond semi-transparent */}
+  <div style={{
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)', // Fond semi-transparent appliqué ici
+    zIndex: 1
+  }} />
+  <NioSection.Content style={{ position: 'relative', zIndex: 2 }}>
+    <Row className="align-items-center">
+      <Col lg={6}>
+        <div style={{ padding: '20px' }}>
+          <h2 style={{ 
+            color: '#fff', 
+            fontSize: '3rem', 
+            fontFamily: "'Poppins', sans-serif", 
+            fontWeight: '700', 
+            textTransform: 'uppercase',
+            lineHeight: '1.2',
+            marginBottom: '20px'
+          }}>
+            Boost Farm Efficiency with Expertise and Technology
+          </h2>
+          <p style={{ 
+            color: '#fff', 
+            fontSize: '1.1rem', 
+            fontFamily: "'Poppins', sans-serif", 
+            fontWeight: '400', 
+            lineHeight: '1.6',
+            maxWidth: '80%'
+          }}>
+            Find the ideal solution now with expert operators and the latest technology for a more efficient and productive farm.
+          </p>
+        </div>
+      </Col>
+      <Col lg={6}>
+        <Row className="gap g-4">
+          <Col sm={6}>
+            <div style={{ 
+              position: 'relative', 
+              borderRadius: '15px', 
+              overflow: 'hidden', 
+              boxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
+              height: '300px'
+            }}>
+              <img 
+                src="https://diplomatist.com/wp-content/uploads/2020/04/Precision-Farming_footer_07.15.19-1-scaled.jpg" 
+                alt="precision farming" 
+                style={{ 
+                  width: '100%', 
+                  height: '100%', 
+                  objectFit: 'cover', 
+                  position: 'absolute',
+                  top: 0,
+                  left: 0
+                }} 
+              />
+              <div style={{ 
+                position: 'absolute', 
+                top: 0, 
+                left: 0, 
+                width: '100%', 
+                height: '100%', 
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                display: 'flex', 
+                flexDirection: 'column', 
+                justifyContent: 'center', 
+                padding: '20px'
+              }}>
+                <h4 style={{ 
+                  color: '#fff', 
+                  fontSize: '1.2rem', 
+                  fontWeight: '600', 
+                  marginBottom: '10px' 
+                }}>
+                  Rent Now, Pay Later!
+                </h4>
+                <p style={{ 
+                  color: '#fff', 
+                  fontSize: '0.9rem', 
+                  fontFamily: "'Poppins', sans-serif", 
+                  marginBottom: '15px' 
+                }}>
+                  Easy application with low interest rates and any collateral.
+                </p>
+                <a 
+                  href="#" 
+                  style={{ 
+                    color: '#28a745', 
+                    fontWeight: '500', 
+                    textDecoration: 'none', 
+                    display: 'inline-flex', 
+                    alignItems: 'center',
+                    backgroundColor: '#fff',
+                    padding: '8px 15px',
+                    borderRadius: '5px'
+                  }}
+                >
+                  Learn More <span style={{ marginLeft: '5px' }}>→</span>
+                </a>
+              </div>
+            </div>
+          </Col>
+          <Col sm={6}>
+            <div style={{ 
+              position: 'relative', 
+              borderRadius: '15px', 
+              overflow: 'hidden', 
+              boxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
+              height: '300px'
+            }}>
+              <img 
+                src="https://agssbd.org/wp-content/uploads/2021/02/Smart-farming-LetsNurture.jpg" 
+                alt="smart farming" 
+                style={{ 
+                  width: '100%', 
+                  height: '100%', 
+                  objectFit: 'cover', 
+                  position: 'absolute',
+                  top: 0,
+                  left: 0
+                }} 
+              />
+              <div style={{ 
+                position: 'absolute', 
+                top: 0, 
+                left: 0, 
+                width: '100%', 
+                height: '100%', 
+                background: 'rgba(0, 0, 0, 0.5)', 
+                display: 'flex', 
+                flexDirection: 'column', 
+                justifyContent: 'center', 
+                padding: '20px'
+              }}>
+                <h4 style={{ 
+                  color: '#fff', 
+                  fontSize: '1.2rem', 
+                  fontWeight: '600', 
+                  marginBottom: '10px' 
+                }}>
+                  Sell Your Commodities!
+                </h4>
+                <p style={{ 
+                  color: '#fff', 
+                  fontSize: '0.9rem', 
+                  fontFamily: "'Poppins', sans-serif", 
+                  marginBottom: '15px' 
+                }}>
+                  Discover a transparent marketplace, straight to the core!
+                </p>
+                <a 
+                  href="#" 
+                  style={{ 
+                    color: '#28a745', 
+                    fontWeight: '500', 
+                    textDecoration: 'none', 
+                    display: 'inline-flex', 
+                    alignItems: 'center',
+                    backgroundColor: '#fff',
+                    padding: '8px 15px',
+                    borderRadius: '5px'
+                  }}
+                >
+                  Learn More <span style={{ marginLeft: '5px' }}>→</span>
+                </a>
+              </div>
+            </div>
+          </Col>
+        </Row>
+      </Col>
+    </Row>
+  </NioSection.Content>
+</NioSection>
       {/*  Blog Section Start   */}
       <NioSection className="nk-section-blog py-7 py-lg-120" masks={["shape-13 d-done d-md-block"]}>
         <NioSection.Head alignX="center">

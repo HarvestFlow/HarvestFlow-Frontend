@@ -64,6 +64,12 @@ import AddObservation from './components/FarmerDashboard/ParcelInfo/AddObservati
 import ChartComponent from './components/FarmerDashboard/charte/charte';
 import UpdateFarmerProfile from './components/FarmerDashboard/farmerprofile';
 import GestionUser from './components/AdminBackoffice/GestionUser';
+import { HeatmapLayer } from '@react-google-maps/api';
+import WeatherHeatMap from './components/FarmerDashboard/LeafletCard/WeatherHeatMap';
+import PlainWeatherHeatMap from './components/FarmerDashboard/LeafletCard/WeatherHeatMap';
+import DebugWeatherHeatMap from './components/FarmerDashboard/LeafletCard/WeatherHeatMap';
+import MapboxWeatherHeatMap from './components/FarmerDashboard/LeafletCard/WeatherHeatMap';
+import Heatmap from './components/FarmerDashboard/LeafletCard/WeatherHeatMap';
 
 function AppRoutes() {
 
@@ -146,6 +152,7 @@ function AppRoutes() {
 
 
       <Route path='/gestionUser' element={<GestionUser />} />
+      <Route path='/Weatherheat' element={<Heatmap />} />
 
 
     </Routes>
