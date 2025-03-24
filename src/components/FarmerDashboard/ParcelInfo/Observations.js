@@ -7,15 +7,22 @@ import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement
 import CurrentWeather from "../../weather/current-weather/current-weather";
 import Forecast from "../../weather/forecast/forecast";
 import "./Observations.css";
-
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 function Observations() {
   const { shapeId } = useParams();
   const { state } = useLocation();
   const [observations, setObservations] = useState([]);
+  const [inputUsages, setInputUsages] = useState([]);
+  const [inputs, setInputs] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [showUsageModal, setShowUsageModal] = useState(false);
   const [selectedObservation, setSelectedObservation] = useState(null);
+  const [newUsage, setNewUsage] = useState({
+    inputId: "",
+    quantity: 0,
+    date: new Date().toISOString().split("T")[0], // Date par défaut : aujourd'hui
+  });
   const [editingId, setEditingId] = useState(null);
   const [shapeCoordinates, setShapeCoordinates] = useState(null);
   const [currentWeather, setCurrentWeather] = useState(null);
@@ -25,6 +32,7 @@ function Observations() {
 
   const WEATHER_API_URL = "https://api.openweathermap.org/data/2.5";
   const WEATHER_API_KEY = "806a508219bb761f07cbef033270c0b0";
+  const API_URL = "http://localhost:5000";
 
   const growthStages = [
     "Germination and Emergence",
@@ -42,7 +50,7 @@ function Observations() {
   useEffect(() => {
     const fetchShapeCoordinates = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/parcelle/shape/${shapeId}`);
+        const response = await axios.get(`${API_URL}/parcelle/shape/${shapeId}`);
         const coordinates = response.data.coordinates;
         if (coordinates && coordinates[0] && coordinates[0][0]) {
           const firstPoint = coordinates[0][0];
@@ -56,7 +64,7 @@ function Observations() {
     const fetchObservations = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/parcelle/dailyObservation/${state.parcelleId}/${shapeId}`
+          `${API_URL}/parcelle/dailyObservation/${state.parcelleId}/${shapeId}`
         );
         setObservations(response.data);
       } catch (error) {
@@ -64,9 +72,31 @@ function Observations() {
       }
     };
 
+    const fetchInputs = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/stock/inputs`, { withCredentials: true });
+        setInputs(response.data);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des intrants :", error);
+      }
+    };
+
+    const fetchInputUsages = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/stock/usage/${shapeId}`, { withCredentials: true });
+        console.log("Input Usages:", response.data); // Debug pour vérifier les données
+        setInputUsages(response.data || []);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des utilisations d'intrants :", error);
+        setInputUsages([]); // Valeur par défaut en cas d'erreur
+      }
+    };
+
     if (state?.parcelleId && shapeId) {
       fetchObservations();
       fetchShapeCoordinates();
+      fetchInputs();
+      fetchInputUsages();
     }
   }, [state, shapeId]);
 
@@ -114,7 +144,7 @@ function Observations() {
 
   const handleSaveGrowthStage = async (obsId, newStage) => {
     try {
-      await axios.put(`http://localhost:5000/parcelle/dailyObservation/${obsId}`, {
+      await axios.put(`${API_URL}/parcelle/dailyObservation/${obsId}`, {
         cropHealth: { growthStage: newStage },
       });
       setObservations((prev) =>
@@ -125,6 +155,47 @@ function Observations() {
       setEditingId(null);
     } catch (error) {
       console.error("Erreur lors de la mise à jour du stade de croissance :", error);
+    }
+  };
+
+  const handleAddInputUsage = async () => {
+    try {
+      const selectedInput = inputs.find((input) => input._id === newUsage.inputId);
+      if (!selectedInput || newUsage.quantity > selectedInput.quantity) {
+        setError("Quantité insuffisante en stock ou intrant invalide.");
+        return;
+      }
+
+      const usageResponse = await axios.post(
+        `${API_URL}/stock/usage`,
+        {
+          shapeId,
+          inputId: newUsage.inputId,
+          quantity: newUsage.quantity,
+          date: newUsage.date,
+        },
+        { withCredentials: true }
+      );
+
+      const newStockQuantity = selectedInput.quantity - newUsage.quantity;
+      await axios.put(
+        `${API_URL}/stock/${newUsage.inputId}`,
+        { quantity: newStockQuantity },
+        { withCredentials: true }
+      );
+
+      setInputUsages([...inputUsages, usageResponse.data]);
+      setInputs((prev) =>
+        prev.map((input) =>
+          input._id === newUsage.inputId ? { ...input, quantity: newStockQuantity } : input
+        )
+      );
+      setShowUsageModal(false);
+      setNewUsage({ inputId: "", quantity: 0, date: new Date().toISOString().split("T")[0] });
+      setError(null);
+    } catch (error) {
+      console.error("Erreur lors de l'ajout de l'utilisation d'intrant :", error);
+      setError("Échec de l'ajout de l'utilisation.");
     }
   };
 
@@ -189,8 +260,17 @@ function Observations() {
 
   return (
     <>
-      <h4 className="text-center mb-4">Observations quotidienne {shapeId}</h4>
-
+<div className="header-container mb-4 d-flex align-items-center mt-3 ml-3">
+  <i className="bi bi-calendar3 me-2 text-primary" style={{ fontSize: "2rem" }}></i>
+  <h5
+    className="text-dark fw-semibold py-2 bg-white border-bottom border-primary mb-0"
+    style={{
+      textShadow: "2px 2px 4px rgba(0, 0, 0, 0.3)",
+    }}
+  >
+    Observations Quotidiennes
+  </h5>
+</div>
       {/* Première rangée : Météo Actuelle et Observations Quotidiennes */}
       <Row>
         <Col md={4} className="mb-4">
@@ -282,7 +362,55 @@ function Observations() {
         </Col>
       </Row>
 
-      {/* Deuxième rangée : Prévisions Météo */}
+    {/* Deuxième rangée : Utilisation des intrants */}
+    <Row>
+        <Col md={12} className="mb-4">
+          <Card>
+            <Card.Header className="simple-header d-flex justify-content-between align-items-center">
+              <h4 className="mb-0">Utilisation des Intrants</h4>
+              <Button variant="success" size="sm" onClick={() => setShowUsageModal(true)}>
+                Ajouter une utilisation
+              </Button>
+            </Card.Header>
+            <Card.Body>
+              <Table bordered hover>
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Catégorie</th> {/* Ajout de la colonne catégorie */}
+                    <th>Type d'intrant</th>
+                    <th>Nom</th>
+                    <th>Quantité utilisée</th>
+                    <th>Unité</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {inputUsages.length > 0 ? (
+                    inputUsages.map((usage) => (
+                      <tr key={usage._id}>
+                        <td>{new Date(usage.date).toLocaleDateString()}</td>
+                        <td>{usage.input?.category || "N/A"}</td> {/* Affichage de la catégorie */}
+                        <td>{usage.input?.type || "N/A"}</td>
+                        <td>{usage.input?.name || "N/A"}</td>
+                        <td>{usage.quantity}</td>
+                        <td>{usage.input?.unit || "N/A"}</td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="6" className="text-center">
+                        Aucune utilisation d'intrant enregistrée
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </Table>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+
+      {/* Troisième rangée : Prévisions Météo */}
       <Row>
         <Col md={12} className="mb-4">
           <Card>
@@ -300,7 +428,7 @@ function Observations() {
         </Col>
       </Row>
 
-      {/* Troisième rangée : Graphique */}
+      {/* Quatrième rangée : Graphique */}
       <Row>
         <Col md={6} className="mb-4">
           <Card className="char">
@@ -320,7 +448,7 @@ function Observations() {
         </Col>
       </Row>
 
-      {/* Modal pour les détails */}
+      {/* Modal pour les détails des observations */}
       <Modal show={showModal} onHide={handleCloseModal} size="lg">
         <Modal.Header closeButton>
           <Modal.Title>
@@ -435,6 +563,59 @@ function Observations() {
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseModal}>
             Fermer
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modal pour ajouter une utilisation d'intrant */}
+      <Modal show={showUsageModal} onHide={() => setShowUsageModal(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Ajouter une utilisation d'intrant</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {error && <p className="text-danger">{error}</p>}
+          <Form>
+            <Form.Group className="mb-3">
+              <Form.Label>Intrant</Form.Label>
+              <Form.Select
+                value={newUsage.inputId}
+                onChange={(e) => setNewUsage({ ...newUsage, inputId: e.target.value })}
+              >
+                <option value="">Sélectionner un intrant</option>
+                {inputs.map((input) => (
+                  <option key={input._id} value={input._id}>
+                    {input.name} ({input.type}) - {input.quantity} {input.unit} restant
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Quantité utilisée</Form.Label>
+              <Form.Control
+                type="number"
+                value={newUsage.quantity}
+                onChange={(e) => setNewUsage({ ...newUsage, quantity: parseFloat(e.target.value) })}
+                min="0"
+                step="0.1"
+                placeholder="Entrez la quantité"
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Date d'utilisation</Form.Label>
+              <Form.Control
+                type="date"
+                value={newUsage.date}
+                onChange={(e) => setNewUsage({ ...newUsage, date: e.target.value })}
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowUsageModal(false)}>
+            Annuler
+          </Button>
+          <Button variant="primary" onClick={handleAddInputUsage}>
+            Ajouter
           </Button>
         </Modal.Footer>
       </Modal>

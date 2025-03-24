@@ -311,8 +311,16 @@ function ParcelInfo() {
   return (
     // Supprimez le conteneur app-container et main-content, gérés par Sidebar.jsx
     <div className="parcel-info-container">
-      <h2 className="text-center mb-4">Parcel Information</h2>
-
+<div className="header-container mb-4 d-flex align-items-center mt-3 ml-3">
+<i className="bi bi-map me-2 text-primary" style={{ fontSize: "2rem" }}></i>  <h5
+    className="text-dark fw-semibold py-2 bg-white border-bottom border-primary mb-0"
+    style={{
+      textShadow: "2px 2px 4px rgba(0, 0, 0, 0.3)",
+    }}
+  >
+    Parcels Information
+  </h5>
+</div>
       <div className="mb-3 map-container">
         <h4 className="mb-2">Parcel Map</h4>
         {renderAllShapesMap()}
@@ -320,7 +328,7 @@ function ParcelInfo() {
 
       <Card className="table-card mb-3">
         <Card.Header>
-          <h4 className="mb-0">Parcel Details</h4>
+          <h5 className="mb-0">Parcel Details</h5>
         </Card.Header>
         <Card.Body>
           <div className="table-responsive">
@@ -427,7 +435,7 @@ function ParcelInfo() {
 
       <Card className="">
   <Card.Header>
-    <h4 className="mb-0">Growth Stage Overview</h4>
+    <h5 className="mb-0">Growth Stage Overview</h5>
   </Card.Header>
   <Card.Body>
     <div style={{ height: "300px" }}>

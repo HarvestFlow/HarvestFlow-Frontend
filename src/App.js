@@ -68,6 +68,7 @@ import PlainWeatherHeatMap from './components/FarmerDashboard/LeafletCard/Weathe
 import DebugWeatherHeatMap from './components/FarmerDashboard/LeafletCard/WeatherHeatMap';
 import MapboxWeatherHeatMap from './components/FarmerDashboard/LeafletCard/WeatherHeatMap';
 import Heatmap from './components/FarmerDashboard/LeafletCard/WeatherHeatMap';
+import WheatProduction from './components/FarmerDashboard/productionStat/WheatProduction';
 
 function AppRoutes() {
 
@@ -146,6 +147,7 @@ function AppRoutes() {
 
       <Route path='/gestionUser' element={<GestionUser />} />
       <Route path='/Weatherheat' element={<Heatmap />} />
+      <Route path='/WheatProduction' element={<WheatProduction />} />
 
 
     </Routes>

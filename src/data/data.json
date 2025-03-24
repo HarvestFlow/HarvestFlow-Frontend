@@ -215,9 +215,9 @@
         },
         {
           "item": {
-            "url": "#features",
+            "url": "Dashboard/AdminDashboard",
             "mega": false,
-            "title": "Features",
+            "title": "Dashboard",
             "submenu": {
               "media": false,
               "items": []

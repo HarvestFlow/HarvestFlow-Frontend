@@ -157,7 +157,7 @@ function NioDropMenu({ className, data }) {
             <li className="nk-nav-item col-lg-4 nk-nav-media d-none d-lg-block">
               <Link to="https://themeforest.net/user/softnio/portfolio" traget="_blank">
                 <img src="/images/promo-banner/promo-1.png" alt="promo-banner" className="rounded-3" />
-              </Link>
+              </Link>F
             </li>
           }
         </ul>

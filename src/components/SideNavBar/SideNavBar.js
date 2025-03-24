@@ -13,7 +13,7 @@ import {
   faSearch,
   faBell,
   faExclamationTriangle,
-  faCog,
+  faCog, faMapMarkedAlt, faBoxes,
   faHome,
 } from "@fortawesome/free-solid-svg-icons";
 import NioBrand from "../NioBrand/NioBrand";
@@ -24,6 +24,8 @@ import ParcelInfo from "../FarmerDashboard/ParcelInfo/ParcelInfo";
 import MapWithComments from "../FarmerDashboard/LeafletCard/LeafletCard";
 import AddObservation from "../FarmerDashboard/ParcelInfo/AddObservation";
 import AdminDashboard from "../FarmerDashboard/charte/charte";
+import StockManagements from "../FarmerDashboard/StockManagement/StockManagement";
+import StockManagement from "../FarmerDashboard/StockManagement/StockManagement";
 
 
 function Sidebar() {
@@ -74,11 +76,11 @@ function Sidebar() {
   };
 
   const menuItems = [
-    { name: "Parcel Info", icon: faInfoCircle, path: "/parcelinfo" },
-    { name: "Observations", icon: faInfoCircle, path: "/observations/:shapeId" },
-    { name: "AdminDashboard", icon: faInfoCircle, path: "/AdminDashboard" },
-
-  ];
+    { name: "Parcel Info", icon: faInfoCircle, path: "/parcelinfo" }, // Icône d'information
+    { name: "Map", icon: faMapMarkedAlt, path: "/MapSelector" }, // Icône de carte
+    { name: "AdminDashboard", icon: faTachometerAlt, path: "/AdminDashboard" }, // Icône de tableau de bord
+    { name: "StockManagement", icon: faBoxes, path: "/StockManagement" }, // Icône de gestion de stock
+];
 
   const toolbarItems = [
     { name: "Dashboard", icon: faHome, path: "/parcelinfo" },
@@ -223,6 +225,7 @@ function Sidebar() {
           <Route path='/MapSelector' element={<MapWithComments />} />
           <Route path="/observations/add/:shapeId" element={<AddObservation />} />
           <Route path="/AdminDashboard" element={<AdminDashboard />} />
+          <Route path="/StockManagement" element={<StockManagement />} />
 
           <Route path="*" element={<div>Dashboard Page non trouvée</div>} />
         </Routes>
