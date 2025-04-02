@@ -737,7 +737,92 @@ At HarvestFlow, we value your time and inbox space. Rest assured, our communicat
       {/* Demos Section End*/}
 
       {/* Pre-Built Section Start  */}
-      
+      <NioSection masks={["green-1 right center"]}>
+        <NioSection.Head alignX="center">
+          <span className="d-inline-block fs-16 text-uppercase text-green fw-semibold mb-2">Press &amp; Media</span>
+          <h2>NioLand In The News</h2>
+          <p className="fs-20">Discover the latest news and updates about NioLand, featured in top publications and media outlets.</p>
+        </NioSection.Head>
+        <NioSection.Content>
+          <Row className="gy-5">
+            <Col lg={6}>
+              <NioCard className="card-gutter-lg bg-green-300 is-theme h-100" >
+                <NioCard.Body className="p-5 p-md-7">
+                  <div className="card-content h-100 d-flex flex-column justify-content-between">
+                    <div className="card-image mb-3">
+                      <Link to="#">
+                        <img src="images/brands/a-light.png" alt="brand" className="h-24px" />
+                      </Link>
+                    </div>
+                    <h3 className="card-title text-capitalize"> NioLand raises $84M in Series C funding </h3>
+                    <p> NioLand, a rapidly growing technology company, recently announced the successful completion of its Series C funding round, securing a substantial investment of $84 million. <br /><br /> The funding will be utilized to further enhance and expand NioLand's products and services, solidifying its position as a market leader in the industry. The significant investment highlights the confidence and support from investors in NioLand's vision and potential for continued success. </p>
+                    <div>
+                      <NioButton
+                        label="Read More"
+                        href="/blog-details"
+                        className="btn-link"
+                        icon="arrow-right after"
+                      />
+                    </div>
+                  </div>
+                </NioCard.Body>
+              </NioCard>
+            </Col>
+            <Col lg={6}>
+              <Row className="gy-5">
+                <Col xs={12}>
+                  <NioCard className="card-gutter-md bg-indigo-alt is-theme" >
+                    <NioCard.Body className="p-5">
+                      <div className="card-content">
+                        <div className="card-image mb-3 mb-md-5 brand">
+                          <Link to="#">
+                            <img src="images/brands/b.png" alt="brand" className="h-24px" />
+                          </Link>
+                        </div>
+                        <h4 className="card-title text-capitalize mb-3 mb-md-5">
+                          <Link to="/blog-details">NioLand claims to be the #1 player in the analytics industry</Link>
+                        </h4>
+                        <div>
+                          <NioButton
+                            label="Read More"
+                            href="/blog-details"
+                            className="btn-link"
+                            icon="arrow-right after"
+                          />
+                        </div>
+                      </div>
+                    </NioCard.Body>
+                  </NioCard>
+                </Col>
+                <Col xs={12} >
+                  <NioCard className="card-gutter-md bg-dark is-theme">
+                    <NioCard.Body className="p-5">
+                      <div className="card-content">
+                        <div className="card-image mb-3 mb-md-5 brand">
+                          <Link to="#">
+                            <img src="images/brands/c.png" alt="brand" className="h-24px" />
+                          </Link>
+                        </div>
+                        <h4 className="card-title text-capitalize mb-3 mb-md-5">
+                          <Link to="/blog-details">NioLand CEO steps-back, new CEO comes in September after the board decisions</Link>
+                        </h4>
+                        <div>
+                          <NioButton
+                            label="Read More"
+                            href="/blog-details"
+                            className="btn-link"
+                            icon="arrow-right after"
+                          />
+                        </div>
+                      </div>
+                    </NioCard.Body>
+                  </NioCard>
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+        </NioSection.Content>
+      </NioSection>
 
       {/* Features Section Start  */}
       

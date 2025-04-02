@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Table, Button, Modal, Card, Row, Col, Form } from "react-bootstrap";
+import { Table, Button, Modal, Card, Row, Col, Form, Pagination } from "react-bootstrap";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { Line } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from "chart.js";
@@ -21,13 +21,14 @@ function Observations() {
   const [newUsage, setNewUsage] = useState({
     inputId: "",
     quantity: 0,
-    date: new Date().toISOString().split("T")[0], // Date par défaut : aujourd'hui
+    date: new Date().toISOString().split("T")[0],
   });
-  const [editingId, setEditingId] = useState(null);
   const [shapeCoordinates, setShapeCoordinates] = useState(null);
   const [currentWeather, setCurrentWeather] = useState(null);
   const [forecast, setForecast] = useState(null);
   const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1); // Pagination: Current page
+  const [itemsPerPage] = useState(5); // Pagination: Items per page
   const navigate = useNavigate();
 
   const WEATHER_API_URL = "https://api.openweathermap.org/data/2.5";
@@ -84,11 +85,10 @@ function Observations() {
     const fetchInputUsages = async () => {
       try {
         const response = await axios.get(`${API_URL}/stock/usage/${shapeId}`, { withCredentials: true });
-        console.log("Input Usages:", response.data); // Debug pour vérifier les données
         setInputUsages(response.data || []);
       } catch (error) {
         console.error("Erreur lors de la récupération des utilisations d'intrants :", error);
-        setInputUsages([]); // Valeur par défaut en cas d'erreur
+        setInputUsages([]);
       }
     };
 
@@ -112,7 +112,7 @@ function Observations() {
             `${WEATHER_API_URL}/forecast?lat=${shapeCoordinates.lat}&lon=${shapeCoordinates.lon}&appid=${WEATHER_API_KEY}&units=metric`,
             { withCredentials: false }
           );
-          setCurrentWeather({ city: "Shape Location", ...currentWeatherResponse.data });
+          setCurrentWeather({ city: "Farm Location", ...currentWeatherResponse.data });
           setForecast(forecastResponse.data);
           setError(null);
         } catch (err) {
@@ -125,7 +125,9 @@ function Observations() {
   }, [shapeCoordinates]);
 
   const handleAddObservation = () => {
-    navigate(`/dashboard/observations/add/${shapeId}`, { state: { parcelleId: state.parcelleId } });
+    navigate(`/dashboard/observations/add/${shapeId}`, {
+      state: { parcelleId: state.parcelleId, currentWeather },
+    });
   };
 
   const handleShowDetails = (observation) => {
@@ -138,26 +140,6 @@ function Observations() {
     setSelectedObservation(null);
   };
 
-  const handleEditGrowthStage = (obsId) => {
-    setEditingId(obsId);
-  };
-
-  const handleSaveGrowthStage = async (obsId, newStage) => {
-    try {
-      await axios.put(`${API_URL}/parcelle/dailyObservation/${obsId}`, {
-        cropHealth: { growthStage: newStage },
-      });
-      setObservations((prev) =>
-        prev.map((obs) =>
-          obs._id === obsId ? { ...obs, cropHealth: { ...obs.cropHealth, growthStage: newStage } } : obs
-        )
-      );
-      setEditingId(null);
-    } catch (error) {
-      console.error("Erreur lors de la mise à jour du stade de croissance :", error);
-    }
-  };
-
   const handleAddInputUsage = async () => {
     try {
       const selectedInput = inputs.find((input) => input._id === newUsage.inputId);
@@ -168,12 +150,7 @@ function Observations() {
 
       const usageResponse = await axios.post(
         `${API_URL}/stock/usage`,
-        {
-          shapeId,
-          inputId: newUsage.inputId,
-          quantity: newUsage.quantity,
-          date: newUsage.date,
-        },
+        { shapeId, inputId: newUsage.inputId, quantity: newUsage.quantity, date: newUsage.date },
         { withCredentials: true }
       );
 
@@ -197,6 +174,16 @@ function Observations() {
       console.error("Erreur lors de l'ajout de l'utilisation d'intrant :", error);
       setError("Échec de l'ajout de l'utilisation.");
     }
+  };
+
+  // Pagination Logic
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentObservations = observations.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(observations.length / itemsPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
   };
 
   const getChartData = () => {
@@ -229,10 +216,7 @@ function Observations() {
     maintainAspectRatio: false,
     plugins: {
       legend: { position: "top" },
-      title: {
-        display: true,
-        text: `Progression des stades de croissance pour le Shape ${shapeId}`,
-      },
+      title: { display: true, text: "Progression des stades de croissance" },
       tooltip: {
         callbacks: {
           label: (context) => {
@@ -260,17 +244,13 @@ function Observations() {
 
   return (
     <>
-<div className="header-container mb-4 d-flex align-items-center mt-3 ml-3">
-  <i className="bi bi-calendar3 me-2 text-primary" style={{ fontSize: "2rem" }}></i>
-  <h5
-    className="text-dark fw-semibold py-2 bg-white border-bottom border-primary mb-0"
-    style={{
-      textShadow: "2px 2px 4px rgba(0, 0, 0, 0.3)",
-    }}
-  >
-    Observations Quotidiennes
-  </h5>
-</div>
+      <div className="header-container mb-4 d-flex align-items-center mt-3 ml-3">
+        <i className="bi bi-calendar3 me-2 text-primary" style={{ fontSize: "2rem" }}></i>
+        <h5 className="text-dark fw-semibold py-2 bg-white border-bottom border-primary mb-0">
+          Observations Quotidiennes
+        </h5>
+      </div>
+
       {/* Première rangée : Météo Actuelle et Observations Quotidiennes */}
       <Row>
         <Col md={4} className="mb-4">
@@ -302,32 +282,18 @@ function Observations() {
                   <tr>
                     <th>Date</th>
                     <th>Stade de croissance</th>
+                    <th>GDD Accumulé</th>
                     <th>Couleur des feuilles</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {observations.length > 0 ? (
-                    observations.map((obs) => (
+                  {currentObservations.length > 0 ? (
+                    currentObservations.map((obs) => (
                       <tr key={obs._id}>
                         <td>{new Date(obs.date).toLocaleDateString()}</td>
-                        <td>
-                          {editingId === obs._id ? (
-                            <Form.Select
-                              value={obs.cropHealth?.growthStage || ""}
-                              onChange={(e) => handleSaveGrowthStage(obs._id, e.target.value)}
-                            >
-                              <option value="">Sélectionner un stade</option>
-                              {growthStages.map((stage) => (
-                                <option key={stage} value={stage}>
-                                  {stage}
-                                </option>
-                              ))}
-                            </Form.Select>
-                          ) : (
-                            obs.cropHealth?.growthStage || "N/A"
-                          )}
-                        </td>
+                        <td>{obs.cropHealth?.growthStage || "N/A"}</td>
+                        <td>{obs.cropHealth?.accumulatedGDD?.toFixed(2) || "N/A"}</td>
                         <td>{obs.cropHealth?.leafColor || "N/A"}</td>
                         <td>
                           <Button
@@ -338,32 +304,53 @@ function Observations() {
                           >
                             Détails
                           </Button>
-                          <Button
-                            variant="primary"
-                            size="sm"
-                            onClick={() => handleEditGrowthStage(obs._id)}
-                          >
-                            Modifier
-                          </Button>
                         </td>
                       </tr>
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="4" className="text-center">
+                      <td colSpan="5" className="text-center">
                         Aucune observation trouvée
                       </td>
                     </tr>
                   )}
                 </tbody>
               </Table>
+
+              {/* Pagination */}
+              {observations.length > itemsPerPage && (
+                <Pagination className="justify-content-center mt-3">
+                  <Pagination.First onClick={() => handlePageChange(1)} disabled={currentPage === 1} />
+                  <Pagination.Prev
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                  />
+                  {[...Array(totalPages)].map((_, index) => (
+                    <Pagination.Item
+                      key={index + 1}
+                      active={index + 1 === currentPage}
+                      onClick={() => handlePageChange(index + 1)}
+                    >
+                      {index + 1}
+                    </Pagination.Item>
+                  ))}
+                  <Pagination.Next
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                  />
+                  <Pagination.Last
+                    onClick={() => handlePageChange(totalPages)}
+                    disabled={currentPage === totalPages}
+                  />
+                </Pagination>
+              )}
             </Card.Body>
           </Card>
         </Col>
       </Row>
 
-    {/* Deuxième rangée : Utilisation des intrants */}
-    <Row>
+      {/* Deuxième rangée : Utilisation des intrants */}
+      <Row>
         <Col md={12} className="mb-4">
           <Card>
             <Card.Header className="simple-header d-flex justify-content-between align-items-center">
@@ -377,7 +364,7 @@ function Observations() {
                 <thead>
                   <tr>
                     <th>Date</th>
-                    <th>Catégorie</th> {/* Ajout de la colonne catégorie */}
+                    <th>Catégorie</th>
                     <th>Type d'intrant</th>
                     <th>Nom</th>
                     <th>Quantité utilisée</th>
@@ -389,7 +376,7 @@ function Observations() {
                     inputUsages.map((usage) => (
                       <tr key={usage._id}>
                         <td>{new Date(usage.date).toLocaleDateString()}</td>
-                        <td>{usage.input?.category || "N/A"}</td> {/* Affichage de la catégorie */}
+                        <td>{usage.input?.category || "N/A"}</td>
                         <td>{usage.input?.type || "N/A"}</td>
                         <td>{usage.input?.name || "N/A"}</td>
                         <td>{usage.quantity}</td>
@@ -517,6 +504,10 @@ function Observations() {
                       <p>
                         <strong>Stade de croissance :</strong>{" "}
                         {selectedObservation.cropHealth?.growthStage || "N/A"}
+                      </p>
+                      <p>
+                        <strong>GDD Accumulé :</strong>{" "}
+                        {selectedObservation.cropHealth?.accumulatedGDD?.toFixed(2) || "N/A"}
                       </p>
                       <p>
                         <strong>Hauteur des plantes :</strong>{" "}

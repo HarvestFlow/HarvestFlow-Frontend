@@ -446,7 +446,7 @@ function ParcelInfo() {
 
       <Modal show={showModal} onHide={handleCloseModal} size="md" centered>
         <Modal.Header closeButton>
-          <Modal.Title>Update Shape</Modal.Title>
+          <Modal.Title>Update Farm</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={handleSubmit}>

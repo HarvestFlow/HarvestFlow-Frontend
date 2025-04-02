@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Form, Button, Card, Row, Col, Accordion } from "react-bootstrap";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
@@ -20,6 +20,24 @@ function AddObservation() {
   });
 
   const [pest, setPest] = useState({ pestType: "", severity: "", affectedArea: "" });
+
+  // Pre-fill temperature fields with current weather data from state
+  useEffect(() => {
+    if (state?.currentWeather) {
+      setFormData((prev) => ({
+        ...prev,
+        weather: {
+          ...prev.weather,
+          temperature: {
+            min: Math.round(state.currentWeather.main.temp_min) || "",
+            max: Math.round(state.currentWeather.main.temp_max) || "",
+          },
+          humidity: state.currentWeather.main.humidity || "",
+          windSpeed: state.currentWeather.wind.speed || "",
+        },
+      }));
+    }
+  }, [state?.currentWeather]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -109,7 +127,7 @@ function AddObservation() {
 
   return (
     <>
-      <h2 className="text-center mb-4">Ajouter une observation pour Shape {shapeId}</h2>
+      <h2 className="text-center mb-4">Ajouter une observation</h2>
       <Form onSubmit={handleSubmit}>
         {/* Date */}
         <Row className="justify-content-center">

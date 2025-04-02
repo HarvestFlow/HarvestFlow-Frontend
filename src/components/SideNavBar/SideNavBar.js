@@ -13,20 +13,27 @@ import {
   faSearch,
   faBell,
   faExclamationTriangle,
-  faCog, faMapMarkedAlt, faBoxes,
+  faCog,
+  faMapMarkedAlt,
+  faBoxes,
+  faMoneyBillWheat,
   faHome,
+  faCalculator,
+  faUserCheck,
 } from "@fortawesome/free-solid-svg-icons";
 import NioBrand from "../NioBrand/NioBrand";
 import { Routes, Route, useNavigate } from "react-router-dom";
+import axios from "axios";
 import "./SideNavBar.css";
 import Observations from "../FarmerDashboard/ParcelInfo/Observations";
 import ParcelInfo from "../FarmerDashboard/ParcelInfo/ParcelInfo";
 import MapWithComments from "../FarmerDashboard/LeafletCard/LeafletCard";
 import AddObservation from "../FarmerDashboard/ParcelInfo/AddObservation";
 import AdminDashboard from "../FarmerDashboard/charte/charte";
-import StockManagements from "../FarmerDashboard/StockManagement/StockManagement";
 import StockManagement from "../FarmerDashboard/StockManagement/StockManagement";
-
+import WheatPrediction from "../FarmerDashboard/cropYield/WheatPrediction";
+import CountryStats from "../FarmerDashboard/cropYield/statistics";
+import GestionUser from "../AdminBackoffice/GestionUser";
 
 function Sidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -34,9 +41,29 @@ function Sidebar() {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/user/getProfile", {
+          withCredentials: true,
+          timeout: 5000,
+        });
+        // Assuming the profile endpoint returns a role field
+        setIsAdmin(response.data.role === "admin"); // Adjust based on actual response structure
+        console.log("Profile response:", response.data); // Debug log
+      } catch (err) {
+        console.error("Erreur lors de la récupération du profil:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserProfile();
+
     const handleResize = () => {
       const mobile = window.innerWidth <= 768;
       setIsMobile(mobile);
@@ -61,26 +88,36 @@ function Sidebar() {
     }
   };
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
-    console.log("Recherche:", e.target.value);
   };
 
   const handleNavigation = (path) => {
-    navigate(`/dashboard${path}`); // Préfixe avec /dashboard
+    if (path === "/gestionUser" && !isAdmin) {
+      alert("Accès réservé aux administrateurs.");
+      return;
+    }
+    navigate(`/dashboard${path}`);
     if (isMobile) setIsMobileCollapsed(false);
   };
 
   const menuItems = [
-    { name: "Parcel Info", icon: faInfoCircle, path: "/parcelinfo" }, // Icône d'information
-    { name: "Map", icon: faMapMarkedAlt, path: "/MapSelector" }, // Icône de carte
-    { name: "AdminDashboard", icon: faTachometerAlt, path: "/AdminDashboard" }, // Icône de tableau de bord
-    { name: "StockManagement", icon: faBoxes, path: "/StockManagement" }, // Icône de gestion de stock
-];
+    { name: "Parcel Info", icon: faInfoCircle, path: "/parcelinfo" },
+    { name: "Map", icon: faMapMarkedAlt, path: "/MapSelector" },
+    { name: "AdminDashboard", icon: faTachometerAlt, path: "/AdminDashboard" },
+    { name: "StockManagement", icon: faBoxes, path: "/StockManagement" },
+    { name: "WheatPrediction", icon: faMoneyBillWheat, path: "/WheatPrediction" },
+    { name: "CountryStats", icon: faCalculator, path: "/CountryStats" },
+    ...(isAdmin
+      ? [{ name: "Gestion User", icon: faUserCheck, path: "/gestionUser" }]
+      : []),
+  ];
+
+  const filteredMenuItems = menuItems.filter((item) =>
+    item.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const toolbarItems = [
     { name: "Dashboard", icon: faHome, path: "/parcelinfo" },
@@ -93,9 +130,12 @@ function Sidebar() {
     { id: 2, text: "Nouvelle mise à jour disponible", icon: faBell },
   ];
 
+  if (loading) {
+    return <div>Chargement...</div>;
+  }
+
   return (
     <div className="app-container">
-      {/* Sidebar */}
       <div
         className={`sidebar-container ${
           isMobile
@@ -140,21 +180,27 @@ function Sidebar() {
           )}
 
           <ul className="sidebar-menu">
-            {menuItems.map((item) => (
-              <li className="sidebar-item" key={item.name}>
-                <a
-                  className="sidebar-link"
-                  onClick={() => handleNavigation(item.path)}
-                >
-                  <FontAwesomeIcon icon={item.icon} className="sidebar-icon" />
-                  <span className="sidebar-text">{item.name}</span>
-                </a>
+            {filteredMenuItems.length > 0 ? (
+              filteredMenuItems.map((item) => (
+                <li className="sidebar-item" key={item.name}>
+                  <a
+                    className="sidebar-link"
+                    onClick={() => handleNavigation(item.path)}
+                  >
+                    <FontAwesomeIcon icon={item.icon} className="sidebar-icon" />
+                    <span className="sidebar-text">{item.name}</span>
+                  </a>
+                </li>
+              ))
+            ) : (
+              <li className="sidebar-item">
+                <span className="sidebar-text">Aucun résultat trouvé</span>
               </li>
-            ))}
+            )}
           </ul>
 
           {!isCollapsed && (
-            <div className="notifications-container">
+            <div className="notifications">
               {notifications.map((notif) => (
                 <div className="notification-item" key={notif.id}>
                   <span className="notification-dot"></span>
@@ -177,7 +223,6 @@ function Sidebar() {
         </div>
       </div>
 
-      {/* Floating Toolbar */}
       <div
         className={`floating-toolbar ${isCollapsed && !isMobile ? "shifted" : ""}`}
       >
@@ -213,7 +258,6 @@ function Sidebar() {
         </div>
       </div>
 
-      {/* Zone de contenu avec routage */}
       <div
         className={`main-content ${
           isCollapsed && !isMobile ? "collapsed" : ""
@@ -222,12 +266,17 @@ function Sidebar() {
         <Routes>
           <Route path="/parcelinfo" element={<ParcelInfo />} />
           <Route path="/observations/:shapeId" element={<Observations />} />
-          <Route path='/MapSelector' element={<MapWithComments />} />
+          <Route path="/MapSelector" element={<MapWithComments />} />
           <Route path="/observations/add/:shapeId" element={<AddObservation />} />
           <Route path="/AdminDashboard" element={<AdminDashboard />} />
           <Route path="/StockManagement" element={<StockManagement />} />
-
-          <Route path="*" element={<div>Dashboard Page non trouvée</div>} />
+          <Route path="/WheatPrediction" element={<WheatPrediction />} />
+          <Route path="/CountryStats" element={<CountryStats />} />
+          <Route
+            path="/gestionUser"
+            element={isAdmin ? <GestionUser /> : <div>Accès réservé aux administrateurs</div>}
+          />
+          <Route path="*" element={<div>Page non trouvée</div>} />
         </Routes>
       </div>
     </div>

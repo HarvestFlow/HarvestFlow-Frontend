@@ -62,7 +62,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
 
 const ProfileActivationDialog = ({ open, onClose }) => {
   const handleRedirect = () => {
-    window.location.href = 'http://localhost:3000/UpdateFarmerProfile';
+    window.location.href = 'http://localhost:3000/dashboard/UpdateFarmerProfile';
   };
 
   return (

@@ -23,6 +23,9 @@ const CurrentWeather = ({ data }) => {
       </div>
       <div className="bottom-section">
         <p className="temperature">{Math.round(data.main.temp)}°C</p>
+        <p className="temp-range">
+                  {Math.round(data.main.temp_max)}°C / {Math.round(data.main.temp_min)}°C
+                </p>
         <div className="weather-stats">
           <div className="stat-row">
             <span className="stat-label">Feels like</span>

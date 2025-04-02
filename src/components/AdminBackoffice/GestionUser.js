@@ -1,25 +1,11 @@
-// src/components/GestionUser.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Switch,
-  CircularProgress,
-  Typography,
-  Box,
-  Button,
-  Card,
-  CardContent,
-  useMediaQuery,
-  useTheme,
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
+  Paper, Switch, CircularProgress, Typography, Box, Button, Card,
+  CardContent, useMediaQuery, useTheme, Fade, Grow, Tooltip
 } from '@mui/material';
-import Sidebar from '../SideNavBar/SideNavBar';
+import { motion } from 'framer-motion';
 
 const GestionUser = () => {
   const [users, setUsers] = useState([]);
@@ -29,9 +15,9 @@ const GestionUser = () => {
   const [error, setError] = useState(null);
 
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm')); // sm = 600px
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  // Récupérer les informations de l'utilisateur connecté
+  // Fetch functions remain unchanged
   const fetchLoggedInUser = async () => {
     try {
       const response = await axios.get('http://localhost:5000/user/getProfile', {
@@ -45,7 +31,6 @@ const GestionUser = () => {
     }
   };
 
-  // Récupérer la liste de tous les utilisateurs
   const fetchUsers = async () => {
     try {
       const response = await axios.get('http://localhost:5000/user/getAllUsers', {
@@ -58,7 +43,6 @@ const GestionUser = () => {
     }
   };
 
-  // Charger les données au montage
   useEffect(() => {
     const loadData = async () => {
       await fetchLoggedInUser();
@@ -68,18 +52,13 @@ const GestionUser = () => {
     loadData();
   }, []);
 
-  // Mettre à jour le statut isActivated d'un utilisateur
   const handleActivationToggle = async (userId, currentStatus) => {
     try {
       const updatedStatus = !currentStatus;
       const response = await axios.put(
         `http://localhost:5000/user/update/${userId}`,
         { isActivated: updatedStatus },
-        {
-          withCredentials: true,
-          headers: { 'Content-Type': 'application/json' },
-          timeout: 5000,
-        }
+        { withCredentials: true, headers: { 'Content-Type': 'application/json' }, timeout: 5000 }
       );
       setUsers((prevUsers) =>
         prevUsers.map((user) =>
@@ -92,245 +71,173 @@ const GestionUser = () => {
     }
   };
 
-  return (
-    <Box sx={{ display: 'flex', minHeight: '100vh' }}>
-      {/* Sidebar à gauche */}
-      <Sidebar />
+  const cardVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
+  };
 
-      {/* Contenu principal à droite */}
-      <Box sx={{ flexGrow: 1, p: 3 }}>
-        {loading ? (
+  return (
+    <Box sx={{ minHeight: '100vh', background: 'linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%)', p: 4 }}>
+      {loading ? (
+        <Fade in={loading}>
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
-            <CircularProgress sx={{ color: '#40916c' }} />
-            <Typography sx={{ mt: 2, color: '#333' }}>Chargement des utilisateurs...</Typography>
-          </Box>
-        ) : error ? (
-          <Box sx={{ maxWidth: '600px', margin: '40px auto', padding: '20px', backgroundColor: '#fee2e2', borderRadius: '8px', textAlign: 'center' }}>
-            <Typography sx={{ color: '#dc2626', fontSize: '16px', fontWeight: '500' }}>
-              Erreur: {error}
+            <CircularProgress sx={{ color: '#2e7d32' }} size={60} thickness={5} />
+            <Typography sx={{ mt: 3, color: '#2e7d32', fontWeight: 500, fontSize: '1.2rem' }}>
+              Chargement des utilisateurs...
             </Typography>
+          </Box>
+        </Fade>
+      ) : error ? (
+        <Grow in={true}>
+          <Box sx={{ maxWidth: 500, mx: 'auto', mt: 8, p: 3, bgcolor: '#ffcdd2', borderRadius: 2, textAlign: 'center' }}>
+            <Typography sx={{ color: '#c62828', fontWeight: 600 }}>{error}</Typography>
             <Button
-              onClick={() => {
-                setError(null);
-                setLoading(true);
-                fetchLoggedInUser().then(() => fetchUsers()).finally(() => setLoading(false));
-              }}
+              onClick={() => { setError(null); setLoading(true); fetchLoggedInUser().then(() => fetchUsers()).finally(() => setLoading(false)); }}
               variant="contained"
-              sx={{ mt: 2, backgroundColor: '#40916c', '&:hover': { backgroundColor: '#2d6a4f' } }}
+              sx={{ mt: 2, bgcolor: '#4caf50', '&:hover': { bgcolor: '#388e3c' } }}
             >
               Réessayer
             </Button>
           </Box>
-        ) : !loggedInUserId ? (
-          <Box sx={{ maxWidth: '600px', margin: '40px auto', padding: '20px', textAlign: 'center' }}>
-            <Typography sx={{ color: '#333', fontSize: '18px' }}>
-              Veuillez vous connecter pour accéder à la gestion des utilisateurs.
-            </Typography>
-          </Box>
-        ) : (
-          <Box
+        </Grow>
+      ) : !loggedInUserId ? (
+        <Typography sx={{ color: '#2e7d32', textAlign: 'center', mt: 8, fontSize: '1.5rem' }}>
+          Veuillez vous connecter pour gérer les utilisateurs
+        </Typography>
+      ) : (
+        <Box sx={{ maxWidth: 1000, mx: 'auto' }}>
+          <Typography
+            variant="h3"
             sx={{
-              maxWidth: '900px',
-              margin: '0 auto',
-              padding: '20px',
-              background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
-              borderRadius: '15px',
-              boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1)',
+              color: '#2e7d32',
+              textAlign: 'center',
+              mb: 4,
+              fontWeight: 700,
+              textShadow: '0 2px 4px rgba(46, 125, 50, 0.3)'
             }}
           >
-            <Typography
-              variant="h4"
-              sx={{
-                textAlign: 'center',
-                color: '#2d6a4f',
-                mb: 4,
-                fontWeight: '700',
-                textTransform: 'uppercase',
-                letterSpacing: '1px',
-              }}
-            >
-              Gestion des utilisateurs
+            Gestion des Utilisateurs
+          </Typography>
+          {!isAdmin && (
+            <Typography sx={{ textAlign: 'center', color: '#ef5350', mb: 3, fontStyle: 'italic' }}>
+              Mode lecture seule - Réservé aux administrateurs
             </Typography>
-            {!isAdmin && (
-              <Typography sx={{ textAlign: 'center', color: '#dc2626', mb: 2 }}>
-                Seuls les administrateurs peuvent modifier le statut des utilisateurs.
-              </Typography>
-            )}
+          )}
 
-            {/* Affichage responsive : Tableau sur grands écrans, cartes sur mobile */}
-            {isMobile ? (
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                {users.map((user) => (
+          {isMobile ? (
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              {users.map((user, index) => (
+                <motion.div key={user._id} variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: index * 0.1 }}>
                   <Card
-                    key={user._id}
                     sx={{
-                      borderRadius: '10px',
-                      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
-                      backgroundColor: '#fff',
-                      '&:hover': { backgroundColor: '#f0f4f8' },
-                      transition: 'background-color 0.3s',
+                      bgcolor: '#ffffff',
+                      border: '1px solid #c8e6c9',
+                      borderRadius: 2,
+                      boxShadow: '0 4px 12px rgba(46, 125, 50, 0.1)',
+                      '&:hover': { transform: 'scale(1.02)', transition: 'transform 0.3s', boxShadow: '0 6px 16px rgba(46, 125, 50, 0.2)' }
                     }}
                   >
-                    <CardContent sx={{ p: 2 }}>
-                      <Typography variant="body2" sx={{ fontWeight: '600', color: '#333' }}>
-                        ID: {user._id}
-                      </Typography>
-                      <Typography variant="body2" sx={{ color: '#555', mt: 1 }}>
-                        Email: {user.email || 'N/A'}
-                      </Typography>
-                      <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
-                        <Switch
-                          checked={user.isActivated}
-                          onChange={() => handleActivationToggle(user._id, user.isActivated)}
-                          color="primary"
-                          disabled={!isAdmin}
-                          sx={{
-                            '& .MuiSwitch-switchBase.Mui-checked': { color: '#40916c' },
-                            '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': { backgroundColor: '#74c69d' },
-                          }}
-                        />
-                        <Typography variant="body2" sx={{ ml: 1 }}>
-                          {user.isActivated ? 'Activé' : 'Désactivé'}
+                    <CardContent sx={{ color: '#2e7d32' }}>
+                      <Typography sx={{ fontWeight: 600 }}>ID: {user._id.slice(0, 8)}...</Typography>
+                      <Typography sx={{ mt: 1 }}>Email: {user.email || 'N/A'}</Typography>
+                      <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
+                        <Tooltip title={isAdmin ? '' : 'Réservé aux admins'}>
+                          <Switch
+                            checked={user.isActivated}
+                            onChange={() => handleActivationToggle(user._id, user.isActivated)}
+                            disabled={!isAdmin}
+                            sx={{
+                              '& .MuiSwitch-switchBase.Mui-checked': { color: '#4caf50' },
+                              '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': { bgcolor: '#81c784' }
+                            }}
+                          />
+                        </Tooltip>
+                        <Typography sx={{ ml: 1, color: user.isActivated ? '#4caf50' : '#ef5350' }}>
+                          {user.isActivated ? 'Actif' : 'Inactif'}
                         </Typography>
                       </Box>
-                      <Typography variant="body2" sx={{ fontSize: '14px', color: '#555', mt: '5px' }}>
-                        Certification actuelle :{' '}
+                      <Typography sx={{ mt: 1 }}>
+                        Certification:{' '}
                         {user.certification ? (
                           <Button
-                            variant="outlined"
-                            size="small"
                             href={`http://localhost:5000/${user.certification}`}
                             target="_blank"
-                            rel="noopener noreferrer"
-                            sx={{
-                              color: '#40916c',
-                              borderColor: '#40916c',
-                              textTransform: 'none',
-                              fontWeight: '500',
-                              '&:hover': {
-                                backgroundColor: '#e6f0ea',
-                                borderColor: '#2d6a4f',
-                                color: '#2d6a4f',
-                              },
-                            }}
+                            sx={{ color: '#2e7d32', '&:hover': { color: '#1b5e20' } }}
                           >
-                            Voir Certification
+                            Voir
                           </Button>
                         ) : (
-                          'Aucune certification'
+                          'Aucune'
                         )}
                       </Typography>
                     </CardContent>
                   </Card>
-                ))}
-              </Box>
-            ) : (
-              <TableContainer
-                component={Paper}
-                sx={{
-                  borderRadius: '10px',
-                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
-                  overflowX: 'auto',
-                }}
-              >
-                <Table sx={{ minWidth: 650 }}>
-                  <TableHead>
-                    <TableRow sx={{ backgroundColor: '#40916c' }}>
-                      <TableCell
-                        sx={{ color: 'white', fontWeight: '600', minWidth: 150, whiteSpace: 'nowrap' }}
-                      >
-                        ID
-                      </TableCell>
-                      <TableCell
-                        sx={{ color: 'white', fontWeight: '600', minWidth: 200, whiteSpace: 'nowrap' }}
-                      >
-                        Email
-                      </TableCell>
-                      <TableCell
-                        sx={{ color: 'white', fontWeight: '600', minWidth: 100, whiteSpace: 'nowrap' }}
-                      >
-                        Activé
-                      </TableCell>
-                      <TableCell
-                        sx={{ color: 'white', fontWeight: '600', minWidth: 100, whiteSpace: 'nowrap' }}
-                      >
-                        Action
-                      </TableCell>
-                      <TableCell
-                        sx={{ color: 'white', fontWeight: '600', minWidth: 200, whiteSpace: 'nowrap' }}
-                      >
-                        Certification
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {users.map((user) => (
-                      <TableRow
-                        key={user._id}
-                        sx={{ '&:hover': { backgroundColor: '#f0f4f8' }, transition: 'background-color 0.3s' }}
-                      >
-                        <TableCell
-                          sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 150 }}
-                        >
-                          {user._id}
-                        </TableCell>
-                        <TableCell
-                          sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 200 }}
-                        >
-                          {user.email || 'N/A'}
-                        </TableCell>
-                        <TableCell>
-                          <Switch
-                            checked={user.isActivated}
-                            onChange={() => handleActivationToggle(user._id, user.isActivated)}
-                            color="primary"
-                            disabled={!isAdmin}
-                            sx={{
-                              '& .MuiSwitch-switchBase.Mui-checked': { color: '#40916c' },
-                              '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': { backgroundColor: '#74c69d' },
-                            }}
-                          />
-                        </TableCell>
-                        <TableCell sx={{ whiteSpace: 'nowrap' }}>
-                          {user.isActivated ? 'Activé' : 'Désactivé'}
-                        </TableCell>
-                        <TableCell
-                          sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 200 }}
-                        >
-                          {user.certification ? (
-                            <Button
-                              variant="outlined"
-                              size="small"
-                              href={`http://localhost:5000/${user.certification}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              sx={{
-                                color: '#40916c',
-                                borderColor: '#40916c',
-                                textTransform: 'none',
-                                fontWeight: '500',
-                                '&:hover': {
-                                  backgroundColor: '#e6f0ea',
-                                  borderColor: '#2d6a4f',
-                                  color: '#2d6a4f',
-                                },
-                              }}
-                            >
-                              Voir Certification
-                            </Button>
-                          ) : (
-                            'Aucune certification'
-                          )}
-                        </TableCell>
-                      </TableRow>
+                </motion.div>
+              ))}
+            </Box>
+          ) : (
+            <TableContainer
+              component={Paper}
+              sx={{
+                bgcolor: '#ffffff',
+                borderRadius: 2,
+                border: '1px solid #c8e6c9',
+                boxShadow: '0 4px 12px rgba(46, 125, 50, 0.1)'
+              }}
+            >
+              <Table>
+                <TableHead>
+                  <TableRow sx={{ bgcolor: '#dcedc8' }}>
+                    {['ID', 'Email', 'Statut', 'Action', 'Certification'].map((header) => (
+                      <TableCell key={header} sx={{ color: '#2e7d32', fontWeight: 600 }}>{header}</TableCell>
                     ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            )}
-          </Box>
-        )}
-      </Box>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {users.map((user, index) => (
+                    <motion.tr
+                      key={user._id}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: index * 0.05 }}
+                    >
+                      <TableCell sx={{ color: '#2e7d32' }}>{user._id.slice(0, 8)}...</TableCell>
+                      <TableCell sx={{ color: '#2e7d32' }}>{user.email || 'N/A'}</TableCell>
+                      <TableCell>
+                        <Switch
+                          checked={user.isActivated}
+                          onChange={() => handleActivationToggle(user._id, user.isActivated)}
+                          disabled={!isAdmin}
+                          sx={{
+                            '& .MuiSwitch-switchBase.Mui-checked': { color: '#4caf50' },
+                            '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': { bgcolor: '#81c784' }
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell sx={{ color: user.isActivated ? '#4caf50' : '#ef5350' }}>
+                        {user.isActivated ? 'Actif' : 'Inactif'}
+                      </TableCell>
+                      <TableCell>
+                        {user.certification ? (
+                          <Button
+                            href={`http://localhost:5000/${user.certification}`}
+                            target="_blank"
+                            sx={{ color: '#2e7d32', '&:hover': { color: '#1b5e20' } }}
+                          >
+                            Voir
+                          </Button>
+                        ) : (
+                          <Typography sx={{ color: '#2e7d32' }}>Aucune</Typography>
+                        )}
+                      </TableCell>
+                    </motion.tr>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
+        </Box>
+      )}
     </Box>
   );
 };

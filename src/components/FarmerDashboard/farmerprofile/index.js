@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import AppLayout from '../../../layouts/AppLayout/AppLayout';
 
 const UpdateFarmerProfile = () => {
   const [formData, setFormData] = useState({
@@ -176,6 +177,8 @@ const UpdateFarmerProfile = () => {
   }
 
   return (
+    <AppLayout>
+
     <div
       style={{
         maxWidth: '600px',
@@ -394,6 +397,8 @@ const UpdateFarmerProfile = () => {
         </button>
       </form>
     </div>
+    </AppLayout>
+
   );
 };
 
