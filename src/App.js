@@ -71,6 +71,8 @@ import Heatmap from './components/FarmerDashboard/LeafletCard/WeatherHeatMap';
 import WheatProduction from './components/FarmerDashboard/productionStat/WheatProduction';
 import CountryStats from './components/FarmerDashboard/cropYield/statistics';
 import TradeDataManager from './components/FarmerDashboard/dataUpload/TradeDataManager';
+import Weather from './components/weather/carte-google';
+import ModelRequest from './components/FarmerDashboard/recommendation/recommendationUtils';
 
 function AppRoutes() {
 
@@ -149,7 +151,7 @@ function AppRoutes() {
 
       <Route path='/Weatherheat' element={<Heatmap />} />
       <Route path='/WheatProduction' element={<WheatProduction />} />
-      <Route path='/trade' element={<TradeDataManager />} />
+      <Route path='/Weather' element={<Weather />} />
 
 
     </Routes>

@@ -1,0 +1,95 @@
+.page-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f5f7f5;
+    padding: 20px;
+  }
+  
+  .content-wrapper {
+    max-width: 1200px;
+    width: 100%;
+    text-align: center;
+  }
+  
+  .header-container {
+    margin-bottom: 30px;
+  }
+  
+  .header-container h2 {
+    font-size: 2rem;
+    color: #2e7d32;
+  }
+  
+  .recommendation-section {
+    background-color: #ffffff;
+    border: 1px solid #81c784;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 40px;
+  }
+  
+  .recommendation-title {
+    font-size: 1.25rem; /* Plus petit qu’un titre principal, mais plus grand qu’un texte normal */
+    font-weight: 500;
+    color: #388e3c;
+    margin: 0;
+  }
+  
+  .fields-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: center;
+  }
+  
+  .field-box {
+    width: 350px;
+    min-height: 300px;
+    background-color: #e6f3e6;
+    border: 3px solid #4caf50;
+    border-radius: 10px;
+    padding: 20px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .field-box:hover {
+    transform: scale(1.03);
+    box-shadow: 0 6px 15px rgba(76, 175, 80, 0.3);
+  }
+  
+  .field-label {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #2e7d32;
+    text-align: center;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #81c784;
+    padding-bottom: 10px;
+  }
+  
+  .shapes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    flex-grow: 1;
+  }
+  
+  .shape-button {
+    background-color: #ffffff;
+    border-color: #4caf50;
+    color: #388e3c;
+    border-radius: 25px;
+    font-size: 1.1rem;
+    padding: 10px 15px;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .shape-button:hover {
+    background-color: #4caf50;
+    color: #ffffff;
+  }

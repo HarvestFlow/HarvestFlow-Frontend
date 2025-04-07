@@ -14,6 +14,7 @@ import { NioCount, NioMedia,NioIcon, NioButton, NioSection, NioCard, NioSubscrib
 
 // section content 
 import PreBuiltContent from '../../components/PageComponents/Landing/PreBuiltContent/PreBuiltContent';
+import LottieAnimation from './LottieAnimation';
 
 
 function index() {
@@ -56,7 +57,7 @@ function index() {
     backgroundRepeat: "no-repeat",
   }}
 >
-  {/* Overlay pour lisibilité */}
+  {/* Overlay for readability */}
   <div
     style={{
       position: "absolute",
@@ -69,49 +70,48 @@ function index() {
     }}
   ></div>
 
-  {/* Contenu superposé */}
+  {/* Centered content */}
   <div
     className="nk-banner nk-banner-landing"
     style={{
       position: "absolute",
-      top: "50%",
+      top: "10%", // Moves content closer to the top
       left: 0,
       right: 0,
       zIndex: 2,
       display: "flex",
       flexDirection: "column",
-      alignItems: "flex-start",
-      justifyContent: "center",
+      alignItems: "center", // Center horizontally
+      justifyContent: "flex-start", // Align content to the top
       padding: "20px",
-      textAlign: "left",
+      textAlign: "center", // Center text
       color: "white",
-      transform: "translateY(-50%)",
-      overflow: "visible", // Prevent clipping of content
+      overflow: "visible",
     }}
   >
     <Container>
-      <Row className="justify-content-start">
+      <Row className="justify-content-center">
         <Col lg={8} xs={12}>
-          <div className="pb-5 pb-lg-7 text-left">
-            <div style={{ textAlign: "left", paddingLeft: "20px" }}>
-              {/* Texte statique "Be the next" */}
+          <div className="pb-5 text-center">
+            <div>
+              {/* Static text "Be the next" */}
               <div
                 style={{
-                  fontSize: "clamp(1.5rem, 8vw, 5rem)", // Smaller minimum size for tiny screens
+                  fontSize: "clamp(1.5rem, 8vw, 5rem)",
                   color: "white",
                   fontWeight: "200",
                   fontFamily: "Poppins, sans-serif",
                   letterSpacing: "0.1em",
                   textShadow: "1px 1px 5px rgba(0, 0, 0, 0.3)",
                   transition: "transform 0.5s ease-in-out",
-                  marginTop: "0", // Remove negative margin to prevent disappearance
-                  lineHeight: "1.2", // Ensure readability on small screens
+                  lineHeight: "1.2",
+                  marginTop:"90px",
                 }}
               >
                 Be the next
               </div>
 
-              {/* Animation dynamique */}
+              {/* Dynamic animation */}
               <TypeAnimation
                 sequence={[
                   "Agricultural innovator",
@@ -138,7 +138,7 @@ function index() {
                 wrapper="h1"
                 speed={70}
                 style={{
-                  fontSize: "clamp(1rem, 6vw, 3.5rem)", // Smaller minimum size for tiny screens
+                  fontSize: "clamp(1rem, 6vw, 3.5rem)",
                   color: "white",
                   fontWeight: "200",
                   display: "inline-block",
@@ -146,7 +146,7 @@ function index() {
                   letterSpacing: "0.1em",
                   textShadow: "1px 1px 3px rgba(0, 0, 0, 0.3)",
                   transition: "transform 1s ease-in-out",
-                  marginTop: "10px", // Reduced margin for better spacing
+                  marginTop: "10px",
                   lineHeight: "1.2",
                 }}
                 repeat={Infinity}
@@ -154,16 +154,34 @@ function index() {
               />
             </div>
 
-            {/* Boutons */}
+            {/* Buttons */}
             <ul
-              className="d-flex flex-wrap align-items-center justify-content-start gap-3 pt-4"
+              className="d-flex flex-wrap align-items-center justify-content-center gap-3 pt-4"
               style={{ flexDirection: "row" }}
             >
               <li>
-                <button className="btn btn-primary">En savoir plus</button>
+                <button className="btn btn-primary green-gradient" style={{ padding: "10px 20px" }}>
+  En savoir plus
+</button>
+
+<style jsx>{`
+  .green-gradient {
+    background: linear-gradient(90deg, #28a745, #34d058);
+    border: none;
+    color: white;
+  }
+  .green-gradient:hover {
+    background: linear-gradient(90deg, #218838, #2ecc71); // Slightly darker gradient on hover
+  }
+`}</style>
               </li>
               <li>
-                <button className="btn btn-outline-light">Contactez-nous</button>
+                <button
+                  className="btn btn-outline-light"
+                  style={{ padding: "10px 20px" }}
+                >
+                  Contactez-nous
+                </button>
               </li>
             </ul>
           </div>
@@ -172,11 +190,12 @@ function index() {
     </Container>
   </div>
 
-  {/* Media Queries pour responsivité */}
+  {/* Media Queries for responsiveness */}
   <style jsx>{`
     @media (max-width: 768px) {
       .nk-banner {
         padding: 15px;
+        top: 5%; /* Adjust for smaller screens */
       }
       .nk-banner ul {
         flex-direction: column;
@@ -204,16 +223,15 @@ function index() {
     }
 
     @media (max-width: 360px) {
-      /* Extra small screens */
       .nk-banner {
         padding: 5px;
+        top: 2%; /* Closer to the top for tiny screens */
       }
       .nk-banner div div div {
-        font-size: clamp(1rem, 7vw, 3rem); /* Even smaller for tiny screens */
-        margin-top: 0;
+        fontSize: clamp(1rem, 7vw, 3rem);
       }
       .nk-banner h1 {
-        font-size: clamp(0.875rem, 5vw, 2rem);
+        fontSize: clamp(0.875rem, 5vw, 2rem);
         margin-top: 5px;
       }
     }
@@ -287,6 +305,7 @@ function index() {
         </NioSection.Content>
               </NioSection>
       {/*  Feature Section End   */}
+      <LottieAnimation />
 
       {/*  Products Section Start   */}
    

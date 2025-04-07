@@ -1,3 +1,4 @@
+// src/components/FarmerDashboard/Observations/Observations.js
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Table, Button, Modal, Card, Row, Col, Form, Pagination } from "react-bootstrap";
@@ -7,6 +8,8 @@ import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement
 import CurrentWeather from "../../weather/current-weather/current-weather";
 import Forecast from "../../weather/forecast/forecast";
 import "./Observations.css";
+import { useNotifications } from "../../Notification/NotificationContext";
+
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 function Observations() {
@@ -27,9 +30,13 @@ function Observations() {
   const [currentWeather, setCurrentWeather] = useState(null);
   const [forecast, setForecast] = useState(null);
   const [error, setError] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1); // Pagination: Current page
-  const [itemsPerPage] = useState(5); // Pagination: Items per page
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(5);
+  const [userId, setUserId] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isActivated, setIsActivated] = useState(true);
   const navigate = useNavigate();
+  const { notifications } = useNotifications();
 
   const WEATHER_API_URL = "https://api.openweathermap.org/data/2.5";
   const WEATHER_API_KEY = "806a508219bb761f07cbef033270c0b0";
@@ -47,6 +54,26 @@ function Observations() {
     "Dough Development",
     "Ripening",
   ];
+
+  useEffect(() => {
+    const checkAuthStatus = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/user/getProfile`, { withCredentials: true });
+        if (response.status === 200) {
+          setIsAuthenticated(true);
+          setUserId(response.data._id);
+          setIsActivated(response.data.isActivated);
+          if (!response.data.isActivated) console.log("Account not activated");
+        }
+      } catch (error) {
+        setIsAuthenticated(false);
+        setIsActivated(true);
+        navigate("/404");
+        console.error("Authentication error:", error);
+      }
+    };
+    checkAuthStatus();
+  }, [navigate]);
 
   useEffect(() => {
     const fetchShapeCoordinates = async () => {
@@ -67,25 +94,27 @@ function Observations() {
         const response = await axios.get(
           `${API_URL}/parcelle/dailyObservation/${state.parcelleId}/${shapeId}`
         );
-        setObservations(response.data);
+        setObservations(Array.isArray(response.data) ? response.data : []);
       } catch (error) {
         console.error("Erreur lors de la récupération des observations :", error);
+        setObservations([]);
       }
     };
 
     const fetchInputs = async () => {
       try {
         const response = await axios.get(`${API_URL}/stock/inputs`, { withCredentials: true });
-        setInputs(response.data);
+        setInputs(Array.isArray(response.data) ? response.data : []);
       } catch (error) {
         console.error("Erreur lors de la récupération des intrants :", error);
+        setInputs([]);
       }
     };
 
     const fetchInputUsages = async () => {
       try {
         const response = await axios.get(`${API_URL}/stock/usage/${shapeId}`, { withCredentials: true });
-        setInputUsages(response.data || []);
+        setInputUsages(Array.isArray(response.data) ? response.data : []);
       } catch (error) {
         console.error("Erreur lors de la récupération des utilisations d'intrants :", error);
         setInputUsages([]);
@@ -176,7 +205,6 @@ function Observations() {
     }
   };
 
-  // Pagination Logic
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentObservations = observations.slice(indexOfFirstItem, indexOfLastItem);
@@ -251,7 +279,6 @@ function Observations() {
         </h5>
       </div>
 
-      {/* Première rangée : Météo Actuelle et Observations Quotidiennes */}
       <Row>
         <Col md={4} className="mb-4">
           <Card>
@@ -316,8 +343,6 @@ function Observations() {
                   )}
                 </tbody>
               </Table>
-
-              {/* Pagination */}
               {observations.length > itemsPerPage && (
                 <Pagination className="justify-content-center mt-3">
                   <Pagination.First onClick={() => handlePageChange(1)} disabled={currentPage === 1} />
@@ -349,7 +374,6 @@ function Observations() {
         </Col>
       </Row>
 
-      {/* Deuxième rangée : Utilisation des intrants */}
       <Row>
         <Col md={12} className="mb-4">
           <Card>
@@ -397,7 +421,6 @@ function Observations() {
         </Col>
       </Row>
 
-      {/* Troisième rangée : Prévisions Météo */}
       <Row>
         <Col md={12} className="mb-4">
           <Card>
@@ -415,7 +438,6 @@ function Observations() {
         </Col>
       </Row>
 
-      {/* Quatrième rangée : Graphique */}
       <Row>
         <Col md={6} className="mb-4">
           <Card className="char">
@@ -435,7 +457,6 @@ function Observations() {
         </Col>
       </Row>
 
-      {/* Modal pour les détails des observations */}
       <Modal show={showModal} onHide={handleCloseModal} size="lg">
         <Modal.Header closeButton>
           <Modal.Title>
@@ -558,7 +579,6 @@ function Observations() {
         </Modal.Footer>
       </Modal>
 
-      {/* Modal pour ajouter une utilisation d'intrant */}
       <Modal show={showUsageModal} onHide={() => setShowUsageModal(false)} centered>
         <Modal.Header closeButton>
           <Modal.Title>Ajouter une utilisation d'intrant</Modal.Title>

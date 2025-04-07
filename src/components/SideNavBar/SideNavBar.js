@@ -20,6 +20,9 @@ import {
   faHome,
   faCalculator,
   faUserCheck,
+  faTimes,
+  faTrademark,
+  faListCheck,
 } from "@fortawesome/free-solid-svg-icons";
 import NioBrand from "../NioBrand/NioBrand";
 import { Routes, Route, useNavigate } from "react-router-dom";
@@ -34,6 +37,12 @@ import StockManagement from "../FarmerDashboard/StockManagement/StockManagement"
 import WheatPrediction from "../FarmerDashboard/cropYield/WheatPrediction";
 import CountryStats from "../FarmerDashboard/cropYield/statistics";
 import GestionUser from "../AdminBackoffice/GestionUser";
+import TradeDataManager from "../FarmerDashboard/dataUpload/TradeDataManager";
+import FileDataManager from "../FarmerDashboard/dataUpload/FileDataManager";
+
+import { useNotifications } from "../Notification/NotificationContext";
+import RecommendationsSelector from "../FarmerDashboard/recommendation/RecommendationsSelector";
+import Recommendations from "../FarmerDashboard/recommendation/recommendationUtils";
 
 function Sidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -43,20 +52,24 @@ function Sidebar() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [showNotifications, setShowNotifications] = useState(false);
   const navigate = useNavigate();
+
+  const { notifications, userId } = useNotifications(); // userId est déjà disponible ici
+  const API_URL = "http://localhost:5000";
 
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/user/getProfile", {
+        const response = await axios.get(`${API_URL}/user/getProfile`, {
           withCredentials: true,
           timeout: 5000,
         });
-        // Assuming the profile endpoint returns a role field
-        setIsAdmin(response.data.role === "admin"); // Adjust based on actual response structure
-        console.log("Profile response:", response.data); // Debug log
+        setIsAdmin(response.data.role === "admin");
+        console.log("Profile response:", response.data);
       } catch (err) {
         console.error("Erreur lors de la récupération du profil:", err);
+        navigate("/404");
       } finally {
         setLoading(false);
       }
@@ -78,7 +91,7 @@ function Sidebar() {
     window.addEventListener("resize", handleResize);
     handleResize();
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  }, [navigate]);
 
   const toggleSidebar = () => {
     if (isMobile) {
@@ -99,8 +112,21 @@ function Sidebar() {
       alert("Accès réservé aux administrateurs.");
       return;
     }
-    navigate(`/dashboard${path}`);
+    // Passer userId dans le state pour Recommendations
+    if (path === "/recommendations") {
+      navigate(`/dashboard${path}`, { state: { userId } });
+    } else {
+      navigate(`/dashboard${path}`);
+    }
     if (isMobile) setIsMobileCollapsed(false);
+  };
+
+  const handleRemoveNotification = async (id) => {
+    try {
+      await axios.put(`${API_URL}/api/notifications/${id}/read`, {}, { withCredentials: true });
+    } catch (error) {
+      console.error("Erreur lors de la suppression de la notification:", error);
+    }
   };
 
   const menuItems = [
@@ -110,6 +136,8 @@ function Sidebar() {
     { name: "StockManagement", icon: faBoxes, path: "/StockManagement" },
     { name: "WheatPrediction", icon: faMoneyBillWheat, path: "/WheatPrediction" },
     { name: "CountryStats", icon: faCalculator, path: "/CountryStats" },
+    { name: "Trading", icon: faTrademark, path: "/trade" },
+    { name: "Recommendations", icon: faListCheck, path: "/recommendations" },
     ...(isAdmin
       ? [{ name: "Gestion User", icon: faUserCheck, path: "/gestionUser" }]
       : []),
@@ -123,11 +151,6 @@ function Sidebar() {
     { name: "Dashboard", icon: faHome, path: "/parcelinfo" },
     { name: "Profile", icon: faUser, path: "/UpdateFarmerProfile" },
     { name: "Settings", icon: faCog, path: "/gestionUser" },
-  ];
-
-  const notifications = [
-    { id: 1, text: "Température élevée détectée", icon: faExclamationTriangle },
-    { id: 2, text: "Nouvelle mise à jour disponible", icon: faBell },
   ];
 
   if (loading) {
@@ -202,13 +225,13 @@ function Sidebar() {
           {!isCollapsed && (
             <div className="notifications">
               {notifications.map((notif) => (
-                <div className="notification-item" key={notif.id}>
+                <div className="notification-item" key={notif._id}>
                   <span className="notification-dot"></span>
                   <FontAwesomeIcon
-                    icon={notif.icon}
+                    icon={notif.condition?.includes("temperature") ? faTemperatureHigh : faBell}
                     className="notification-icon"
                   />
-                  <span>{notif.text}</span>
+                  <span>{notif.message}</span>
                 </div>
               ))}
             </div>
@@ -244,6 +267,42 @@ function Sidebar() {
                 {isMenuOpen && <span className="toolbar-tooltip">{item.name}</span>}
               </div>
             ))}
+
+            <div className="toolbar-item">
+              <button
+                className="toolbar-button"
+                onClick={() => setShowNotifications(!showNotifications)}
+                title="Notifications"
+              >
+                <FontAwesomeIcon icon={faBell} />
+                {notifications.length > 0 && (
+                  <span className="notification-badge">{notifications.length}</span>
+                )}
+              </button>
+              {showNotifications && (
+                <div className="notification-dropdown">
+                  {notifications.length > 0 ? (
+                    notifications.map((notif) => (
+                      <div className="notification-item" key={notif._id}>
+                        <FontAwesomeIcon
+                          icon={notif.condition?.includes("temperature") ? faTemperatureHigh : faBell}
+                          className="notification-icon"
+                        />
+                        <span>{notif.message}</span>
+                        <button
+                          className="remove-notification"
+                          onClick={() => handleRemoveNotification(notif._id)}
+                        >
+                          <FontAwesomeIcon icon={faTimes} />
+                        </button>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="notification-item">Aucune notification</div>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
 
           <div className="toolbar-user">
@@ -272,6 +331,10 @@ function Sidebar() {
           <Route path="/StockManagement" element={<StockManagement />} />
           <Route path="/WheatPrediction" element={<WheatPrediction />} />
           <Route path="/CountryStats" element={<CountryStats />} />
+          <Route path="/trade" element={<TradeDataManager />} />
+          <Route path="/trade-data/:fileId" element={<FileDataManager />} />
+          <Route path="/recommendations" element={<RecommendationsSelector />} />
+          <Route path="/recommendations/:shapeId" element={<Recommendations />} />
           <Route
             path="/gestionUser"
             element={isAdmin ? <GestionUser /> : <div>Accès réservé aux administrateurs</div>}
