@@ -6,17 +6,19 @@
 	overflow: hidden;
   }
   
+  /* Sidebar */
   .sidebar-container {
 	position: fixed;
 	top: 0;
 	left: 0;
-	width: 210px;
+	width: 220px;
 	height: 100vh;
 	background: linear-gradient(180deg, #093f2c 0%, #27aa6f 100%);
 	border-right: 1px solid #bce2ca;
-	transition: width 0.3s ease, transform 0.3s ease;
+	transition: transform 0.3s ease, width 0.3s ease;
 	z-index: 1000;
 	box-shadow: 0 2px 10px rgba(5, 5, 52, 0.608);
+	overflow-y: hidden;
   }
   
   .sidebar-container.collapsed {
@@ -42,6 +44,7 @@
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	flex-shrink: 0;
   }
   
   .logo-container {
@@ -64,26 +67,11 @@
 	height: auto;
   }
   
-  .toggle-btn {
-	background: none;
-	border: none;
-	color: #dcfce7;
-	font-size: 1.2rem;
-	cursor: pointer;
-	padding: 5px;
-	transition: color 0.2s ease;
-	margin-top: -65px;
-    margin-right: -10px;
-  }
-  
-  .toggle-btn:hover {
-	color: #ffffff;
-  }
-  
   /* Search bar styling */
   .search-container {
 	padding: 15px 10px;
 	position: relative;
+	flex-shrink: 0;
   }
   
   .search-input {
@@ -113,10 +101,33 @@
   
   .sidebar-menu {
 	list-style: none;
-	padding: 10px 0;
+	padding: 10px 5px;
 	margin: 0;
 	flex-grow: 1;
-	max-height: calc(100% - 300px);
+	overflow-y: auto;
+	overflow-x: hidden;
+  }
+  
+  /* Custom Scrollbar Styling */
+  .sidebar-menu::-webkit-scrollbar {
+	width: 8px;
+  }
+  
+  .sidebar-menu::-webkit-scrollbar-track {
+	background: rgba(255, 255, 255, 0.1);
+	border-radius: 10px;
+	margin: 5px;
+  }
+  
+  .sidebar-menu::-webkit-scrollbar-thumb {
+	background: #15803d;
+	border-radius: 10px;
+	border: 2px solid transparent;
+	background-clip: padding-box;
+  }
+  
+  .sidebar-menu::-webkit-scrollbar-thumb:hover {
+	background: #22c55e;
   }
   
   .sidebar-item {
@@ -134,6 +145,7 @@
 	font-weight: 500;
 	font-size: 14px;
 	cursor: pointer;
+	position: relative;
   }
   
   .sidebar-link:hover,
@@ -152,11 +164,78 @@
 	display: none;
   }
   
+  /* Tooltip pour les éléments du sidebar lorsqu'il est réduit */
+  .sidebar-tooltip {
+	position: absolute;
+	left: 100%;
+	top: 50%;
+	transform: translateY(-50%);
+	background: #15803d;
+	color: #ffffff;
+	padding: 5px 10px;
+	border-radius: 4px;
+	font-size: 12px;
+	white-space: nowrap;
+	margin-left: 10px;
+	z-index: 1000;
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity 0.2s ease, visibility 0.2s ease;
+  }
+  
+  .sidebar-item:hover .sidebar-tooltip {
+	opacity: 1;
+	visibility: visible;
+  }
+  
+  /* Overlay */
+  .sidebar-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.5);
+	z-index: 999;
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+  
+  .sidebar-container:not(.mobile-collapsed) ~ .sidebar-overlay {
+	opacity: 1;
+	visibility: visible;
+  }
+  
   /* Notifications styling */
-  .notifications-container {
-	padding: 15px 0;
+  .notifications {
+	padding: 15px 5px;
 	max-height: 200px;
 	overflow-y: auto;
+	overflow-x: hidden;
+	flex-shrink: 0;
+  }
+  
+  /* Custom Scrollbar for Notifications */
+  .notifications::-webkit-scrollbar {
+	width: 8px;
+  }
+  
+  .notifications::-webkit-scrollbar-track {
+	background: rgba(255, 255, 255, 0.1);
+	border-radius: 10px;
+	margin: 5px;
+  }
+  
+  .notifications::-webkit-scrollbar-thumb {
+	background: #15803d;
+	border-radius: 10px;
+	border: 2px solid transparent;
+	background-clip: padding-box;
+  }
+  
+  .notifications::-webkit-scrollbar-thumb:hover {
+	background: #22c55e;
   }
   
   .notification-item {
@@ -166,7 +245,7 @@
 	margin: 5px 0;
 	border-radius: 6px;
 	background: rgba(255, 255, 255, 0.1);
-	color: #1a4629;
+	color: #ffffff;
 	font-size: 13px;
 	transition: all 0.2s ease;
   }
@@ -192,6 +271,7 @@
   .sidebar-footer {
 	padding: 10px 0;
 	border-top: 1px solid #15803d;
+	flex-shrink: 0;
   }
   
   .logout-button {
@@ -317,16 +397,17 @@
 	padding: 80px 20px 20px 20px;
 	overflow-y: auto;
 	transition: margin-left 0.3s ease;
+	z-index: 800;
   }
   
   .main-content.collapsed {
 	margin-left: 80px;
   }
   
-  /* Suppression de mobile-expanded pour éviter les ajustements dynamiques */
   .main-content.mobile-expanded {
 	margin-left: 0;
 	width: 100%;
+	overflow: hidden;
   }
   
   /* Responsive Design */
@@ -335,9 +416,10 @@
 	  transform: translateX(-100%);
 	  width: 240px;
 	  z-index: 1100;
+	  overflow-y: hidden;
 	}
   
-	.sidebar-container.mobile-collapsed {
+	.sidebar-container:not(.mobile-collapsed) {
 	  transform: translateX(0);
 	}
   
@@ -347,6 +429,7 @@
 	  top: 10px;
 	  height: 50px;
 	  background: rgba(9, 63, 44, 0.5);
+	  z-index: 900;
 	}
   
 	.floating-toolbar.shifted {
@@ -367,19 +450,18 @@
 	  margin-left: 0;
 	  padding: 70px 10px 10px 10px;
 	  width: 100%;
-	  z-index: 1000;
+	  z-index: 800;
 	}
   
-	/* Pas de changement de padding ou de largeur lorsque la sidebar est visible ou cachée */
 	.main-content.mobile-expanded {
 	  margin-left: 0;
-	  padding: 70px 10px 10px 10px; /* Padding fixe */
+	  padding: 70px 10px 10px 10px;
 	  width: 100%;
 	}
   
 	.sidebar-container.mobile-collapsed ~ .main-content {
 	  margin-left: 0;
-	  padding: 70px 10px 10px 10px; /* Même padding que l’état de base */
+	  padding: 70px 10px 10px 10px;
 	  width: 100%;
 	}
   }
@@ -389,7 +471,7 @@
 	  width: 200px;
 	}
   
-	.sidebar-container.mobile-collapsed {
+	.sidebar-container:not(.mobile-collapsed) {
 	  width: 200px;
 	}
   
@@ -403,15 +485,17 @@
 	}
   
 	.main-content {
-	  padding: 70px 5px 5px 5px; /* Réduit légèrement sur petits écrans */
+	  padding: 70px 5px 5px 5px;
 	}
-  }/* Notification Badge */
-.notification-badge {
+  }
+  
+  /* Notification Badge */
+  .notification-badge {
 	position: absolute;
 	top: -5px;
 	right: -5px;
 	background-color: red;
-	color: rgb(7, 20, 6);
+	color: white;
 	border-radius: 50%;
 	width: 16px;
 	height: 16px;

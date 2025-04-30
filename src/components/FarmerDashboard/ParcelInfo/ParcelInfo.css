@@ -1,114 +1,337 @@
+/* Container principal avec un fond inspiré de la nature */
 .parcel-info-container {
-  width: 100%;
-  max-width: 100%;
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
+  padding: 20px;
+  min-height: 100vh;
 }
 
+/* En-tête avec un style naturel */
+.header-container {
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(8px);
+  border-radius: 10px;
+  padding: 10px 20px;
+  border: 1px solid #a5d6a7; /* Bordure verte claire */
+}
+
+.header-container h5 {
+  color: #2e7d32; /* Vert forêt pour le texte */
+  font-weight: 600;
+}
+
+/* Conteneur de la carte */
 .map-container {
-  width: 100%;
-  margin-bottom: 20px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 16px rgba(46, 125, 50, 0.2); /* Ombre verte subtile */
+  transition: transform 0.3s ease;
+  border: 1px solid #81c784; /* Bordure verte */
+}
+
+.map-container:hover {
+  transform: translateY(-5px);
 }
 
 .map-container h4 {
-  font-size: 1.25rem;
-  margin-bottom: 10px;
+  color: #388e3c; /* Vert pour le titre */
 }
 
-.table-card, .chart-card {
+/* Carte pour le tableau */
+.table-card {
+  background: rgba(255, 255, 255, 0.95);
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(46, 125, 50, 0.2);
+  backdrop-filter: blur(4px);
+  transition: transform 0.3s ease;
+  overflow-x: auto; /* Allow horizontal scrolling for tables on small screens */
+}
+
+.table-card:hover {
+  transform: translateY(-5px);
+}
+
+.table-card .card-header {
+  background: #e6e6e6; /* Vert principal */
+  color: white;
+  border-radius: 12px 12px 0 0;
+}
+
+.table-card .card-header h5 {
+  margin: 0;
+}
+
+/* Style du tableau */
+.modern-table {
+  border-collapse: collapse; /* Use collapse for better responsiveness */
   width: 100%;
-  margin-bottom: 20px;
-  overflow-x: auto;
+  min-width: 600px; /* Minimum width to ensure content fits, allows scrolling */
 }
 
-.simple-table {
-  width: 100%;
-  min-width: 800px;
+.modern-table th {
+  background: #bbf1bd !important; /* Vert plus foncé pour l'en-tête */
+  color: white;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 12px;
+  border: none;
+  white-space: nowrap; /* Prevent header text from wrapping */
+  text-align: left;
 }
 
-.color-dot {
-  display: inline-block;
-  width: 12px;
-  height: 12px;
+.modern-table td {
+  background: rgba(255, 255, 255, 0.8);
+  padding: 12px;
+  border: none;
+  transition: background 0.3s ease;
+  color: #1b5e20; /* Vert foncé pour le texte */
+  vertical-align: middle;
+  max-width: 150px; /* Limit cell width to prevent overflow */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Truncate long text */
+  white-space: nowrap; /* Prevent text wrapping by default */
+}
+
+.modern-table tr {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.modern-table tr:hover {
+  transform: scale(1.01);
+  background: rgba(200, 230, 201, 0.9); /* Vert clair au survol */
+  box-shadow: 0 2px 8px rgba(46, 125, 50, 0.3);
+}
+
+/* Bouton de carte */
+.map-btn {
+  color: #2e7d32 !important; /* Vert forêt */
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.map-btn:hover {
+  color: #1b5e20 !important; /* Vert plus foncé */
+  transform: scale(1.2);
+}
+
+/* Boutons d'action */
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap; /* Allow buttons to wrap on small screens */
+}
+
+.action-btn {
   border-radius: 50%;
-  margin-right: 5px;
-}
-
-.chart-card .card-body {
-  padding: 15px;
-}
-
-.chart-card div {
-  width: 100%;
-  height: 300px;
-}
-
-.modal-content {
-  max-width: 100%;
-}
-
-@media (max-width: 768px) {
-  .parcel-info-container {
-    padding: 0 10px;
-  }
-
-  .simple-table {
-    min-width: 100%;
-  }
-
-  .map-container, .table-card, .chart-card {
-    margin-bottom: 15px;
-  }
-
-  .chart-card div {
-    height: 250px;
-  }
-
-  /* Ajustements pour mobile-expanded (sidebar visible) */
-  .main-content.mobile-expanded .parcel-info-container {
-    padding: 0 5px;
-    width: 100%;
-    margin-left: 0;
-  }
-
-  .main-content.mobile-expanded .simple-table {
-    font-size: 0.9rem;
-  }
-
-  .main-content.mobile-expanded .map-container,
-  .main-content.mobile-expanded .table-card,
-  .main-content.mobile-expanded .chart-card {
-    width: 100%;
-    overflow-x: auto;
-  }
-
-  /* Lorsque la sidebar est cachée */
-  .sidebar-container.mobile-collapsed ~ .main-content .parcel-info-container {
-    padding: 0 10px; /* Restaure le padding normal */
-    width: 100%;
-    margin-left: 0;
-  }
-}
-
-@media (max-width: 480px) {
-  .main-content.mobile-expanded .parcel-info-container {
-    width: 100%;
-  }
-
-  .sidebar-container.mobile-collapsed ~ .main-content .parcel-info-container {
-    width: 100%;
-  }
-}
-.chart-card .card-header {
-  padding: 0.5rem 1rem;
-  min-height: 40px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
-  background-color: #f8f9fa; /* Optionnel : garder une couleur de fond légère */
+  justify-content: center;
+  transition: all 0.3s ease;
+  background: transparent;
 }
 
-.chart-card h4 {
-  font-size: 1.25rem;
-  margin: 0;
+.action-btn:hover {
+  transform: rotate(360deg);
+  background: #a5d6a7; /* Vert clair au survol */
+}
+
+/* Couleurs spécifiques pour chaque bouton */
+.action-btn.btn-outline-primary {
+  color: #388e3c; /* Vert pour Observations */
+  border-color: #388e3c;
+}
+
+.action-btn.btn-outline-primary:hover {
+  color: white;
+  background: #388e3c;
+}
+
+.action-btn.btn-outline-info {
+  color: #4caf50; /* Vert principal pour Détails */
+  border-color: #4caf50;
+}
+
+.action-btn.btn-outline-info:hover {
+  color: white;
+  background: #4caf50;
+}
+
+.action-btn.btn-outline-success {
+  color: #2e7d32; /* Vert forêt pour Modifier */
+  border-color: #2e7d32;
+}
+
+.action-btn.btn-outline-success:hover {
+  color: white;
+  background: #2e7d32;
+}
+
+/* Point de couleur */
+.color-dot {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  margin-left: 8px;
+  vertical-align: middle;
+  border: 1px solid #dcedc8; /* Bordure verte pâle */
+}
+
+/* Conteneur des détails dans la modal */
+.details-container p {
+  margin: 8px 0;
+  padding: 10px;
+  background: rgba(200, 230, 201, 0.4); /* Vert très clair */
+  border-radius: 6px;
+  color: #1b5e20; /* Vert foncé pour le texte */
+}
+
+/* Style des modals */
+.modal-content {
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.97);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 16px rgba(46, 125, 50, 0.3);
+  border: 1px solid #a5d6a7; /* Bordure verte */
+}
+
+.modal-header {
+  border-bottom: none;
+  padding-bottom: 0;
+  background: #e8f5e9; /* Fond vert pâle */
+}
+
+.modal-header .modal-title {
+  color: #2e7d32; /* Vert forêt */
+}
+
+.modal-footer {
+  border-top: none;
+  padding-top: 0;
+}
+
+.modal-footer .btn-secondary {
+  background: #dcedc8; /* Vert très clair */
+  color: #1b5e20; /* Vert foncé */
+  border: none;
+}
+
+.modal-footer .btn-secondary:hover {
+  background: #c8e6c9;
+}
+
+.modal-footer .btn-primary {
+  background: #4caf50; /* Vert principal */
+  border: none;
+}
+
+.modal-footer .btn-primary:hover {
+  background: #388e3c; /* Vert plus foncé */
+}
+
+/* Formulaire dans la modal */
+.form-label {
+  color: #2e7d32; /* Vert forêt */
+}
+
+.form-control,
+.form-select {
+  border-color: #a5d6a7; /* Bordure verte */
+  transition: border-color 0.3s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #4caf50; /* Vert principal */
+  box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  /* Stack tables vertically on small screens */
+  .tables-container {
+    flex-direction: column;
+  }
+
+  .table-card {
+    margin-bottom: 20px;
+  }
+
+  /* Make tables scrollable horizontally */
+  .modern-table {
+    min-width: 100%; /* Allow table to shrink to container width */
+    border-spacing: 0; /* Remove spacing for better scrolling */
+  }
+
+  /* Allow text wrapping in cells for readability */
+  .modern-table td {
+    white-space: normal; /* Allow text to wrap */
+    max-width: 120px; /* Slightly reduce max-width for smaller screens */
+    font-size: 14px; /* Slightly smaller text */
+    padding: 8px; /* Reduce padding */
+  }
+
+  .modern-table th {
+    font-size: 14px;
+    padding: 8px;
+    white-space: normal; /* Allow header text to wrap if needed */
+  }
+
+  /* Stack action buttons vertically with full width */
+  .action-buttons {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .action-btn {
+    width: 100%;
+    border-radius: 8px;
+    justify-content: flex-start;
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  /* Adjust map and table card padding */
+  .map-container,
+  .table-card {
+    padding: 15px;
+  }
+
+  /* Pagination adjustments */
+  .pagination {
+    font-size: 14px;
+  }
+
+  .pagination-item {
+    padding: 5px 10px;
+  }
+}
+
+@media (max-width: 576px) {
+  /* Further reduce font sizes and padding */
+  .modern-table td,
+  .modern-table th {
+    font-size: 12px;
+    padding: 6px;
+  }
+
+  .modern-table td {
+    max-width: 100px; /* Further reduce cell width */
+  }
+
+  /* Reduce map height */
+  .map-container {
+    padding: 10px;
+  }
+
+  .map-container > div {
+    height: 200px !important; /* Adjust map height */
+  }
+
+  /* Optimize action buttons further */
+  .action-btn {
+    padding: 6px;
+    font-size: 12px;
+  }
 }

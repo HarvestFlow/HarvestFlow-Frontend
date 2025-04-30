@@ -37,7 +37,7 @@ export function NotificationProvider({ children }) {
           });
         });
 
-        // Récupérer toutes les parcelles de l'utilisateur avec userId dans l'URL
+        // Récupérer toutes les parcelles de l'utilisateur
         const parcelleResponse = await axios.get(`${API_URL}/parcelle/parcelle/${fetchedUserId}`, {
           withCredentials: true,
         });
@@ -47,7 +47,11 @@ export function NotificationProvider({ children }) {
         // Pour chaque parcelle, récupérer les données météo et envoyer les notifications
         for (const parcelle of parcelles) {
           for (const shape of parcelle.shapes) {
-            const coordinates = shape.geometry.coordinates[0][0]; // [lon, lat]
+            const coordinates = shape.geometry.coordinates[0]?.[0]; // [lon, lat]
+            if (!coordinates || !Array.isArray(coordinates) || coordinates.length < 2) {
+              console.warn(`⚠️ Shape ${shape._id} ignoré: coordonnées invalides`, shape.geometry.coordinates);
+              continue;
+            }
             console.log(`📍 Traitement shape ${shape._id} avec coordonnées:`, coordinates);
             await fetchWeatherAndNotify(fetchedUserId, parcelle._id, shape._id, {
               lon: coordinates[0],
@@ -67,43 +71,86 @@ export function NotificationProvider({ children }) {
     };
   }, [socket]);
 
-  const fetchWeatherAndNotify = async (userId, parcelleId, shapeId, coordinates) => {
-    try {
-      const currentWeatherResponse = await axios.get(
-        `${WEATHER_API_URL}/weather?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${WEATHER_API_KEY}&units=metric`,
-        { withCredentials: false }
-      );
-      const forecastResponse = await axios.get(
-        `${WEATHER_API_URL}/forecast?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${WEATHER_API_KEY}&units=metric`,
-        { withCredentials: false }
-      );
+  const fetchWeatherAndNotify = async (userId, parcelleId, shapeId, coordinates, retries = 3) => {
+    for (let attempt = 1; attempt <= retries; attempt++) {
+      try {
+        console.log(`🌍 Tentative ${attempt} pour shape ${shapeId} (parcelle ${parcelleId})`);
+        console.log(`📍 Coordonnées: lon=${coordinates.lon}, lat=${coordinates.lat}`);
 
-      const currentTemperature = {
-        min: currentWeatherResponse.data.main.temp_min,
-        max: currentWeatherResponse.data.main.temp_max,
-      };
-      const forecastTemperature = {
-        min: Math.min(...forecastResponse.data.list.map((item) => item.main.temp_min)),
-        max: Math.max(...forecastResponse.data.list.map((item) => item.main.temp_max)),
-      };
+        // Vérifier si les coordonnées sont valides
+        if (!coordinates.lat || !coordinates.lon) {
+          console.error(`❌ Coordonnées invalides pour shape ${shapeId}`);
+          return;
+        }
 
-      console.log(`🌡️ Températures pour shape ${shapeId}:`, { currentTemperature, forecastTemperature });
+        // Récupérer les données météo actuelles
+        console.log(`📡 Requête météo pour shape ${shapeId}`);
+        const currentWeatherResponse = await axios.get(
+          `${WEATHER_API_URL}/weather?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${WEATHER_API_KEY}&units=metric`,
+          { withCredentials: false }
+        );
 
-      // Envoyer la notification au backend
-      const notificationResponse = await axios.post(
-        `${API_URL}/api/notifications/daily-temperature`,
-        {
-          userId,
-          shapeId,
-          parcelleId,
+        // Récupérer les prévisions météo
+        const forecastResponse = await axios.get(
+          `${WEATHER_API_URL}/forecast?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${WEATHER_API_KEY}&units=metric`,
+          { withCredentials: false }
+        );
+
+        // Extraire les informations
+        const currentTemperature = {
+          min: currentWeatherResponse.data.main.temp_min,
+          max: currentWeatherResponse.data.main.temp_max,
+        };
+        const forecastTemperature = {
+          min: Math.min(...forecastResponse.data.list.map((item) => item.main.temp_min)),
+          max: Math.max(...forecastResponse.data.list.map((item) => item.main.temp_max)),
+        };
+        const averageTemperature = (currentTemperature.min + currentTemperature.max) / 2;
+        const country = currentWeatherResponse.data.sys.country || "Inconnu";
+
+        console.log(`🌡️ Données météo pour shape ${shapeId}:`, {
           currentTemperature,
           forecastTemperature,
-        },
-        { withCredentials: true }
-      );
-      console.log("✅ Notification envoyée:", notificationResponse.data);
-    } catch (error) {
-      console.error("❌ Erreur lors de la récupération des données météo ou envoi de notification:", error.response?.data || error.message);
+          averageTemperature,
+          country,
+        });
+
+        // Mettre à jour le shape dans la base de données
+        console.log(`📡 Envoi mise à jour pour shape ${shapeId}`);
+        const updateResponse = await axios.put(
+          `${API_URL}/parcelle/update-shape/${parcelleId}/${shapeId}`,
+          {
+            averageTemperature,
+            country,
+          },
+          { withCredentials: true }
+        );
+        console.log(`✅ Mise à jour réussie pour shape ${shapeId}:`, updateResponse.data);
+
+        // Envoyer la notification au backend
+        console.log(`📡 Envoi notification pour shape ${shapeId}`);
+        const notificationResponse = await axios.post(
+          `${API_URL}/api/notifications/daily-temperature`,
+          {
+            userId,
+            shapeId,
+            parcelleId,
+            currentTemperature,
+            forecastTemperature,
+            averageTemperature,
+            country,
+          },
+          { withCredentials: true }
+        );
+        console.log(`✅ Notification envoyée pour shape ${shapeId}:`, notificationResponse.data);
+
+        return; // Sortir si succès
+      } catch (error) {
+        console.error(`❌ Tentative ${attempt} échouée pour shape ${shapeId}:`, error.response?.data || error.message);
+        if (attempt === retries) {
+          console.error(`❌ Échec définitif pour shape ${shapeId} après ${retries} tentatives`);
+        }
+      }
     }
   };
 

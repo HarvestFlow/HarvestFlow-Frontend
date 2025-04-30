@@ -73,6 +73,10 @@ import CountryStats from './components/FarmerDashboard/cropYield/statistics';
 import TradeDataManager from './components/FarmerDashboard/dataUpload/TradeDataManager';
 import Weather from './components/weather/carte-google';
 import ModelRequest from './components/FarmerDashboard/recommendation/recommendationUtils';
+import FarmingForm from './components/FarmerDashboard/farmerform/farmerform';
+import FarmerOffers from './components/FarmerDashboard/farmerform/farmeroffers';
+import MarketValuesPage from './components/FarmerDashboard/dataUpload/worldwheatprice';
+import TradeDataPage from './components/FarmerDashboard/dataUpload/TradeDataPage';
 
 function AppRoutes() {
 
@@ -152,7 +156,10 @@ function AppRoutes() {
       <Route path='/Weatherheat' element={<Heatmap />} />
       <Route path='/WheatProduction' element={<WheatProduction />} />
       <Route path='/Weather' element={<Weather />} />
+      <Route path='/FarmingForm' element={<FarmingForm />} />
 
+      <Route path='/MarketValuesPage' element={<MarketValuesPage />} />
+      <Route path='/TradeDataPage' element={<TradeDataPage />} />
 
     </Routes>
   );

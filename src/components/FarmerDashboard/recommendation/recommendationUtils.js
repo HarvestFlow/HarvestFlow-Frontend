@@ -1,14 +1,14 @@
-// src/components/FarmerDashboard/Recommendations/Recommendations.js
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Table, Card, Row, Col } from "react-bootstrap";
 import { useParams, useLocation } from "react-router-dom";
-import "./Recommendations.css"; // Créez ce fichier pour le style si nécessaire
+import "./Recommendations.css"; // Create this file for styling if necessary
 
 function Recommendations() {
   const { shapeId } = useParams();
   const { state } = useLocation();
   const [recommendations, setRecommendations] = useState([]);
+  const [selectedRecommendation, setSelectedRecommendation] = useState(null); // New state for selected recommendation
   const API_URL = "http://localhost:5000";
 
   useEffect(() => {
@@ -36,6 +36,10 @@ function Recommendations() {
       const [attribute, action] = line.split(": ");
       return { attribute: attribute.replace(/^\d+\.\s*/, ""), action };
     });
+  };
+
+  const handleRowClick = (rec) => {
+    setSelectedRecommendation(rec); // Set the clicked recommendation
   };
 
   return (
@@ -81,27 +85,49 @@ function Recommendations() {
             </Card.Header>
             <Card.Body>
               {recommendations.length > 0 ? (
-                <Table bordered hover>
-                  <thead>
-                    <tr>
-                      <th>Date</th>
-                      <th>Recommandation (Résumé)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {recommendations.map((rec) => (
-                      <tr key={rec._id}>
-                        <td>{new Date(rec.createdAt).toLocaleDateString()}</td>
-                        <td>
-                          {parseRecommendation(rec.recommendation)[0]?.attribute +
-                            ": " +
-                            parseRecommendation(rec.recommendation)[0]?.action.slice(0, 50) +
-                            "..."}
-                        </td>
+                <>
+                  <Table bordered hover>
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>Recommandation (Résumé)</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </Table>
+                    </thead>
+                    <tbody>
+                      {recommendations.map((rec) => (
+                        <tr
+                          key={rec._id}
+                          onClick={() => handleRowClick(rec)}
+                          style={{ cursor: "pointer" }} // Add cursor pointer for better UX
+                        >
+                          <td>{new Date(rec.createdAt).toLocaleDateString()}</td>
+                          <td>
+                            {parseRecommendation(rec.recommendation)[0]?.attribute +
+                              ": " +
+                              parseRecommendation(rec.recommendation)[0]?.action.slice(0, 50) +
+                              "..."}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </Table>
+                  {selectedRecommendation && (
+                    <div className="mt-3">
+                      <h5>Détails de la recommandation sélectionnée</h5>
+                      {parseRecommendation(selectedRecommendation.recommendation).map((item, index) => (
+                        <div key={index} className="mb-2">
+                          <strong>{item.attribute}:</strong> <span>{item.action}</span>
+                        </div>
+                      ))}
+                      <button
+                        className="btn btn-secondary mt-2"
+                        onClick={() => setSelectedRecommendation(null)}
+                      >
+                        Fermer
+                      </button>
+                    </div>
+                  )}
+                </>
               ) : (
                 <p className="text-muted text-center">Aucun historique disponible.</p>
               )}

@@ -1,4 +1,3 @@
-// src/components/FarmerDashboard/Observations/Observations.js
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Table, Button, Modal, Card, Row, Col, Form, Pagination } from "react-bootstrap";
@@ -9,6 +8,7 @@ import CurrentWeather from "../../weather/current-weather/current-weather";
 import Forecast from "../../weather/forecast/forecast";
 import "./Observations.css";
 import { useNotifications } from "../../Notification/NotificationContext";
+import WheatPrediction from "../cropYield/WheatPrediction";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
@@ -20,6 +20,7 @@ function Observations() {
   const [inputs, setInputs] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showUsageModal, setShowUsageModal] = useState(false);
+  const [showPredictionModal, setShowPredictionModal] = useState(false);
   const [selectedObservation, setSelectedObservation] = useState(null);
   const [newUsage, setNewUsage] = useState({
     inputId: "",
@@ -35,6 +36,7 @@ function Observations() {
   const [userId, setUserId] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isActivated, setIsActivated] = useState(true);
+  const [shapeData, setShapeData] = useState(null);
   const navigate = useNavigate();
   const { notifications } = useNotifications();
 
@@ -89,6 +91,26 @@ function Observations() {
       }
     };
 
+    const fetchShapeData = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/parcelle/parcelle/${userId}`);
+        const parcelle = response.data.find((p) => p._id === state.parcelleId);
+        if (parcelle) {
+          const shape = parcelle.shapes.find((s) => s._id === shapeId);
+          if (shape) {
+            setShapeData({
+              _id: shape._id,
+              averageTemperature: shape.averageTemperature,
+              country: shape.country,
+              properties: shape.properties,
+            });
+          }
+        }
+      } catch (error) {
+        console.error("Erreur lors de la récupération des données du shape :", error);
+      }
+    };
+
     const fetchObservations = async () => {
       try {
         const response = await axios.get(
@@ -121,13 +143,14 @@ function Observations() {
       }
     };
 
-    if (state?.parcelleId && shapeId) {
+    if (state?.parcelleId && shapeId && userId) {
       fetchObservations();
       fetchShapeCoordinates();
       fetchInputs();
       fetchInputUsages();
+      fetchShapeData();
     }
-  }, [state, shapeId]);
+  }, [state, shapeId, userId]);
 
   useEffect(() => {
     if (shapeCoordinates) {
@@ -152,6 +175,10 @@ function Observations() {
       fetchWeatherData();
     }
   }, [shapeCoordinates]);
+
+  const totalPesticides = inputUsages
+    .filter((usage) => usage.input?.type.toLowerCase() === "pesticide")
+    .reduce((sum, usage) => sum + (usage.quantity || 0), 0);
 
   const handleAddObservation = () => {
     navigate(`/dashboard/observations/add/${shapeId}`, {
@@ -281,8 +308,9 @@ function Observations() {
 
       <Row>
         <Col md={4} className="mb-4">
-          <Card>
-            <Card.Header className="simple-header">
+          <Card className="weather-card">
+            <Card.Header className="simple-header d-flex align-items-center">
+              <i className="bi bi-cloud-sun me-2"></i>
               <h4 className="mb-0">Météo Actuelle</h4>
             </Card.Header>
             <Card.Body>
@@ -296,53 +324,62 @@ function Observations() {
           </Card>
         </Col>
         <Col md={8} className="mb-4">
-          <Card>
+          <Card className="observations-card">
             <Card.Header className="simple-header d-flex justify-content-between align-items-center">
-              <h4 className="mb-0">Observations Quotidiennes</h4>
-              <Button className="bg-green-400" size="sm" onClick={handleAddObservation}>
+              <div className="d-flex align-items-center">
+                <i className="bi bi-list-check me-2"></i>
+                <h4 className="mb-0">Observations Quotidiennes</h4>
+              </div>
+              <Button variant="success" size="sm" onClick={handleAddObservation}>
                 Ajouter une observation
               </Button>
             </Card.Header>
             <Card.Body>
-              <Table bordered hover>
-                <thead>
-                  <tr>
-                    <th>Date</th>
-                    <th>Stade de croissance</th>
-                    <th>GDD Accumulé</th>
-                    <th>Couleur des feuilles</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {currentObservations.length > 0 ? (
-                    currentObservations.map((obs) => (
-                      <tr key={obs._id}>
-                        <td>{new Date(obs.date).toLocaleDateString()}</td>
-                        <td>{obs.cropHealth?.growthStage || "N/A"}</td>
-                        <td>{obs.cropHealth?.accumulatedGDD?.toFixed(2) || "N/A"}</td>
-                        <td>{obs.cropHealth?.leafColor || "N/A"}</td>
-                        <td>
-                          <Button
-                            variant="info"
-                            size="sm"
-                            onClick={() => handleShowDetails(obs)}
-                            className="me-2"
-                          >
-                            Détails
-                          </Button>
+              <div className="table-responsive">
+                <Table bordered hover className="modern-table">
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Stade de croissance</th>
+                      <th>GDD Accumulé</th>
+                      <th>Couleur des feuilles</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {currentObservations.length > 0 ? (
+                      currentObservations.map((obs) => (
+                        <tr key={obs._id}>
+                          <td>{new Date(obs.date).toLocaleDateString()}</td>
+                          <td>
+                            <span className={`badge ${obs.cropHealth?.growthStage ? 'bg-success' : 'bg-secondary'}`}>
+                              {obs.cropHealth?.growthStage || "N/A"}
+                            </span>
+                          </td>
+                          <td>{obs.cropHealth?.accumulatedGDD?.toFixed(2) || "N/A"}</td>
+                          <td>{obs.cropHealth?.leafColor || "N/A"}</td>
+                          <td>
+                            <Button
+                              variant="info"
+                              size="sm"
+                              onClick={() => handleShowDetails(obs)}
+                              className="me-2"
+                            >
+                              Détails
+                            </Button>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="5" className="text-center">
+                          Aucune observation trouvée
                         </td>
                       </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="5" className="text-center">
-                        Aucune observation trouvée
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </Table>
+                    )}
+                  </tbody>
+                </Table>
+              </div>
               {observations.length > itemsPerPage && (
                 <Pagination className="justify-content-center mt-3">
                   <Pagination.First onClick={() => handlePageChange(1)} disabled={currentPage === 1} />
@@ -376,46 +413,51 @@ function Observations() {
 
       <Row>
         <Col md={12} className="mb-4">
-          <Card>
+          <Card className="inputs-card">
             <Card.Header className="simple-header d-flex justify-content-between align-items-center">
-              <h4 className="mb-0">Utilisation des Intrants</h4>
+              <div className="d-flex align-items-center">
+                <i className="bi bi-box-seam me-2"></i>
+                <h4 className="mb-0">Utilisation des Intrants</h4>
+              </div>
               <Button variant="success" size="sm" onClick={() => setShowUsageModal(true)}>
                 Ajouter une utilisation
               </Button>
             </Card.Header>
             <Card.Body>
-              <Table bordered hover>
-                <thead>
-                  <tr>
-                    <th>Date</th>
-                    <th>Catégorie</th>
-                    <th>Type d'intrant</th>
-                    <th>Nom</th>
-                    <th>Quantité utilisée</th>
-                    <th>Unité</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {inputUsages.length > 0 ? (
-                    inputUsages.map((usage) => (
-                      <tr key={usage._id}>
-                        <td>{new Date(usage.date).toLocaleDateString()}</td>
-                        <td>{usage.input?.category || "N/A"}</td>
-                        <td>{usage.input?.type || "N/A"}</td>
-                        <td>{usage.input?.name || "N/A"}</td>
-                        <td>{usage.quantity}</td>
-                        <td>{usage.input?.unit || "N/A"}</td>
-                      </tr>
-                    ))
-                  ) : (
+              <div className="table-responsive">
+                <Table bordered hover className="modern-table">
+                  <thead>
                     <tr>
-                      <td colSpan="6" className="text-center">
-                        Aucune utilisation d'intrant enregistrée
-                      </td>
+                      <th>Date</th>
+                      <th>Catégorie</th>
+                      <th>Type d'intrant</th>
+                      <th>Nom</th>
+                      <th>Quantité utilisée</th>
+                      <th>Unité</th>
                     </tr>
-                  )}
-                </tbody>
-              </Table>
+                  </thead>
+                  <tbody>
+                    {inputUsages.length > 0 ? (
+                      inputUsages.map((usage) => (
+                        <tr key={usage._id}>
+                          <td>{new Date(usage.date).toLocaleDateString()}</td>
+                          <td>{usage.input?.category || "N/A"}</td>
+                          <td>{usage.input?.type || "N/A"}</td>
+                          <td>{usage.input?.name || "N/A"}</td>
+                          <td>{usage.quantity}</td>
+                          <td>{usage.input?.unit || "N/A"}</td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="6" className="text-center">
+                          Aucune utilisation d'intrant enregistrée
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </Table>
+              </div>
             </Card.Body>
           </Card>
         </Col>
@@ -423,8 +465,9 @@ function Observations() {
 
       <Row>
         <Col md={12} className="mb-4">
-          <Card>
-            <Card.Header className="simple-header">
+          <Card className="forecast-card">
+            <Card.Header className="simple-header d-flex align-items-center">
+              <i className="bi bi-cloud-rain me-2"></i>
               <h4 className="mb-0">Prévisions Météo</h4>
             </Card.Header>
             <Card.Body>
@@ -440,11 +483,12 @@ function Observations() {
 
       <Row>
         <Col md={6} className="mb-4">
-          <Card className="char">
-            <Card.Header className="simple-header">
+          <Card className="chart-card">
+            <Card.Header className="simple-header d-flex align-items-center">
+              <i className="bi bi-bar-chart-line me-2"></i>
               <h4 className="mb-0">Progression des Stades de Croissance</h4>
             </Card.Header>
-            <Card.Body>
+            <Card.Body className="chart-container">
               {observations.length > 0 ? (
                 <div style={{ height: "300px" }}>
                   <Line data={getChartData()} options={chartOptions} />
@@ -455,9 +499,33 @@ function Observations() {
             </Card.Body>
           </Card>
         </Col>
+        <Col md={6} className="mb-4">
+          <Card className="prediction-card">
+            <Card.Header className="simple-header d-flex justify-content-between align-items-center">
+              <div className="d-flex align-items-center">
+                <i className="bi bi-graph-up me-2"></i>
+                <h4 className="mb-0">Prédiction de Rendement</h4>
+              </div>
+              <Button variant="info" size="sm" onClick={() => setShowPredictionModal(true)}>
+                Voir les détails
+              </Button>
+            </Card.Header>
+            <Card.Body>
+              {shapeData ? (
+                <div style={{ textAlign: 'center' }}>
+                  <p>Température moyenne : {shapeData.averageTemperature?.toFixed(1) || 'N/A'}°C</p>
+                  <p>Pays : {shapeData.country || 'N/A'}</p>
+                  <p>Pesticides utilisés : {totalPesticides.toFixed(2)} tonnes</p>
+                </div>
+              ) : (
+                <p>Chargement des données de prédiction...</p>
+              )}
+            </Card.Body>
+          </Card>
+        </Col>
       </Row>
 
-      <Modal show={showModal} onHide={handleCloseModal} size="lg">
+      <Modal show={showModal} onHide={handleCloseModal} size="lg" className="modern-modal">
         <Modal.Header closeButton>
           <Modal.Title>
             Détails de l'observation -{" "}
@@ -579,7 +647,7 @@ function Observations() {
         </Modal.Footer>
       </Modal>
 
-      <Modal show={showUsageModal} onHide={() => setShowUsageModal(false)} centered>
+      <Modal show={showUsageModal} onHide={() => setShowUsageModal(false)} centered className="modern-modal">
         <Modal.Header closeButton>
           <Modal.Title>Ajouter une utilisation d'intrant</Modal.Title>
         </Modal.Header>
@@ -627,6 +695,28 @@ function Observations() {
           </Button>
           <Button variant="primary" onClick={handleAddInputUsage}>
             Ajouter
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal show={showPredictionModal} onHide={() => setShowPredictionModal(false)} size="xl" className="modern-modal">
+        <Modal.Header closeButton>
+          <Modal.Title>Prédictions de Rendement Détaillées</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {shapeData && userId ? (
+            <WheatPrediction
+              userId={userId}
+              initialShapeData={shapeData}
+              initialPesticides={totalPesticides}
+            />
+          ) : (
+            <p>Chargement des données de prédiction...</p>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowPredictionModal(false)}>
+            Fermer
           </Button>
         </Modal.Footer>
       </Modal>

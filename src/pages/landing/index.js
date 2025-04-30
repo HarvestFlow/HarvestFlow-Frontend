@@ -238,6 +238,632 @@ function index() {
   `}</style>
 </section>
 
+<section className="nk-banner nk-banner-business-expance-tracker bg-primary-gradient-soft">
+  <div className="nk-banner-wrap">
+    <Container>
+      <Row className="flex-row-reverse align-items-center justify-content-between">
+        <Col lg={6}>
+          <div className="nk-banner-img mb-4 mb-lg-0" style={{ maxWidth: "80%", margin: "0 auto" }}>
+            <img 
+              src="https://www.arsilac.com/data/medias/30548/style/emailing_visuel/arsilac-agilor-financement-credit-service-2.jpeg" 
+              alt="banner-cover" 
+              style={{ borderRadius: "10px", boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }} 
+            />
+          </div>
+        </Col>
+        <Col lg={6}>
+          <div className="nk-banner-content">
+            <div className="logo-card" style={{ width: "100%", maxWidth: "none", textAlign: "center" }}>
+              <img 
+                src="images/logo-s1-dark2x.png" 
+                alt="logo" 
+                style={{ width: "70%", height: "auto", maxWidth: "none" ,marginTop:"-70px" }} 
+              />
+            </div>
+            <h4 className="display-8 mb-2 mt-20">Agriculture Connectée et Rentable</h4>   
+            <p className="fs-18 mb-0">Analysez vos données, alignez production et demande, et optimisez vos récoltes avec notre technologie.</p>
+            <ul className="nk-btn-group pt-4 pt-lg-5">
+              <li>
+                <NioButton href="#" className="btn-primary-alt" label="Démo Gratuite" />
+              </li>
+              <li>
+                <NioButton href="#" className="btn-outline-primary-alt" label="Découvrir" />
+              </li>
+            </ul>
+          </div>
+        </Col>
+      </Row>
+    </Container>
+  </div>
+</section>
+
+
+<NioSection className="nk-process-section py-7 py-lg-120">
+  <Row className="justify-content-center">
+    <Col lg={8} xl={6}>
+      <div className="nk-section-head pb-7 pb-lg-120 text-center">
+        <span className="d-inline-block fs-16 text-uppercase text-primary-alt fw-bold mb-2">L’Idée Générale</span>
+        <h2>Une Solution pour l’Agriculture de Demain</h2>
+        <p className="fs-20 mb-0">
+          HarvestFlow digitalise l’agriculture en connectant les producteurs, transporteurs et distributeurs. Grâce à l’importation de vos données commerciales (Trade Data Upload) et à une mise en relation intelligente entre l’offre et la demande (Demand-Supply Matching), notre plateforme optimise vos récoltes, réduit les pertes et maximise vos profits.
+        </p>
+        <ul className="nk-btn-group justify-content-center pt-5">
+          <li>
+            <NioButton href="/about" className="btn-primary-alt" label="En savoir plus sur notre vision" />
+          </li>
+          <li>
+            <NioButton href="/contact-us" className="btn-outline-primary-alt" label="Contact Us" />
+          </li>
+        </ul>
+      </div>
+    </Col>
+  </Row>
+
+  <NioSection.Content>
+    <ul className="nk-schedule d-flex flex-column gap-3 gap-md-5 gap-lg-60 nk-schedule-s1">
+      <li className="nk-schedule-item p-0">
+        <div className="nk-schedule-item-inner">
+          <div className="nk-schedule-symbol">
+            <NioMedia size="lg" rounded variant="primary-soft" className="fw-bold">
+              1
+            </NioMedia>
+          </div>
+          <div className="nk-schedule-content">
+            <Row className="flex-row-reverse justify-content-between">
+              <Col lg={4}>
+                <div className="nk-feature-overview-img text-lg-end mb-n2 mb-lg-n0 mt-lg-n9">
+                  <img src="https://img.freepik.com/free-vector/memory-storage-concept-illustration_114360-2942.jpg?t=st=1744117637~exp=1744121237~hmac=0fc413c85944c7acecd05b46c8155fc88f2d064e8d8c1745f1dff97cc2820d64&w=826" alt="data-background" />
+                </div>
+              </Col>
+              <Col lg={5}>
+                <div className="nk-section-head">
+                  <h3 className="text-capitalize mb-3">Importez vos <span className="text-primary-alt">Données</span></h3>
+                  <p className="fs-20 text-base">
+                    Importez vos historiques de ventes (CSV, Excel) et transformez-les en analyses prédictives pour mieux négocier et planifier.
+                  </p>
+                  <ul className="nk-btn-group pt-3 pt-md-5">
+                    <li>
+                      <NioButton href="#" className="btn-outline-primary-alt" icon="arrow-right after" label="Learn More" />
+                    </li>
+                  </ul>
+                </div>
+              </Col>
+            </Row>
+          </div>
+        </div>
+      </li>
+
+      <li className="nk-schedule-item p-0">
+        <div className="nk-schedule-item-inner">
+          <div className="nk-schedule-symbol">
+            <NioMedia size="lg" rounded variant="warning-soft" className="fw-bold">
+              2
+            </NioMedia>
+          </div>
+          <div className="nk-schedule-content">
+            <Row className="flex-row-reverse justify-content-between">
+              <Col lg={4}>
+                <div className="nk-feature-overview-img text-lg-end mb-4 mb-sm-0 mb-sm-n3 mb-lg-n0 mt-lg-n9">
+                  <img src="https://img.freepik.com/free-vector/sales-representative-abstract-concept_335657-3002.jpg?t=st=1744117670~exp=1744121270~hmac=fa8a526e5f3d52df6e9fcf119423161620e99bd1b205bd2d71799df6b42f0a38&w=826" alt="connection-background" />
+                </div>
+              </Col>
+              <Col lg={5}>
+                <div className="nk-section-head">
+                  <h3 className="text-capitalize mb-3">Connectez Offre et <span className="text-warning">Demande</span></h3>
+                  <p className="fs-20 text-base">
+                    Notre algorithme relie vos récoltes aux besoins des distributeurs locaux, en temps réel, pour vendre au meilleur moment.
+                  </p>
+                  <ul className="nk-btn-group pt-3 pt-md-5">
+                    <li>
+                      <NioButton href="#" className="btn-outline-warning" icon="arrow-right after" label="Learn More" />
+                    </li>
+                  </ul>
+                </div>
+              </Col>
+            </Row>
+          </div>
+        </div>
+      </li>
+
+      <li className="nk-schedule-item p-0">
+        <div className="nk-schedule-item-inner p-0">
+          <div className="nk-schedule-symbol">
+            <NioMedia size="lg" rounded variant="danger-soft" className="fw-bold">
+              3
+            </NioMedia>
+          </div>
+          <div className="nk-schedule-content">
+            <Row className="flex-row-reverse justify-content-between">
+              <Col lg={4}>
+                <div className="nk-feature-overview-img text-lg-end mb-4 mb-sm-0 mb-sm-n3 mb-lg-n0 mt-lg-n9">
+                  <img src="https://img.freepik.com/free-vector/paper-cash-bundle-with-red-arrow-money-exchange_107791-15900.jpg?t=st=1744117797~exp=1744121397~hmac=8406f16f5c08bbcd4a3d987b756aa2ff120726d483fe03a290111670ef7bc5d4&w=996" alt="agriculture-background" />
+                </div>
+              </Col>
+              <Col lg={5}>
+                <div className="nk-section-head">
+                  <h3 className="text-capitalize mb-3">Boostez Votre <span className="text-danger">Agriculture</span></h3>
+                  <p className="fs-20 text-base">
+                    Optimisez vos récoltes, réduisez les pertes et maximisez vos profits grâce à une plateforme pensée pour l’agriculture de demain.
+                  </p>
+                  <ul className="nk-btn-group pt-3 pt-md-5">
+                    <li>
+                      <NioButton href="#" className="btn-outline-danger" icon="arrow-right after" label="Learn More" />
+                    </li>
+                  </ul>
+                </div>
+              </Col>
+            </Row>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </NioSection.Content>
+</NioSection>
+
+
+
+
+
+
+
+
+<NioSection className="nk-section-features py-7 py-lg-120">
+  <NioSection.Head alignX="center">
+    <h2>Des Outils Puissants au Service de <span className="text-indigo">Votre Réussite</span></h2>
+    <p className="fs-20 mb-0">Boostez votre activité agricole grâce à des solutions innovantes qui transforment vos données en opportunités concrètes.</p>
+    <NioButton href="/signup" className="btn-indigo mt-5" label="Testez ces outils dès aujourd’hui" />
+  </NioSection.Head>
+  <NioSection.Content>
+    <Row className="gy-5 gy-xl-0 ">
+      <Col md={6} xl={4} >
+        <NioCard className="h-100 has-shadow">
+          <NioCard.Body>
+            <div className="card-image">
+              <img src="https://img.freepik.com/vecteurs-premium/telecharger-fichier-icone-xls-etiquette-ecran-ordinateur-portable-telechargement-du-concept-document_545399-1854.jpg" alt="trade-data-visual" className="card-img" />
+              {/* Innovative touch: Suggest an animation overlay of raw data turning into graphs */}
+            </div>
+            <div className="card-content pt-5">
+              <ul className="pb-3">
+                <li>
+                  <Link to="/features-details" className="badge text-bg-danger-soft text-base text-uppercase fw-semibold">Trade Data Upload</Link>
+                </li>
+              </ul>
+              <h5 className="card-title">
+                <Link to="/features-details">Valorisez Votre Passé</Link>
+              </h5>
+              <p className="fs-16">Importez vos historiques de ventes (CSV, Excel) et transformez-les en analyses prédictives pour mieux négocier et planifier.</p>
+              
+            </div>
+          </NioCard.Body>
+        </NioCard>
+      </Col>
+      <Col md={6} xl={4} >
+        <NioCard className="h-100 has-shadow">
+          <NioCard.Body>
+            <div className="card-image">
+              <img src="https://acci-cavie.org/wp-content/uploads/2024/01/cover-image.jpg" alt="matching-visual" className="card-img" />
+              {/* Innovative touch: Suggest an interactive map effect with dynamic lines */}
+            </div>
+            <div className="card-content pt-5">
+              <ul className="pb-3">
+                <li>
+                  <Link to="/features-details" className="badge text-bg-cyan-soft text-base text-uppercase fw-semibold">Demand-Supply Matching</Link>
+                </li>
+              </ul>
+              <h5 className="card-title">
+                <Link to="/features-details">La Rencontre Parfaite</Link>
+              </h5>
+              <p className="fs-16">Notre algorithme relie vos récoltes aux besoins des distributeurs locaux, en temps réel, pour vendre au meilleur moment.</p>
+            
+            </div>
+          </NioCard.Body>
+        </NioCard>
+      </Col>
+      <Col md={6} xl={4} >
+        <NioCard className="h-100 has-shadow">
+          <NioCard.Body>
+            <div className="card-image">
+              <img src="https://static.vecteezy.com/ti/vecteur-libre/t2/37329459-du-quotidien-temps-prevoir-telephone-app-dans-3d-papier-couper-style-climat-et-atmosphere-widget-modele-pour-telephone-intelligent-meteo-etat-ui-vecteur-ensemble-vectoriel.jpg" alt="dashboard-visual" className="card-img" />
+              {/* Innovative touch: Suggest a sleek dashboard preview with live widgets */}
+            </div>
+            <div className="card-content pt-5">
+              <ul className="pb-3">
+                <li>
+                  <Link to="/features-details" className="badge text-bg-purple-soft text-base text-uppercase fw-semibold">Agriculture Optimisée</Link>
+                </li>
+              </ul>
+              <h5 className="card-title">
+                <Link to="/features-details">De la Graine au Profit</Link>
+              </h5>
+              <p className="fs-16">Suivez vos cultures, anticipez la météo et coordonnez la logistique pour une gestion sans faille.</p>
+             
+            </div>
+          </NioCard.Body>
+        </NioCard>
+      </Col>
+    </Row>
+  </NioSection.Content>
+</NioSection>
+
+
+
+<LottieAnimation />
+
+
+
+<NioSection className="nk-section-roles py-7 py-lg-120">
+  <NioSection.Head alignX="center">
+    <h2>HarvestFlow <span className="text-indigo">S’Adapte à Vous</span></h2>
+    <p className="fs-20 mb-0">Que vous cultiviez, transportiez ou distribuiez, notre plateforme vous connecte au cœur de l’agriculture moderne.</p>
+  </NioSection.Head>
+  <NioSection.Content>
+    <Row className="g-5 align-items-stretch">
+      {/* Agriculteur Card - Spans 6 Columns */}
+      <Col md={12} lg={6}>
+        <div
+          className="farmer-hub"
+          style={{
+            backgroundImage: 'url(https://www.synox.io/wp-content/uploads/2022/04/smart-farming-transition-agricole.jpg)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            borderRadius: '20px',
+            padding: '2.5rem',
+            position: 'relative',
+            overflow: 'hidden',
+            height: '100%',
+            boxShadow: '0 10px 25px rgba(102, 51, 153, 0.1)',
+            transition: 'transform 0.4s ease',
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
+          onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+        >
+          {/* Innovative Touch: Dark Overlay with Gradient */}
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              background: 'linear-gradient(145deg, rgba(0, 0, 0, 0.5), rgba(102, 51, 153, 0.3))',
+              zIndex: 0,
+            }}
+          />
+          {/* Floating Icon Orbit */}
+          <div
+            style={{
+              position: 'absolute',
+              top: '20px',
+              left: '20px',
+              width: '80px',
+              height: '80px',
+              animation: 'orbit 6s infinite linear',
+              zIndex: 1,
+            }}
+          >
+          </div>
+          <h3
+            className="text-white fw-bold"
+            style={{ fontSize: '2rem', marginBottom: '1rem', position: 'relative', zIndex: 1 }}
+          >
+            Agriculteur
+          </h3>
+          <p
+            className="fs-18 text-white"
+            style={{ maxWidth: '80%', marginBottom: '2rem', position: 'relative', zIndex: 1 }}
+          >
+            Analysez, produisez, vendez mieux. Transformez vos données en stratégies gagnantes.
+          </p>
+          <Link
+            to="/farmers"
+            className="btn-indigo"
+            style={{
+              padding: '0.75rem 1.5rem',
+              borderRadius: '50px',
+              fontWeight: 'bold',
+              position: 'relative',
+              zIndex: 1,
+              transition: 'background-color 0.3s ease',
+              color: '#fff',
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#4b2e83'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#663399'}
+          >
+            Votre Espace
+          </Link>
+          {/* Subtle Background Wave */}
+          <div
+            style={{
+              position: 'absolute',
+              bottom: '-50px',
+              right: '-50px',
+              width: '200px',
+              height: '200px',
+              background: 'rgba(255, 255, 255, 0.1)',
+              borderRadius: '50%',
+              animation: 'wave 8s infinite ease-in-out',
+              zIndex: 0,
+            }}
+          />
+        </div>
+      </Col>
+
+      {/* Right Column: Transporteur and Distributeur Stacked */}
+      <Col md={12} lg={6}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '2rem',
+            height: '100%',
+          }}
+        >
+          {/* Transporteur Card */}
+          <div
+            className="role-stack"
+            style={{
+              backgroundImage: 'url(https://media.licdn.com/dms/image/v2/D4D12AQEMx0aJh191gw/article-cover_image-shrink_720_1280/article-cover_image-shrink_720_1280/0/1716489337568?e=2147483647&v=beta&t=gH3bBg6OYxLvzBIGbOtgBWWJh5lwegJJKghDX5KmtrI)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              borderRadius: '15px 50px 15px 15px',
+              padding: '2rem',
+              flex: '1',
+              boxShadow: '0 8px 20px rgba(0, 0, 0, 0.05)',
+              position: 'relative',
+              overflow: 'hidden',
+              transition: 'all 0.3s ease',
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.transform = 'translateX(10px)'}
+            onMouseLeave={(e) => e.currentTarget.style.transform = 'translateX(0)'}
+          >
+            {/* Innovative Touch: Frosted Glass Effect */}
+            <div
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                background: 'rgba(245, 250, 255, 0.7)',
+                zIndex: 0,
+              }}
+            />
+            <div
+              style={{
+                position: 'absolute',
+                top: '15px',
+                right: '15px',
+                width: '50px',
+                height: '50px',
+                animation: 'spin 4s infinite linear',
+                zIndex: 1,
+              }}
+            >
+            </div>
+            <h4
+              className="text-cyan-600 fw-semibold"
+              style={{ marginBottom: '0.75rem', position: 'relative', zIndex: 1 }}
+            >
+              Transporteur
+            </h4>
+            <p
+              className="fs-16 text-gray-800"
+              style={{ position: 'relative', zIndex: 1 }}
+            >
+              Livrez efficacement, gagnez du temps.
+            </p>
+            <Link
+              to="/transporters"
+              className="btn-outline-cyan"
+              style={{
+                marginTop: '1rem',
+                padding: '0.5rem 1rem',
+                borderRadius: '25px',
+                display: 'inline-block',
+                position: 'relative',
+                zIndex: 1,
+              }}
+            >
+              Planifiez
+            </Link>
+          </div>
+
+          {/* Distributeur Card */}
+          <div
+            className="role-stack"
+            style={{
+              backgroundImage: 'url(https://www.shutterstock.com/image-photo/outside-logistics-distributions-warehouse-diverse-260nw-2042952425.jpg)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              borderRadius: '15px 15px 50px 15px',
+              padding: '2rem',
+              flex: '1',
+              boxShadow: '0 8px 20px rgba(0, 0, 0, 0.05)',
+              position: 'relative',
+              overflow: 'hidden',
+              transition: 'all 0.3s ease',
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.transform = 'translateX(10px)'}
+            onMouseLeave={(e) => e.currentTarget.style.transform = 'translateX(0)'}
+          >
+            {/* Innovative Touch: Diagonal Overlay */}
+            <div
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                background: 'linear-gradient(45deg, rgba(0, 0, 0, 0.6), rgba(255, 255, 255, 0.2))',
+                zIndex: 0,
+              }}
+            />
+            <div
+              style={{
+                position: 'absolute',
+                top: '15px',
+                right: '15px',
+                width: '50px',
+                height: '50px',
+                animation: 'bounce 3s infinite ease',
+                zIndex: 1,
+              }}
+            >
+            </div>
+            <h4
+              className="text-white fw-semibold"
+              style={{ marginBottom: '0.75rem', position: 'relative', zIndex: 1 }}
+            >
+              Distributeur
+            </h4>
+            <p
+              className="fs-16 text-white"
+              style={{ position: 'relative', zIndex: 1 }}
+            >
+              Achetez au bon prix, au bon moment.
+            </p>
+            <Link
+              to="/distributors"
+              className="btn-outline-purple"
+              style={{
+                marginTop: '1rem',
+                padding: '0.5rem 1rem',
+                borderRadius: '25px',
+                display: 'inline-block',
+                position: 'relative',
+                zIndex: 1,
+                color: '#fff',
+                borderColor: '#fff',
+              }}
+            >
+              Explorez
+            </Link>
+          </div>
+        </div>
+      </Col>
+    </Row>
+  </NioSection.Content>
+</NioSection>
+
+
+
+
+<NioSection 
+  className="nk-section-collaboration py-7 py-lg-120" 
+  style={{
+    backgroundImage: 'url(https://as2.ftcdn.net/v2/jpg/07/31/71/67/1000_F_731716765_WBBnTHe86KkiilSPZtMJozq6tsZP9lIW.jpg)',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    position: 'relative',
+    overflow: 'hidden',
+  }}
+>
+  {/* Overlay for Readability */}
+  <div
+    style={{
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      background: 'linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(34, 139, 34, 0.4))', // Dark to forest green gradient
+      zIndex: 0,
+    }}
+  />
+  
+  <NioSection.Content style={{ position: 'relative', zIndex: 1 }}>
+    <Row className="justify-content-center text-center">
+      <Col lg={10} xl={8}>
+        <h1 
+          className="text-white fw-bold" 
+          style={{ 
+            fontSize: '2.5rem', 
+            marginBottom: '1.5rem', 
+            textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)', // Subtle shadow for depth
+          }}
+        >
+          Une Agriculture Plus Forte, <span className="text-indigo">Ensemble</span>
+        </h1>
+        <p 
+          className="fs-20 text-white mb-5" 
+          style={{ 
+            maxWidth: '800px', 
+            margin: '0 auto', 
+            lineHeight: '1.6', 
+            textShadow: '0 1px 3px rgba(0, 0, 0, 0.2)',
+          }}
+        >
+          Avec HarvestFlow, réduisez les pertes, optimisez les ressources et construisez une chaîne d’approvisionnement durable. Plus de visibilité, plus de profits, moins de gâchis.
+        </p>
+
+        {/* Optional Statistics */}
+        <Row className="g-4 justify-content-center">
+          <Col sm={6} md={4}>
+            <div
+              style={{
+                background: 'rgba(255, 255, 255, 0.1)',
+                borderRadius: '15px',
+                padding: '1.5rem',
+                backdropFilter: 'blur(5px)', // Frosted glass effect
+                transition: 'transform 0.3s ease',
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+              onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+            >
+              <h3 className="text-indigo fw-bold" style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>
+                20%
+              </h3>
+              <p className="fs-16 text-white mb-0">de pertes en moins</p>
+            </div>
+          </Col>
+          <Col sm={6} md={4}>
+            <div
+              style={{
+                background: 'rgba(255, 255, 255, 0.1)',
+                borderRadius: '15px',
+                padding: '1.5rem',
+                backdropFilter: 'blur(5px)',
+                transition: 'transform 0.3s ease',
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+              onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+            >
+              <h3 className="text-indigo fw-bold" style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>
+                30%
+              </h3>
+              <p className="fs-16 text-white mb-0">de ventes directes en plus</p>
+            </div>
+          </Col>
+        </Row>
+
+        {/* Innovative Touch: Animated Accent */}
+        <div
+          style={{
+            position: 'absolute',
+            bottom: '20px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: '100px',
+            height: '100px',
+            background: 'rgba(102, 51, 153, 0.2)',
+            borderRadius: '50%',
+            animation: 'pulse 4s infinite ease-in-out',
+            zIndex: 0,
+          }}
+        />
+      </Col>
+    </Row>
+  </NioSection.Content>
+</NioSection>
+
+
+
+
+
+
+
+
+
 
 <section className="banner-section" style={{ width: "100%", height: "100vh", overflow: "hidden", position: "relative" }}>
   <div className="image-slider"></div>
@@ -305,7 +931,6 @@ function index() {
         </NioSection.Content>
               </NioSection>
       {/*  Feature Section End   */}
-      <LottieAnimation />
 
       {/*  Products Section Start   */}
    

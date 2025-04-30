@@ -1,91 +1,183 @@
-.app-container {
-  display: flex;
-  flex-direction: row;
-  min-height: 100vh;
+/* General Card Styling */
+.card {
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  transition: transform 0.2s ease-in-out;
 }
 
-.main-content {
-  flex: 1;
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Specific Card Classes */
+.weather-card, .observations-card, .inputs-card, .forecast-card, .chart-card {
+  margin-bottom: 20px;
+}
+
+/* Header Styling */
+.simple-header {
+  background: #2c3e50;
+  color: white;
+  border-bottom: 2px solid #1a252f;
+  font-size: 1.1rem;
+  padding: 10px 15px;
+  display: flex;
+  align-items: center;
+}
+
+.simple-header h4 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+/* Table Styling */
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on touch devices */
+}
+
+.modern-table {
+  font-size: 0.95rem;
+  border-radius: 8px;
+  overflow: hidden;
+  width: 100%;
+  min-width: 600px; /* Ensures table is wide enough to require scrolling on small screens */
+}
+
+.modern-table th,
+.modern-table td {
+  vertical-align: middle;
+  text-align: center;
+  padding: 12px;
+  color: #34495e;
+}
+
+.modern-table th {
+  background: #ecf0f1;
+  font-weight: 600;
+}
+
+.modern-table .badge {
+  padding: 5px 10px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+}
+
+/* Button Styling */
+.btn {
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-success {
+  background-color: #27ae60;
+  border-color: #27ae60;
+}
+
+.btn-info {
+  background-color: #3498db;
+  border-color: #3498db;
+}
+
+/* Chart Styling */
+.chart-card {
+  background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+}
+
+.chart-container {
   padding: 15px;
 }
 
-.table {
-  font-size: 14px;
+/* Modal Styling */
+.modern-modal .modal-content {
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
-.table th,
-.table td {
-  vertical-align: middle;
-  text-align: center;
-  padding: 8px;
+.modern-modal .modal-header {
+  background: #3498db;
+  color: white;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
 }
 
-.chart-card {
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-bottom: 15px;
+.modern-modal .modal-body {
+  padding: 20px;
 }
 
+.modern-modal .modal-title {
+  font-weight: 600;
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.modern-modal.show .modal-dialog {
+  animation: modalFadeIn 0.3s ease-in-out;
+}
+
+/* Observation Details */
 .observation-details .card {
   border-radius: 8px;
 }
 
-.observation-details .card-header {
-  font-weight: bold;
+.observation-details .card-body {
+  padding: 15px;
 }
 
-/* Responsive adjustments */
+.observation-details p {
+  font-size: 0.95rem;
+  color: #34495e;
+}
+
+.observation-details strong {
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+/* Responsive Adjustments */
 @media (max-width: 768px) {
-  .app-container {
-    flex-direction: column;
+  .card {
+    margin-bottom: 15px;
   }
 
-  .main-content {
-    padding: 10px;
+  .modern-table {
+    font-size: 0.85rem;
   }
 
-  .table {
-    font-size: 12px;
+  .modern-table th,
+  .modern-table td {
+    padding: 8px;
   }
 
-  .table th,
-  .table td {
-    padding: 5px;
-  }
-
-  .table-responsive {
-    overflow-x: auto;
-  }
-
-  .table td:last-child {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
-  }
-
-  .table .btn {
-    width: 100%;
-    margin: 0;
-  }
-
-  .chart-card canvas {
-    max-height: 250px; /* Adjust chart height on tablet */
+  .chart-container canvas {
+    max-height: 250px;
   }
 }
 
 @media (max-width: 576px) {
-  .table {
-    font-size: 10px;
+  .modern-table {
+    font-size: 0.75rem;
   }
 
-  .table th,
-  .table td {
-    padding: 3px;
+  .modern-table th,
+  .modern-table td {
+    padding: 5px;
   }
 
-  .chart-card canvas {
-    max-height: 200px; /* Smaller chart on phone */
+  .chart-container canvas {
+    max-height: 200px;
   }
 
   .observation-details .row {
@@ -95,62 +187,4 @@
   .observation-details .col-md-6 {
     margin-bottom: 10px;
   }
-}
-
-
-/* Cible spécifiquement le h4 dans simple-header */
-.simple-header h4 {
-  font-size: 1.2rem; /* Taille de police plus petite (16px) */
-  font-weight: 600; /* Police plus fine (normal) */
-  margin: 0; /* Supprime les marges par défaut du h4 */
-}.recommendation-card {
-  border: none;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-}
-
-.recommendation-content {
-  animation: fadeIn 0.5s ease-in;
-}
-
-.recommendation-content .lead {
-  font-size: 1.25rem;
-  color: #2c3e50;
-  font-weight: 500;
-}
-
-.recommendation-card .simple-header {
-  background: #3498db;
-  color: white;
-  border-bottom: 2px solid #2980b9;
-}
-
-.spin {
-  animation: spin 1s linear infinite;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}.recommendation-content {
-  padding: 10px;
-}
-
-.recommendation-content div {
-  padding: 8px 0;
-  border-bottom: 1px solid #eee;
-}
-
-.recommendation-content strong {
-  color: #2c3e50;
-  font-weight: 600;
-}
-
-.recommendation-content span {
-  color: #34495e;
 }

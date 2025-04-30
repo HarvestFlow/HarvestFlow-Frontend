@@ -108,9 +108,9 @@
         },
         {
           "item": {
-            "url": "#demo",
+            "url": "/blogs",
             "mega": false,
-            "title": "Demos",
+            "title": "Offers",
             "submenu": {
               "media": false,
               "items": []

@@ -133,7 +133,6 @@ function MapWithComments() {
     }
   };
 
-  // Color Picker Handlers
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -168,7 +167,7 @@ function MapWithComments() {
 
       <div
         style={{
-          height: "calc(100vh - 120px)", // Adjust height for header/buttons and leave space
+          height: "calc(100vh - 120px)",
           width: "100%",
           border: "1px solid #ccc",
         }}
@@ -191,7 +190,16 @@ function MapWithComments() {
               position="topleft"
               onCreated={_onCreated}
               onDeleted={_onDeleted}
-              draw={{ polyline: true, polygon: true, rectangle: true, circle: true, marker: true }}
+              draw={{
+                polyline: true,
+                polygon: true,
+                rectangle: true,
+                marker: true,
+                circle: false,
+              }}
+              edit={{
+                edit: false,
+              }}
             />
           </FeatureGroup>
         </MapContainer>

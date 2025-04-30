@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faTemperatureHigh,
@@ -8,11 +8,8 @@ import {
   faBars,
   faUser,
   faTachometerAlt,
-  faChevronLeft,
-  faChevronRight,
   faSearch,
   faBell,
-  faExclamationTriangle,
   faCog,
   faMapMarkedAlt,
   faBoxes,
@@ -23,6 +20,8 @@ import {
   faTimes,
   faTrademark,
   faListCheck,
+  faFileWaveform,
+  faChartLine, // Added for Trade Wizard icon
 } from "@fortawesome/free-solid-svg-icons";
 import NioBrand from "../NioBrand/NioBrand";
 import { Routes, Route, useNavigate } from "react-router-dom";
@@ -39,14 +38,21 @@ import CountryStats from "../FarmerDashboard/cropYield/statistics";
 import GestionUser from "../AdminBackoffice/GestionUser";
 import TradeDataManager from "../FarmerDashboard/dataUpload/TradeDataManager";
 import FileDataManager from "../FarmerDashboard/dataUpload/FileDataManager";
-
 import { useNotifications } from "../Notification/NotificationContext";
 import RecommendationsSelector from "../FarmerDashboard/recommendation/RecommendationsSelector";
 import Recommendations from "../FarmerDashboard/recommendation/recommendationUtils";
+import FarmerOffers from "../FarmerDashboard/farmerform/farmeroffers";
+import DynamicChartPage from "../FarmerDashboard/dataUpload/DynamicChartPage";
+import TradeChartPage from "../FarmerDashboard/IAanalyst/TradeChartPage";
+import TradeAiReportPage from "../FarmerDashboard/IAanalyst/TradeAiReportPage";
+import { TradeDataProvider } from "../FarmerDashboard/IAanalyst/TradeDataContext";
+import TradingSelectionPage from "../FarmerDashboard/IAanalyst/TradingSelectionPage";
+
+
 
 function Sidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [isMobileCollapsed, setIsMobileCollapsed] = useState(false);
+  const [isMobileCollapsed, setIsMobileCollapsed] = useState(true);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -54,8 +60,9 @@ function Sidebar() {
   const [loading, setLoading] = useState(true);
   const [showNotifications, setShowNotifications] = useState(false);
   const navigate = useNavigate();
+  const sidebarRef = useRef(null);
 
-  const { notifications, userId } = useNotifications(); // userId est déjà disponible ici
+  const { notifications, userId } = useNotifications();
   const API_URL = "http://localhost:5000";
 
   useEffect(() => {
@@ -69,7 +76,6 @@ function Sidebar() {
         console.log("Profile response:", response.data);
       } catch (err) {
         console.error("Erreur lors de la récupération du profil:", err);
-        navigate("/404");
       } finally {
         setLoading(false);
       }
@@ -81,10 +87,11 @@ function Sidebar() {
       const mobile = window.innerWidth <= 768;
       setIsMobile(mobile);
       if (mobile) {
-        setIsMobileCollapsed(false);
+        setIsMobileCollapsed(true);
         setIsMenuOpen(false);
       } else {
-        setIsMobileCollapsed(true);
+        setIsMobileCollapsed(false);
+        setIsCollapsed(false);
       }
     };
 
@@ -92,6 +99,23 @@ function Sidebar() {
     handleResize();
     return () => window.removeEventListener("resize", handleResize);
   }, [navigate]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        isMobile &&
+        !isMobileCollapsed &&
+        sidebarRef.current &&
+        !sidebarRef.current.contains(event.target)
+      ) {
+        console.log("Clic en dehors détecté sur mobile, réduction du sidebar");
+        setIsMobileCollapsed(true);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isMobile, isMobileCollapsed]);
 
   const toggleSidebar = () => {
     if (isMobile) {
@@ -112,13 +136,12 @@ function Sidebar() {
       alert("Accès réservé aux administrateurs.");
       return;
     }
-    // Passer userId dans le state pour Recommendations
     if (path === "/recommendations") {
       navigate(`/dashboard${path}`, { state: { userId } });
     } else {
       navigate(`/dashboard${path}`);
     }
-    if (isMobile) setIsMobileCollapsed(false);
+    if (isMobile) setIsMobileCollapsed(true);
   };
 
   const handleRemoveNotification = async (id) => {
@@ -135,8 +158,10 @@ function Sidebar() {
     { name: "AdminDashboard", icon: faTachometerAlt, path: "/AdminDashboard" },
     { name: "StockManagement", icon: faBoxes, path: "/StockManagement" },
     { name: "WheatPrediction", icon: faMoneyBillWheat, path: "/WheatPrediction" },
+    { name: "farmeroffers", icon: faFileWaveform, path: "/FarmerOffers" },
     { name: "CountryStats", icon: faCalculator, path: "/CountryStats" },
-    { name: "Trading", icon: faTrademark, path: "/trade" },
+    { name: "Trading", icon: faTrademark, path: "/trade" }, // Original route
+    { name: "Trade Wizard", icon: faChartLine, path: "/trade-wizard" }, // New wizard route
     { name: "Recommendations", icon: faListCheck, path: "/recommendations" },
     ...(isAdmin
       ? [{ name: "Gestion User", icon: faUserCheck, path: "/gestionUser" }]
@@ -160,6 +185,7 @@ function Sidebar() {
   return (
     <div className="app-container">
       <div
+        ref={sidebarRef}
         className={`sidebar-container ${
           isMobile
             ? isMobileCollapsed
@@ -182,11 +208,6 @@ function Sidebar() {
                 />
               </div>
             </div>
-            <button className="toggle-btn" onClick={toggleSidebar}>
-              <FontAwesomeIcon
-                icon={isCollapsed || !isMobileCollapsed ? faChevronRight : faChevronLeft}
-              />
-            </button>
           </div>
 
           {!isCollapsed && (
@@ -212,6 +233,9 @@ function Sidebar() {
                   >
                     <FontAwesomeIcon icon={item.icon} className="sidebar-icon" />
                     <span className="sidebar-text">{item.name}</span>
+                    {isCollapsed && !isMobile && (
+                      <span className="sidebar-tooltip">{item.name}</span>
+                    )}
                   </a>
                 </li>
               ))
@@ -238,7 +262,11 @@ function Sidebar() {
           )}
 
           <div className="sidebar-footer">
-            <button className="logout-button" onClick={() => console.log("Logout")}>
+            <button
+              className="logout-button"
+              onClick={() => console.log("Logout")}
+              aria-label="Logout"
+            >
               <FontAwesomeIcon icon={faSignOutAlt} className="sidebar-icon" />
               <span className="sidebar-text">Logout</span>
             </button>
@@ -246,11 +274,26 @@ function Sidebar() {
         </div>
       </div>
 
+      {isMobile && !isMobileCollapsed && (
+        <div
+          className="sidebar-overlay"
+          onClick={() => setIsMobileCollapsed(true)}
+          aria-label="Close sidebar"
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => e.key === "Enter" && setIsMobileCollapsed(true)}
+        />
+      )}
+
       <div
         className={`floating-toolbar ${isCollapsed && !isMobile ? "shifted" : ""}`}
       >
         <div className="toolbar-content">
-          <button className="toolbar-toggle" onClick={toggleSidebar}>
+          <button
+            className="toolbar-toggle"
+            onClick={toggleSidebar}
+            aria-label={isMobileCollapsed ? "Open sidebar" : "Close sidebar"}
+          >
             <FontAwesomeIcon icon={faBars} />
           </button>
 
@@ -261,6 +304,7 @@ function Sidebar() {
                   className="toolbar-button"
                   onClick={() => handleNavigation(item.path)}
                   title={item.name}
+                  aria-label={item.name}
                 >
                   <FontAwesomeIcon icon={item.icon} />
                 </button>
@@ -273,6 +317,7 @@ function Sidebar() {
                 className="toolbar-button"
                 onClick={() => setShowNotifications(!showNotifications)}
                 title="Notifications"
+                aria-label="Toggle notifications"
               >
                 <FontAwesomeIcon icon={faBell} />
                 {notifications.length > 0 && (
@@ -292,6 +337,7 @@ function Sidebar() {
                         <button
                           className="remove-notification"
                           onClick={() => handleRemoveNotification(notif._id)}
+                          aria-label="Remove notification"
                         >
                           <FontAwesomeIcon icon={faTimes} />
                         </button>
@@ -310,6 +356,7 @@ function Sidebar() {
               className="toolbar-button logout-btn"
               onClick={() => console.log("Logout")}
               title="Logout"
+              aria-label="Logout"
             >
               <FontAwesomeIcon icon={faSignOutAlt} />
             </button>
@@ -331,13 +378,29 @@ function Sidebar() {
           <Route path="/StockManagement" element={<StockManagement />} />
           <Route path="/WheatPrediction" element={<WheatPrediction />} />
           <Route path="/CountryStats" element={<CountryStats />} />
+          {/* Original Trade Route - Kept as is */}
           <Route path="/trade" element={<TradeDataManager />} />
           <Route path="/trade-data/:fileId" element={<FileDataManager />} />
+          <Route path="/trade-data/:fileId/charts" element={<DynamicChartPage />} />
           <Route path="/recommendations" element={<RecommendationsSelector />} />
           <Route path="/recommendations/:shapeId" element={<Recommendations />} />
+          <Route path='/FarmerOffers' element={<FarmerOffers />} />
           <Route
             path="/gestionUser"
             element={isAdmin ? <GestionUser /> : <div>Accès réservé aux administrateurs</div>}
+          />
+          {/* New Nested Routes for Trade Wizard */}
+          <Route
+            path="/trade-wizard/*"
+            element={
+              <TradeDataProvider>
+                <Routes>
+                  <Route path="/" element={<TradingSelectionPage />} />
+                  <Route path="/chart" element={<TradeChartPage />} />
+                  <Route path="/report" element={<TradeAiReportPage />} />
+                </Routes>
+              </TradeDataProvider>
+            }
           />
           <Route path="*" element={<div>Page non trouvée</div>} />
         </Routes>
