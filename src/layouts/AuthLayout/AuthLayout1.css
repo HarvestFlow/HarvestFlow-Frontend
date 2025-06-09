@@ -1,0 +1,99 @@
+@keyframes float {
+    0% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  .float-element {
+    animation: float 3s ease-in-out infinite, fadeIn 1s ease-out forwards;
+  }
+  
+  .btn-outline-light {
+    border: 2px solid #fff;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-weight: 600;
+  }
+  
+  .btn-outline-light:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Floating geometric shapes */
+  .nk-auth-col-content::before {
+    content: '';
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    top: 10%;
+    left: 10%;
+    animation: float 5s ease-in-out infinite;
+    z-index: 0;
+  }
+  
+  .nk-auth-col-content::after {
+    content: '';
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background: rgba(255, 255, 255, 0.3);
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    bottom: 15%;
+    right: 15%;
+    animation: float 4s ease-in-out infinite;
+    z-index: 0;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .nk-auth-content-inner h1 {
+      font-size: 2rem !important;
+    }
+  
+    .nk-auth-quote p {
+      font-size: 1rem !important;
+      max-width: 90% !important;
+    }
+  
+    .nk-auth-content {
+      padding: 1.5rem !important;
+    }
+  
+    .nio-brand {
+      width: 150px !important;
+    }
+  
+    .nk-auth-col-content::before,
+    .nk-auth-col-content::after {
+      display: none; /* Hide floating shapes on mobile for simplicity */
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .nk-auth-content-inner h1 {
+      font-size: 1.5rem !important;
+    }
+  
+    .nk-auth-quote p {
+      font-size: 0.9rem !important;
+    }
+  } 

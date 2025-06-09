@@ -9,6 +9,7 @@ import {
 import {
   Edit as EditIcon, Save as SaveIcon, ArrowBack as ArrowBackIcon, Delete as DeleteIcon,
   Add as AddIcon, ViewColumn as ViewColumnIcon, Download as DownloadIcon, BarChart as BarChartIcon,
+  Send as SendIcon,
 } from '@mui/icons-material';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { motion } from 'framer-motion';
@@ -50,8 +51,8 @@ const FileDataManager = () => {
   const [newColumnDialog, setNewColumnDialog] = useState(false);
   const [newColumnName, setNewColumnName] = useState('');
   const [deleteColumnDialog, setDeleteColumnDialog] = useState({ open: false, column: '' });
-  // Filter states
   const [filters, setFilters] = useState([]); // Array of { column, value }
+  const [aiResponse, setAIResponse] = useState(''); // État pour stocker la réponse de l'IA
 
   // Fetch user profile
   useEffect(() => {
@@ -229,6 +230,76 @@ const FileDataManager = () => {
     )
   );
 
+  const handleAnalyzeWithAI = async () => {
+    try {
+      // Log tradeData to verify columns
+      console.log('Colonnes envoyées:', columns);
+      console.log('Exemple de tradeData:', JSON.stringify(tradeData[0], null, 2));
+
+      const requestData = {
+        userId,
+        fileId,
+        tradeData, // Send full dataset
+        messages: [
+          {
+            role: 'user',
+            content: `
+            Voici les données sur le commerce de blé pour 2025 : \n\`\`\`json\n${JSON.stringify(tradeData, null, 2)}\n\`\`\`
+            
+            Fournissez les prédictions des profits pour les 6 prochains mois (janvier à juin 2026) en JSON, basées sur les tendances des données (par exemple, croissance linéaire, variations saisonnières). Si "product", "unit_price", ou "total_cost" est absent, retournez [] et expliquez brièvement.
+            
+            ## Prédictions
+            ### Prédictions des profits (6 mois)
+            \`\`\`json
+            {
+              "profitPredictions": [
+                {
+                  "month": "Nom du mois",
+                  "profits": {
+                    "product_name_1": Nombre (€),
+                    "product_name_2": Nombre (€),
+                    ...
+                  }
+                },
+                ...
+              ]
+            }
+            \`\`\`
+            - Analyse des tendances : Calculez les profits moyens par produit et identifiez les tendances (par exemple, croissance de 5 % par mois, pics saisonniers). Si données limitées, assumez une légère croissance (2 % par mois).
+            - Résumé des tendances : Fournissez une phrase par produit décrivant la tendance prédite (par exemple, "Blé dur : croissance stable due à une demande constante").
+            - Si données insuffisantes, retournez [] et précisez "Données insuffisantes : colonnes product, unit_price, ou total_cost manquantes."
+            
+            **Instructions**:
+            - Vérifiez la présence de "product", "unit_price", "total_cost" dans les données.
+            - Extrapolez pour janvier à juin 2026 en utilisant les tendances observées ou une croissance modeste.
+            - JSON valide, réponse concise, en français.
+            `
+          },
+        ],
+      };
+
+      const response = await axios.post(
+        `http://localhost:5000/api/trade/${userId}/${fileId}/analyze`,
+        requestData,
+        { withCredentials: true }
+      );
+
+      setSnackbar({
+        open: true,
+        message: 'Analyse IA effectuée avec succès',
+        severity: 'success',
+      });
+
+      navigate(`/trade-data/${fileId}/ai-analysis`);
+    } catch (error) {
+      console.error('Erreur lors de l\'analyse IA:', error);
+      setSnackbar({
+        open: true,
+        message: `Erreur lors de l'analyse IA : ${error.response?.data?.error || error.message}`,
+        severity: 'error',
+      });
+    }
+  };
   // Prepare automatic chart data
   const prepareAutomaticChartData = () => {
     if (fileInfo?.dataType === 'agricultural') {
@@ -342,7 +413,6 @@ const FileDataManager = () => {
               gradient.addColorStop(1, 'rgba(245, 158, 11, 0)');
               return gradient;
             },
-            fill: true,
             tension: 0.4,
             pointBackgroundColor: '#F59E0B',
             pointBorderColor: '#fff',
@@ -557,6 +627,15 @@ const FileDataManager = () => {
         heightLeft -= pageHeight;
       }
 
+      // Ajouter la réponse de l'IA si disponible
+      if (aiResponse) {
+        pdf.addPage();
+        pdf.setFontSize(12);
+        pdf.text('Analyse IA', 10, 10);
+        pdf.setFontSize(10);
+        pdf.text(aiResponse, 10, 20, { maxWidth: 190 });
+      }
+
       pdf.save(`${fileInfo?.filename || 'report'}.pdf`);
     });
   };
@@ -649,6 +728,14 @@ const FileDataManager = () => {
             >
               Visualiser les données
             </Button>
+            <Button
+  variant="contained"
+  startIcon={<SendIcon />}
+  onClick={handleAnalyzeWithAI}
+  sx={{ bgcolor: '#EC4899', '&:hover': { bgcolor: '#DB2777' } }}
+>
+  Analyser avec IA
+</Button>
             <IconButton onClick={handleDeleteFile} sx={{ ml: 'auto' }}>
               <DeleteIcon sx={{ color: '#EF4444' }} />
             </IconButton>
@@ -1208,14 +1295,12 @@ const FileDataManager = () => {
               <Typography variant="h6" sx={{ mb: 2, color: '#1F2937', fontWeight: 600, fontFamily: 'Poppins' }}>
                 Conseils pour Optimisation
               </Typography>
-              <Typography sx={{ color: '#1F2937', fontFamily: 'Roboto' }}>
-                {tradeData.length === 0 ? (
-                  'Aucune donnée pour fournir des conseils.'
-                ) : fileInfo.dataType === 'agricultural' ? (
-                  `Analyse des données agricoles : Le rendement moyen est de ${automaticChartData.stats?.avgYield || 'N/A'} kg/ha, mais ${automaticChartData.stats?.minYieldYear || 'N/A'} montre un rendement faible. Envisagez une analyse des sols ou des techniques d'irrigation pour améliorer les rendements.`
-                ) : (
-                  `Analyse des transactions : Le prix unitaire moyen est de $${automaticChartData.stats?.avgUnitPrice || 'N/A'}, avec un pic à $${automaticChartData.stats?.maxUnitPrice || 'N/A'} en ${automaticChartData.stats?.maxUnitPriceLocation || 'N/A'}. Envisagez de cibler des marchés comme ${automaticChartData.stats?.maxUnitPriceLocation || 'N/A'} pour maximiser vos revenus.`
-                )}
+              <Typography sx={{ color: '#1F2937', fontFamily: 'Roboto', whiteSpace: 'pre-wrap' }}>
+                {aiResponse || (tradeData.length === 0
+                  ? 'Aucune donnée pour fournir des conseils.'
+                  : fileInfo.dataType === 'agricultural'
+                  ? `Analyse des données agricoles : Le rendement moyen est de ${automaticChartData.stats?.avgYield || 'N/A'} kg/ha, mais ${automaticChartData.stats?.minYieldYear || 'N/A'} montre un rendement faible. Envisagez une analyse des sols ou des techniques d'irrigation pour améliorer les rendements.`
+                  : `Analyse des transactions : Le prix unitaire moyen est de $${automaticChartData.stats?.avgUnitPrice || 'N/A'}, avec un pic à $${automaticChartData.stats?.maxUnitPrice || 'N/A'} en ${automaticChartData.stats?.maxUnitPriceLocation || 'N/A'}. Envisagez de cibler des marchés comme ${automaticChartData.stats?.maxUnitPriceLocation || 'N/A'} pour maximiser vos revenus.`)}
               </Typography>
             </Paper>
           </motion.div>

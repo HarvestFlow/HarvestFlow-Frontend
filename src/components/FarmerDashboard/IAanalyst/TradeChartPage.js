@@ -1,19 +1,36 @@
-import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { useTradeData } from "./TradeDataContext";
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { useTradeData } from './TradeDataContext';
 import {
-  Box, Typography, Stack, Button, Snackbar, Alert, CircularProgress,
+  Box,
+  Typography,
+  Stack,
+  Button,
+  Snackbar,
+  Alert,
+  CircularProgress,
   Paper,
 } from '@mui/material';
-import { Download as DownloadIcon } from '@mui/icons-material';
+import { Download as DownloadIcon, ArrowBack as ArrowBackIcon } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 import { Line } from 'react-chartjs-2';
 import {
-  Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip as ChartTooltip, Legend,
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip as ChartTooltip,
+  Legend,
 } from 'chart.js';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import ReactMarkdown from 'react-markdown';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { dark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import remarkGfm from 'remark-gfm';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, ChartTooltip, Legend);
 
@@ -45,8 +62,16 @@ const elementList = [
 
 const getColor = (index) => {
   const colors = [
-    '#A9CBA4', '#6B9E78', '#4A704C', '#EF4444', '#8B5CF6',
-    '#EC4899', '#6B7280', '#14B8A6', '#F97316', '#6366F1',
+    '#A9CBA4',
+    '#6B9E78',
+    '#4A704C',
+    '#EF4444',
+    '#8B5CF6',
+    '#EC4899',
+    '#6B7280',
+    '#14B8A6',
+    '#F97316',
+    '#6366F1',
   ];
   return colors[index % colors.length];
 };
@@ -54,15 +79,26 @@ const getColor = (index) => {
 const TradeChartPage = () => {
   const navigate = useNavigate();
   const {
-    tradeData, setTradeData,
-    loading, setLoading,
-    error, setError,
-    snackbar, setSnackbar,
-    selectedCountry, selectedPartners, selectedElement, yearRange,
-    aiAnalysis, setAiAnalysis,
-    aiLoading, setAiLoading,
-    aiError, setAiError,
-    lastRequestUrl, setLastRequestUrl,
+    tradeData,
+    setTradeData,
+    loading,
+    setLoading,
+    error,
+    setError,
+    snackbar,
+    setSnackbar,
+    selectedCountry,
+    selectedPartners,
+    selectedElement,
+    yearRange,
+    aiAnalysis,
+    setAiAnalysis,
+    aiLoading,
+    setAiLoading,
+    aiError,
+    setAiError,
+    lastRequestUrl,
+    setLastRequestUrl,
   } = useTradeData();
 
   const fetchTradeData = async () => {
@@ -70,9 +106,9 @@ const TradeChartPage = () => {
     setAiAnalysis('');
     setAiError(null);
     try {
-      const reporterCountryCode = countryList.find(c => c.name === selectedCountry)?.code || '222';
+      const reporterCountryCode = countryList.find((c) => c.name === selectedCountry)?.code || '222';
       const partnerCountryCodes = selectedPartners
-        .map(partner => countryList.find(c => c.name === partner)?.code)
+        .map((partner) => countryList.find((c) => c.name === partner)?.code)
         .filter(Boolean)
         .join(',') || '231';
       const yearsQuery = Array.from(
@@ -103,6 +139,7 @@ const TradeChartPage = () => {
 Analyse les données commerciales de blé suivantes pour ${selectedCountry} avec ses partenaires (${selectedPartners.join(', ')}) entre ${yearRange.start} et ${yearRange.end}. Fournis une analyse détaillée et structurée pour guider ${selectedCountry} dans ses décisions d'importation de blé, en mettant l'accent sur l'anticipation des tendances pour identifier le meilleur pays partenaire pour de futures transactions commerciales. Structure ta réponse en sections avec des titres clairs et des listes à puces.
 
 ### Instructions :
+
 1. **Résumé des données** :
    - Fournis un résumé quantitatif des importations (quantité totale, valeur totale, prix moyen par tonne) pour chaque partenaire.
    - Mentionne les tendances générales observées sur la période.
@@ -125,7 +162,7 @@ Analyse les données commerciales de blé suivantes pour ${selectedCountry} avec
    - Recommande le meilleur pays partenaire pour les importations de blé dans les années à venir, en te basant sur l'anticipation des tendances et les données historiques.
    - Explique pourquoi ce partenaire est le meilleur choix pour optimiser les transactions commerciales (par exemple, meilleur prix, stabilité, potentiel de croissance).
    - Mentionne les risques potentiels (par exemple, dépendance excessive, instabilité politique) et comment les atténuer.
-
+ 
 ### Données :
 ${JSON.stringify(data, null, 2)}
 
@@ -135,14 +172,12 @@ Utilise des titres Markdown (##) pour chaque section, des sous-titres (###) pour
         const response = await axios.post(
           'https://agent-c3e00297dd87c5c5860f-thwxf.ondigitalocean.app/api/v1/chat/completions',
           {
-            messages: [
-              { role: 'user', content: prompt }
-            ],
+            messages: [{ role: 'user', content: prompt }],
             model: 'llama3.3-70b-instruct',
           },
           {
             headers: {
-              'Authorization': 'Bearer QaocsC8cU8Rm3wbH4JLQWviFOrNWwW3P',
+              Authorization: 'Bearer QaocsC8cU8Rm3wbH4JLQWviFOrNWwW3P',
               'Content-Type': 'application/json',
             },
             withCredentials: false,
@@ -151,11 +186,10 @@ Utilise des titres Markdown (##) pour chaque section, des sous-titres (###) pour
         const analysis = response.data.choices[0].message.content;
         setAiAnalysis(analysis);
         setAiLoading(false);
-        navigate('/dashboard/trade-wizard/report');
         return;
       } catch (err) {
         if (err.response?.status === 429 && i < retries - 1) {
-          await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)));
+          await new Promise((resolve) => setTimeout(resolve, 1000 * (i + 1)));
           continue;
         }
         const message = err.response
@@ -175,20 +209,24 @@ Utilise des titres Markdown (##) pour chaque section, des sous-titres (###) pour
 
   const prepareChartData = () => {
     let filteredData = tradeData
-      .filter(entry => entry['Reporter Countries'] === selectedCountry)
-      .filter(entry => Number(entry['Year']) >= Number(yearRange.start) && Number(entry['Year']) <= Number(yearRange.end));
+      .filter((entry) => entry['Reporter Countries'] === selectedCountry)
+      .filter(
+        (entry) =>
+          Number(entry['Year']) >= Number(yearRange.start) &&
+          Number(entry['Year']) <= Number(yearRange.end)
+      );
 
     let datasets = [];
     let labels = [];
     let stats = {};
 
     if (selectedElement === 'compare') {
-      const importData = filteredData.filter(entry => entry['Element Code'] === '5610');
-      const exportData = filteredData.filter(entry => entry['Element Code'] === '5910');
+      const importData = filteredData.filter((entry) => entry['Element Code'] === '5610');
+      const exportData = filteredData.filter((entry) => entry['Element Code'] === '5910');
       datasets = [
         {
           label: `Import Value (1000 US$) - ${selectedCountry}`,
-          data: importData.map(entry => Number(entry['Value']) || 0),
+          data: importData.map((entry) => Number(entry['Value']) || 0),
           borderColor: '#A9CBA4',
           backgroundColor: (context) => {
             const ctx = context.chart.ctx;
@@ -203,7 +241,7 @@ Utilise des titres Markdown (##) pour chaque section, des sous-titres (###) pour
         },
         {
           label: `Export Value (1000 US$) - ${selectedCountry}`,
-          data: exportData.map(entry => Number(entry['Value']) || 0),
+          data: exportData.map((entry) => Number(entry['Value']) || 0),
           borderColor: '#6B9E78',
           backgroundColor: (context) => {
             const ctx = context.chart.ctx;
@@ -217,16 +255,16 @@ Utilise des titres Markdown (##) pour chaque section, des sous-titres (###) pour
           yAxisID: 'y',
         },
       ];
-      labels = importData.map(entry => entry['Year']);
+      labels = importData.map((entry) => entry['Year']);
     } else {
       const partners = selectedPartners.length > 0 ? selectedPartners : ['United States of America'];
       datasets = partners.map((partner, index) => {
         const partnerData = filteredData
-          .filter(entry => entry['Partner Countries'] === partner)
-          .filter(entry => entry['Element Code'] === selectedElement);
+          .filter((entry) => entry['Partner Countries'] === partner)
+          .filter((entry) => entry['Element Code'] === selectedElement);
         return {
-          label: `${elementList.find(e => e.code === selectedElement)?.name} - ${partner}`,
-          data: partnerData.map(entry => Number(entry['Value']) || 0),
+          label: `${elementList.find((e) => e.code === selectedElement)?.name} - ${partner}`,
+          data: partnerData.map((entry) => Number(entry['Value']) || 0),
           borderColor: getColor(index + 1),
           backgroundColor: (context) => {
             const ctx = context.chart.ctx;
@@ -239,10 +277,10 @@ Utilise des titres Markdown (##) pour chaque section, des sous-titres (###) pour
           tension: 0.4,
         };
       });
-      const reporterData = filteredData.filter(entry => entry['Element Code'] === selectedElement);
+      const reporterData = filteredData.filter((entry) => entry['Element Code'] === selectedElement);
       datasets.unshift({
-        label: `${elementList.find(e => e.code === selectedElement)?.name} - ${selectedCountry}`,
-        data: reporterData.map(entry => Number(entry['Value']) || 0),
+        label: `${elementList.find((e) => e.code === selectedElement)?.name} - ${selectedCountry}`,
+        data: reporterData.map((entry) => Number(entry['Value']) || 0),
         borderColor: '#A9CBA4',
         backgroundColor: (context) => {
           const ctx = context.chart.ctx;
@@ -254,20 +292,22 @@ Utilise des titres Markdown (##) pour chaque section, des sous-titres (###) pour
         fill: true,
         tension: 0.4,
       });
-      labels = reporterData.map(entry => entry['Year']);
+      labels = reporterData.map((entry) => entry['Year']);
     }
 
     const chartData = { labels, datasets };
 
     const values = filteredData
-      .filter(entry => entry['Element Code'] === selectedElement)
-      .map(entry => Number(entry['Value']) || 0);
+      .filter((entry) => entry['Element Code'] === selectedElement)
+      .map((entry) => Number(entry['Value']) || 0);
     stats = {
       avg: values.length ? (values.reduce((sum, v) => sum + v, 0) / values.length).toFixed(2) : '0',
       max: values.length ? Math.max(...values).toFixed(2) : '0',
       min: values.length ? Math.min(...values).toFixed(2) : '0',
       total: values.length ? values.reduce((sum, v) => sum + v, 0).toFixed(2) : '0',
-      unit: elementList.find(e => e.code === selectedElement)?.name.includes('Value') ? '1000 US$' : 'tonnes',
+      unit: elementList.find((e) => e.code === selectedElement)?.name.includes('Value')
+        ? '1000 US$'
+        : 'tonnes',
     };
 
     return { chartData, stats };
@@ -308,36 +348,46 @@ Utilise des titres Markdown (##) pour chaque section, des sous-titres (###) pour
         },
       },
     },
-    scales: selectedElement === 'compare' ? {
-      x: {
-        type: 'category',
-        grid: { display: false },
-        title: { display: true, text: 'Année', font: { size: 14, family: 'Roboto' }, color: '#355E3B' },
-        ticks: { color: '#4A704C' },
-      },
-      y: {
-        grid: { color: 'rgba(0,0,0,0.1)' },
-        title: { display: true, text: 'Valeur (1000 US$)', font: { size: 14, family: 'Roboto' }, color: '#355E3B' },
-        ticks: { color: '#4A704C' },
-      },
-    } : {
-      x: {
-        type: 'category',
-        grid: { display: false },
-        title: { display: true, text: 'Année', font: { size: 14, family: 'Roboto' }, color: '#355E3B' },
-        ticks: { color: '#4A704C' },
-      },
-      y: {
-        grid: { color: 'rgba(0,0,0,0.1)' },
-        title: {
-          display: true,
-          text: elementList.find(e => e.code === selectedElement)?.name.includes('Value') ? 'Valeur (1000 US$)' : 'Quantité (tonnes)',
-          font: { size: 14, family: 'Roboto' },
-          color: '#355E3B',
-        },
-        ticks: { color: '#4A704C' },
-      },
-    },
+    scales:
+      selectedElement === 'compare'
+        ? {
+            x: {
+              type: 'category',
+              grid: { display: false },
+              title: { display: true, text: 'Année', font: { size: 14, family: 'Roboto' }, color: '#355E3B' },
+              ticks: { color: '#4A704C' },
+            },
+            y: {
+              grid: { color: 'rgba(0,0,0,0.1)' },
+              title: {
+                display: true,
+                text: 'Valeur (1000 US$)',
+                font: { size: 14, family: 'Roboto' },
+                color: '#355E3B',
+              },
+              ticks: { color: '#4A704C' },
+            },
+          }
+        : {
+            x: {
+              type: 'category',
+              grid: { display: false },
+              title: { display: true, text: 'Année', font: { size: 14, family: 'Roboto' }, color: '#355E3B' },
+              ticks: { color: '#4A704C' },
+            },
+            y: {
+              grid: { color: 'rgba(0,0,0,0.1)' },
+              title: {
+                display: true,
+                text: elementList.find((e) => e.code === selectedElement)?.name.includes('Value')
+                  ? 'Valeur (1000 US$)'
+                  : 'Quantité (tonnes)',
+                font: { size: 14, family: 'Roboto' },
+                color: '#355E3B',
+              },
+              ticks: { color: '#4A704C' },
+            },
+          },
   });
 
   const exportToPDF = () => {
@@ -346,7 +396,7 @@ Utilise des titres Markdown (##) pour chaque section, des sous-titres (###) pour
       setSnackbar({ open: true, message: 'Erreur : conteneur introuvable', severity: 'error' });
       return;
     }
-    html2canvas(input, { scale: 2 }).then(canvas => {
+    html2canvas(input, { scale: 2 }).then((canvas) => {
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF('p', 'mm', 'a4');
       const imgWidth = 190;
@@ -375,8 +425,17 @@ Utilise des titres Markdown (##) pour chaque section, des sous-titres (###) pour
 
   const { chartData, stats } = prepareChartData();
 
-  if (loading) return <CircularProgress sx={{ display: 'block', mx: 'auto', mt: 4, color: '#A9CBA4' }} />;
-  if (error) return <Typography color="error" sx={{ textAlign: 'center', mt: 4, color: '#4A704C' }}>Erreur : {error}</Typography>;
+  if (loading) {
+    return <CircularProgress sx={{ display: 'block', mx: 'auto', mt: 4, color: '#A9CBA4' }} />;
+  }
+
+  if (error) {
+    return (
+      <Typography color="error" sx={{ textAlign: 'center', mt: 4, color: '#4A704C' }}>
+        Erreur : {error}
+      </Typography>
+    );
+  }
 
   return (
     <Box
@@ -409,7 +468,7 @@ Utilise des titres Markdown (##) pour chaque section, des sous-titres (###) pour
           textAlign: 'center',
         }}
       >
-        Étape 2 : Visualisation des Données
+        Étape 2 : Visualisation et Analyse des Données
       </Typography>
       <Paper
         sx={{
@@ -454,6 +513,7 @@ Utilise des titres Markdown (##) pour chaque section, des sous-titres (###) pour
         <Box id="chart-container">
           {chartData && chartData.labels.length > 0 ? (
             <Stack spacing={3}>
+              {/* Chart Section */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -475,6 +535,7 @@ Utilise des titres Markdown (##) pour chaque section, des sous-titres (###) pour
                   </Box>
                 </Paper>
               </motion.div>
+              {/* Statistics Section */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -498,7 +559,7 @@ Utilise des titres Markdown (##) pour chaque section, des sous-titres (###) pour
                       fontFamily: '"Roboto", sans-serif',
                     }}
                   >
-                    Statistiques ({elementList.find(e => e.code === selectedElement)?.name || 'Unknown'})
+                    Statistiques ({elementList.find((e) => e.code === selectedElement)?.name || 'Unknown'})
                   </Typography>
                   <Stack spacing={1}>
                     <Typography sx={{ color: '#4A704C' }}>
@@ -516,9 +577,170 @@ Utilise des titres Markdown (##) pour chaque section, des sous-titres (###) pour
                   </Stack>
                 </Paper>
               </motion.div>
-              <Stack direction="row" spacing={2} justifyContent="space-between">
+              {/* AI Analysis Section */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.4 }}
+              >
+                <Paper
+                  sx={{
+                    p: 3,
+                    borderRadius: 2,
+                    boxShadow: '0 6px 24px rgba(0,0,0,0.1)',
+                    border: '1px solid #A9CBA4',
+                    bgcolor: '#FAFAFA',
+                    transition: 'transform 0.3s ease',
+                    '&:hover': { transform: 'translateY(-4px)' },
+                  }}
+                >
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      color: '#355E3B',
+                      fontWeight: 600,
+                      fontFamily: '"Playfair Display", serif',
+                      mb: 2,
+                    }}
+                  >
+                    Analyse IA pour {selectedCountry} ({yearRange.start} - {yearRange.end})
+                  </Typography>
+                  {aiLoading ? (
+                    <CircularProgress sx={{ display: 'block', mx: 'auto', color: '#A9CBA4' }} />
+                  ) : aiError ? (
+                    <Typography color="error" sx={{ color: '#4A704C', textAlign: 'center' }}>
+                      Erreur : {aiError}
+                    </Typography>
+                  ) : aiAnalysis ? (
+                    <ReactMarkdown
+                      remarkPlugins={[remarkGfm]}
+                      components={{
+                        h2: ({ node, ...props }) => (
+                          <Typography
+                            variant="h5"
+                            sx={{
+                              color: '#355E3B',
+                              fontFamily: '"Playfair Display", serif',
+                              fontWeight: 700,
+                              mt: 4,
+                              mb: 2,
+                              textShadow: '0.5px 0.5px 1px rgba(0, 0, 0, 0.1)',
+                              borderBottom: '2px solid #A9CBA4',
+                              pb: 1,
+                            }}
+                            {...props}
+                          />
+                        ),
+                        h3: ({ node, ...props }) => (
+                          <Typography
+                            variant="h6"
+                            sx={{
+                              color: '#6B9E78',
+                              fontFamily: '"Roboto", sans-serif',
+                              fontWeight: 500,
+                              mt: 3,
+                              mb: 1.5,
+                              textDecoration: 'underline',
+                              textDecorationColor: '#A9CBA4',
+                            }}
+                            {...props}
+                          />
+                        ),
+                        p: ({ node, ...props }) => (
+                          <Typography
+                            sx={{
+                              color: '#4A704C',
+                              fontFamily: '"Roboto", sans-serif',
+                              fontWeight: 400,
+                              lineHeight: 1.6,
+                              mb: 1.5,
+                            }}
+                            {...props}
+                          />
+                        ),
+                        ul: ({ node, ...props }) => (
+                          <Box
+                            component="ul"
+                            sx={{
+                              pl: 4,
+                              mb: 2,
+                              color: '#5A7F5C',
+                              listStyleType: 'disc',
+                            }}
+                            {...props}
+                          />
+                        ),
+                        li: ({ node, ...props }) => (
+                          <Typography
+                            component="li"
+                            sx={{
+                              fontFamily: '"Roboto", sans-serif',
+                              fontWeight: 400,
+                              mb: 0.75,
+                              color: '#5A7F5C',
+                            }}
+                            {...props}
+                          />
+                        ),
+                        code({ node, inline, className, children, ...props }) {
+                          const match = /language-(\w+)/.exec(className || '');
+                          return !inline && match ? (
+                            <Box
+                              sx={{
+                                border: '1px solid #A9CBA4',
+                                borderRadius: 1,
+                                overflow: 'hidden',
+                                mb: 2,
+                              }}
+                            >
+                              <SyntaxHighlighter
+                                style={dark}
+                                language={match[1]}
+                                PreTag="div"
+                                {...props}
+                              >
+                                {String(children).replace(/\n$/, '')}
+                              </SyntaxHighlighter>
+                            </Box>
+                          ) : (
+                            <Typography
+                              component="code"
+                              sx={{
+                                fontFamily: '"Source Code Pro", monospace',
+                                color: '#2D3A35',
+                                backgroundColor: '#E8F5E9',
+                                p: 0.5,
+                                borderRadius: 1,
+                                fontSize: '0.9em',
+                              }}
+                              {...props}
+                            >
+                              {children}
+                            </Typography>
+                          );
+                        },
+                      }}
+                    >
+                      {aiAnalysis}
+                    </ReactMarkdown>
+                  ) : (
+                    <Typography
+                      sx={{
+                        color: '#4A704C',
+                        textAlign: 'center',
+                        fontFamily: '"Roboto", sans-serif',
+                      }}
+                    >
+                      Aucune analyse IA disponible. Veuillez patienter pendant que l’analyse est générée.
+                    </Typography>
+                  )}
+                </Paper>
+              </motion.div>
+              {/* Navigation Buttons */}
+              <Stack direction="rowpospolity: space-between" sx={{ mt: 3 }}>
                 <Button
                   variant="outlined"
+                  startIcon={<ArrowBackIcon />}
                   onClick={() => navigate('/dashboard/trade-wizard')}
                   sx={{
                     borderColor: '#A9CBA4',
@@ -531,22 +753,23 @@ Utilise des titres Markdown (##) pour chaque section, des sous-titres (###) pour
                 </Button>
                 <Button
                   variant="contained"
-                  onClick={() => navigate('/dashboard/trade-wizard/report')}
+                  onClick={() => navigate('/dashboard/trade-wizard')}
                   sx={{
                     bgcolor: '#6B9E78',
                     color: '#E8F5E9',
                     fontFamily: '"Roboto", sans-serif',
                     '&:hover': { bgcolor: '#4A704C' },
                   }}
-                  disabled={aiLoading || !aiAnalysis}
                 >
-                  Suivant : Rapport IA
+                  Nouvelle Analyse
                 </Button>
               </Stack>
             </Stack>
           ) : (
             <Typography sx={{ color: '#4A704C', textAlign: 'center', fontFamily: '"Roboto", sans-serif' }}>
-              Aucune donnée disponible pour {selectedCountry} avec les pays partenaires sélectionnés ({elementList.find(e => e.code === selectedElement)?.name || 'Unknown'}). Veuillez sélectionner d’autres pays ou années.
+              Aucune donnée disponible pour {selectedCountry} avec les pays partenaires sélectionnés (
+              {elementList.find((e) => e.code === selectedElement)?.name || 'Unknown'}). Veuillez sélectionner
+              d’autres pays ou années.
             </Typography>
           )}
         </Box>

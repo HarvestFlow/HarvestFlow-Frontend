@@ -111,7 +111,7 @@ export default function Login() {
                     <ReCAPTCHA sitekey="6Ldl_IopAAAAAGqFfTC7gEmxqOhoLnPidP96OeGN" onChange={handleCaptchaChange} />
                   </Col>
                   <Col xs={12}>
-                    <NioButton type="submit" label="Login to Your Account" className="btn-block btn-indigo" disabled={!isCaptchaValid} />
+                    <NioButton type="submit" label="Login to Your Account" className="btn-block btn-success" disabled={!isCaptchaValid} />
                   </Col>
                   <Col xs={12} className="pt-2">
                     <NioButton  label="Login With Google" className="border border-lighter text-dark w-100" />

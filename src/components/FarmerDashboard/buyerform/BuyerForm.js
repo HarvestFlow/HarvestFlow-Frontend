@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 const products = ['Wheat', 'Barley'];
@@ -9,7 +9,7 @@ const currencies = ['USD', 'EUR', 'GBP', 'CNY', 'INR', 'Other'];
 const API_URL = 'http://localhost:5000';
 const COUNTRIES_API = 'https://restcountries.com/v3.1/all';
 
-const FarmerForm = () => {
+const BuyerForm = () => {
   const [formData, setFormData] = useState({
     title: '',
     company: {
@@ -24,30 +24,28 @@ const FarmerForm = () => {
       contactEmail: '',
       contactPhone: 'N/A',
     },
-    productCategory: 'Wheat',
-    productOffered: 'Wheat',
-    quantityAvailable: { value: '', unit: 'tons' },
-    pricePerUnit: { value: '', currency: 'USD' },
+    productCategory: 'Wheat', // Default to a valid value
+    productNeeded: 'Wheat', // Default to a valid value
+    quantityDesired: { value: '', unit: 'tons' },
+    pricePerUnit: { value: '', currency: 'USD' }, // Default to a valid currency
     paymentTerms: 'Other',
-    destination: '',
-    lookingForBuyersFrom: [],
-    productDescription: '',
+    deliveryLocation: '',
+    preferredSuppliersFrom: [],
+    productSpecifications: '',
     contactName: '',
     verifiedStatus: 'NOT_VERIFIED',
-    availabilityEndDate: '',
+    offerEndDate: '',
     userId: '',
   });
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [fieldErrors, setFieldErrors] = useState({});
+  const [fieldErrors, setFieldErrors] = useState({}); // Track field-specific errors
   const [currentStep, setCurrentStep] = useState(1);
   const [countries, setCountries] = useState([]);
   const [isLoadingCountries, setIsLoadingCountries] = useState(false);
   const [countriesError, setCountriesError] = useState('');
-  const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
-  const { id } = useParams();
 
   useEffect(() => {
     const checkAuthStatus = async () => {
@@ -56,10 +54,10 @@ const FarmerForm = () => {
         if (response.status === 200) {
           setIsAuthenticated(true);
           setFormData((prev) => ({ ...prev, userId: response.data._id }));
+          if (!response.data.isActivated) console.log('Account not activated');
         }
       } catch (error) {
         setIsAuthenticated(false);
-        setError('Authentication failed. Please log in.');
         navigate('/404');
         console.error('Authentication error:', error);
       }
@@ -75,7 +73,7 @@ const FarmerForm = () => {
         const countryList = response.data.map((country) => country.name.common).sort();
         setCountries(countryList);
       } catch (error) {
-        setCountriesError('Failed to load countries. Using default list.');
+        setCountriesError('Failed to load countries. Please try again later.');
         setCountries(['Egypt', 'United States', 'India', 'China', 'Brazil']);
       } finally {
         setIsLoadingCountries(false);
@@ -84,69 +82,18 @@ const FarmerForm = () => {
     fetchCountries();
   }, []);
 
-  useEffect(() => {
-    if (id && formData.userId) {
-      const fetchForm = async () => {
-        try {
-          const response = await axios.get(`${API_URL}/farmerform/farmer/${formData.userId}`);
-          const form = response.data.find((f) => f._id === id);
-          if (form) {
-            setFormData({
-              title: form.title || '',
-              company: {
-                name: form.company?.name || '',
-                registrationNumber: form.company?.registrationNumber || 'N/A',
-                address: {
-                  street: form.company?.address?.street || 'N/A',
-                  city: form.company?.address?.city || 'N/A',
-                  country: form.company?.address?.country || '',
-                  postalCode: form.company?.address?.postalCode || 'N/A',
-                },
-                contactEmail: form.company?.contactEmail || '',
-                contactPhone: form.company?.contactPhone || 'N/A',
-              },
-              productCategory: form.productCategory || 'Wheat',
-              productOffered: form.productOffered || 'Wheat',
-              quantityAvailable: {
-                value: form.quantityAvailable?.value != null ? form.quantityAvailable.value : '',
-                unit: form.quantityAvailable?.unit || 'tons',
-              },
-              pricePerUnit: {
-                value: form.pricePerUnit?.value != null ? form.pricePerUnit.value : '',
-                currency: form.pricePerUnit?.currency || 'USD',
-              },
-              paymentTerms: form.paymentTerms || 'Other',
-              destination: form.destination || '',
-              lookingForBuyersFrom: Array.isArray(form.lookingForBuyersFrom) ? form.lookingForBuyersFrom : [],
-              productDescription: form.productDescription || '',
-              contactName: form.contactName || '',
-              verifiedStatus: form.verifiedStatus || 'NOT_VERIFIED',
-              availabilityEndDate: form.availabilityEndDate ? form.availabilityEndDate.split('T')[0] : '',
-              userId: form.userId || formData.userId,
-            });
-            setIsEditing(true);
-          } else {
-            setError('Form not found.');
-          }
-        } catch (error) {
-          setError('Failed to load form data: ' + (error.response?.data?.error || error.message));
-        }
-      };
-      fetchForm();
-    }
-  }, [id, formData.userId]);
-
   const validateEmail = (email) => {
     return /^\S+@\S+\.\S+$/.test(email);
   };
 
   const validateFormData = () => {
     const errors = {};
+
     if (!formData.title || formData.title.length < 3 || formData.title.length > 100) {
-      errors.title = 'Title must be 3-100 characters long.';
+      errors.title = 'Title is required and must be 3-100 characters long.';
     }
     if (!formData.company.name || formData.company.name.length < 2 || formData.company.name.length > 100) {
-      errors.companyName = 'Company name must be 2-100 characters long.';
+      errors.companyName = 'Company name is required and must be 2-100 characters long.';
     }
     if (!formData.company.contactEmail || !validateEmail(formData.company.contactEmail)) {
       errors.contactEmail = 'A valid company contact email is required.';
@@ -155,39 +102,40 @@ const FarmerForm = () => {
       errors.companyCountry = 'Company country is required.';
     }
     if (!formData.productCategory || !products.includes(formData.productCategory)) {
-      errors.productCategory = 'Product category must be Wheat or Barley.';
+      errors.productCategory = 'Product category is required and must be Wheat or Barley.';
     }
-    if (!formData.productOffered || !products.includes(formData.productOffered)) {
-      errors.productOffered = 'Product offered must be Wheat or Barley.';
+    if (!formData.productNeeded || !products.includes(formData.productNeeded)) {
+      errors.productNeeded = 'Product needed is required and must be Wheat or Barley.';
     }
-    if (!formData.quantityAvailable.value || formData.quantityAvailable.value < 0) {
-      errors.quantityAvailable = 'Quantity available must be a non-negative number.';
+    if (!formData.quantityDesired.value || formData.quantityDesired.value < 0) {
+      errors.quantityDesired = 'Quantity desired must be a non-negative number.';
     }
     if (!formData.pricePerUnit.value || formData.pricePerUnit.value < 0) {
       errors.pricePerUnit = 'Price per unit must be a non-negative number.';
     }
-    if (!formData.pricePerUnit.currency) {
+    if (!formData.pricePerUnit.currency || !currencies.includes(formData.pricePerUnit.currency)) {
       errors.currency = 'Currency is required.';
     }
-    if (!formData.destination) {
-      errors.destination = 'Destination is required.';
+    if (!formData.deliveryLocation) {
+      errors.deliveryLocation = 'Delivery location is required.';
     }
-    if (!formData.productDescription || formData.productDescription.length < 10) {
-      errors.productDescription = 'Product description must be at least 10 characters long.';
+    if (!formData.productSpecifications || formData.productSpecifications.length < 10) {
+      errors.productSpecifications = 'Product specifications are required and must be at least 10 characters long.';
     }
     if (!formData.contactName || formData.contactName.length < 2) {
-      errors.contactName = 'Contact name must be at least 2 characters long.';
+      errors.contactName = 'Contact name is required and must be at least 2 characters long.';
     }
-    if (!formData.availabilityEndDate || new Date(formData.availabilityEndDate) < new Date()) {
-      errors.availabilityEndDate = 'Availability end date must be in the future.';
+    if (!formData.offerEndDate || new Date(formData.offerEndDate) < new Date()) {
+      errors.offerEndDate = 'Offer end date is required and must be in the future.';
     }
+
     setFieldErrors(errors);
     return Object.keys(errors).length === 0;
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFieldErrors((prev) => ({ ...prev, [name.split('.').pop()]: '' }));
+    setFieldErrors((prev) => ({ ...prev, [name.split('.').pop()]: '' })); // Clear error for the field
 
     if (name.includes('company.address.')) {
       const field = name.split('.')[2];
@@ -204,19 +152,22 @@ const FarmerForm = () => {
         ...formData,
         company: { ...formData.company, [field]: value },
       });
-    } else if (name === 'quantityAvailable.value' || name === 'pricePerUnit.value') {
-      setFormData({
-        ...formData,
-        [name.split('.')[0]]: { ...formData[name.split('.')[0]], value: value },
-      });
+    } else if (name === 'quantityDesired.value' || name === 'pricePerUnit.value') {
+      if (value === '' || (/^\d*\.?\d*$/.test(value) && parseFloat(value) >= 0)) {
+        const field = name.split('.')[1];
+        setFormData({
+          ...formData,
+          [name.split('.')[0]]: { ...formData[name.split('.')[0]], [field]: value },
+        });
+      }
     } else if (name === 'pricePerUnit.currency') {
       setFormData({
         ...formData,
         pricePerUnit: { ...formData.pricePerUnit, currency: value },
       });
-    } else if (name === 'lookingForBuyersFrom') {
+    } else if (name === 'preferredSuppliersFrom') {
       const values = value ? [value] : [];
-      setFormData({ ...formData, lookingForBuyersFrom: values });
+      setFormData({ ...formData, preferredSuppliersFrom: values });
     } else {
       setFormData({ ...formData, [name]: value });
     }
@@ -225,13 +176,16 @@ const FarmerForm = () => {
   const handleNext = () => {
     if (currentStep === 1) {
       if (!formData.title || formData.title.length < 3 || formData.title.length > 100) {
-        setError('Title must be 3-100 characters long.');
-        setFieldErrors((prev) => ({ ...prev, title: 'Title must be 3-100 characters long.' }));
+        setError('Title is required and must be 3-100 characters long.');
+        setFieldErrors((prev) => ({ ...prev, title: 'Title is required and must be 3-100 characters long.' }));
         return;
       }
       if (!formData.company.name || formData.company.name.length < 2 || formData.company.name.length > 100) {
-        setError('Company name must be 2-100 characters long.');
-        setFieldErrors((prev) => ({ ...prev, companyName: 'Company name must be 2-100 characters long.' }));
+        setError('Company name is required and must be 2-100 characters long.');
+        setFieldErrors((prev) => ({
+          ...prev,
+          companyName: 'Company name is required and must be 2-100 characters long.',
+        }));
         return;
       }
       if (!formData.company.contactEmail || !validateEmail(formData.company.contactEmail)) {
@@ -246,18 +200,27 @@ const FarmerForm = () => {
       }
     } else if (currentStep === 2) {
       if (!formData.productCategory || !products.includes(formData.productCategory)) {
-        setError('Product category must be Wheat or Barley.');
-        setFieldErrors((prev) => ({ ...prev, productCategory: 'Product category must be Wheat or Barley.' }));
+        setError('Product category is required and must be Wheat or Barley.');
+        setFieldErrors((prev) => ({
+          ...prev,
+          productCategory: 'Product category is required and must be Wheat or Barley.',
+        }));
         return;
       }
-      if (!formData.productOffered || !products.includes(formData.productOffered)) {
-        setError('Product offered must be Wheat or Barley.');
-        setFieldErrors((prev) => ({ ...prev, productOffered: 'Product offered must be Wheat or Barley.' }));
+      if (!formData.productNeeded || !products.includes(formData.productNeeded)) {
+        setError('Product needed is required and must be Wheat or Barley.');
+        setFieldErrors((prev) => ({
+          ...prev,
+          productNeeded: 'Product needed is required and must be Wheat or Barley.',
+        }));
         return;
       }
-      if (!formData.quantityAvailable.value || formData.quantityAvailable.value < 0) {
-        setError('Quantity available must be a non-negative number.');
-        setFieldErrors((prev) => ({ ...prev, quantityAvailable: 'Quantity available must be a non-negative number.' }));
+      if (!formData.quantityDesired.value || formData.quantityDesired.value < 0) {
+        setError('Quantity desired must be a non-negative number.');
+        setFieldErrors((prev) => ({
+          ...prev,
+          quantityDesired: 'Quantity desired must be a non-negative number.',
+        }));
         return;
       }
       if (!formData.pricePerUnit.value || formData.pricePerUnit.value < 0) {
@@ -270,24 +233,24 @@ const FarmerForm = () => {
         setFieldErrors((prev) => ({ ...prev, currency: 'Currency is required.' }));
         return;
       }
-      if (!formData.destination) {
-        setError('Destination is required.');
-        setFieldErrors((prev) => ({ ...prev, destination: 'Destination is required.' }));
+      if (!formData.deliveryLocation) {
+        setError('Delivery location is required.');
+        setFieldErrors((prev) => ({ ...prev, deliveryLocation: 'Delivery location is required.' }));
         return;
       }
-      if (!formData.productDescription || formData.productDescription.length < 10) {
-        setError('Product description must be at least 10 characters long.');
-        setFieldErrors((prev) => ({ ...prev, productDescription: 'Product description must be at least 10 characters long.' }));
+      if (!formData.productSpecifications || formData.productSpecifications.length < 10) {
+        setError('Product specifications are required and must be at least 10 characters long.');
+        setFieldErrors((prev) => ({
+          ...prev,
+          productSpecifications: 'Product specifications are required and must be at least 10 characters long.',
+        }));
         return;
       }
     }
-    setError('');
     if (currentStep < 3) setCurrentStep(currentStep + 1);
   };
 
   const handlePrevious = () => {
-    setError('');
-    setFieldErrors({});
     if (currentStep > 1) setCurrentStep(currentStep - 1);
   };
 
@@ -311,57 +274,45 @@ const FarmerForm = () => {
       title: formData.title,
       company: formData.company,
       productCategory: formData.productCategory,
-      productOffered: formData.productOffered,
-      quantityAvailable: {
-        value: parseFloat(formData.quantityAvailable.value) || 0,
-        unit: formData.quantityAvailable.unit,
-      },
-      pricePerUnit: {
-        value: parseFloat(formData.pricePerUnit.value) || 0,
-        currency: formData.pricePerUnit.currency,
-      },
+      productNeeded: formData.productNeeded,
+      quantityDesired: formData.quantityDesired,
+      pricePerUnit: formData.pricePerUnit,
       paymentTerms: formData.paymentTerms,
-      destination: formData.destination,
-      lookingForBuyersFrom: formData.lookingForBuyersFrom,
-      productDescription: formData.productDescription,
+      deliveryLocation: formData.deliveryLocation,
+      preferredSuppliersFrom: formData.preferredSuppliersFrom,
+      productSpecifications: formData.productSpecifications,
       contactName: formData.contactName,
       verifiedStatus: formData.verifiedStatus,
-      availabilityEndDate: formData.availabilityEndDate || undefined,
+      offerEndDate: formData.offerEndDate || undefined,
       userId: formData.userId,
     };
 
     try {
-      if (isEditing) {
-        await axios.put(`${API_URL}/farmerform/farmerforms/${id}`, submitData);
-        setSuccess('Form updated successfully!');
-        navigate('/dashboard/farmeroffers');
-      } else {
-        await axios.post(`${API_URL}/farmerform/farmer`, submitData);
-        setSuccess('Form submitted successfully!');
-        setFormData({
-          title: '',
-          company: {
-            name: '',
-            registrationNumber: 'N/A',
-            address: { street: 'N/A', city: 'N/A', country: '', postalCode: 'N/A' },
-            contactEmail: '',
-            contactPhone: 'N/A',
-          },
-          productCategory: 'Wheat',
-          productOffered: 'Wheat',
-          quantityAvailable: { value: '', unit: 'tons' },
-          pricePerUnit: { value: '', currency: 'USD' },
-          paymentTerms: 'Other',
-          destination: '',
-          lookingForBuyersFrom: [],
-          productDescription: '',
-          contactName: '',
-          verifiedStatus: 'NOT_VERIFIED',
-          availabilityEndDate: '',
-          userId: formData.userId,
-        });
-        setCurrentStep(1);
-      }
+      const response = await axios.post(`${API_URL}/farmerform/buyer`, submitData);
+      setSuccess('Form submitted successfully!');
+      setFormData({
+        title: '',
+        company: {
+          name: '',
+          registrationNumber: 'N/A',
+          address: { street: 'N/A', city: 'N/A', country: '', postalCode: 'N/A' },
+          contactEmail: '',
+          contactPhone: 'N/A',
+        },
+        productCategory: 'Wheat',
+        productNeeded: 'Wheat',
+        quantityDesired: { value: '', unit: 'tons' },
+        pricePerUnit: { value: '', currency: 'USD' },
+        paymentTerms: 'Other',
+        deliveryLocation: '',
+        preferredSuppliersFrom: [],
+        productSpecifications: '',
+        contactName: '',
+        verifiedStatus: 'NOT_VERIFIED',
+        offerEndDate: '',
+        userId: formData.userId,
+      });
+      setCurrentStep(1);
     } catch (error) {
       setError(error.response?.data?.error || 'Failed to submit form.');
     }
@@ -398,7 +349,7 @@ const FarmerForm = () => {
         animate="visible"
       >
         <h1 className="text-4xl font-bold mb-6 text-center text-green-800 tracking-tight">
-          {isEditing ? 'Edit Farmer Supplier Form' : 'Farmer Supplier Form'}
+          Buyer Request Form
         </h1>
         <div className="mb-8">
           <div className="flex justify-between mb-2">
@@ -477,7 +428,9 @@ const FarmerForm = () => {
                     name="title"
                     value={formData.title}
                     onChange={handleChange}
-                    className={`block w-full p-3 border rounded-lg focus:ring-green-500 focus:border-green-500 bg-green-50/50 transition-all ${fieldErrors.title ? 'border-red-500' : 'border-green-300'}`}
+                    className={`block w-full p-3 border rounded-lg focus:ring-green-500 focus:border-green-500 bg-green-50/50 transition-all ${
+                      fieldErrors.title ? 'border-red-500' : 'border-green-300'
+                    }`}
                     required
                     aria-describedby={fieldErrors.title ? 'title-error' : undefined}
                   />
@@ -497,7 +450,9 @@ const FarmerForm = () => {
                     name="company.name"
                     value={formData.company.name}
                     onChange={handleChange}
-                    className={`block w-full p-3 border rounded-lg focus:ring-green-500 focus:border-green-500 bg-green-50/50 transition-all ${fieldErrors.companyName ? 'border-red-500' : 'border-green-300'}`}
+                    className={`block w-full p-3 border rounded-lg focus:ring-green-500 focus:border-green-500 bg-green-50/50 transition-all ${
+                      fieldErrors.companyName ? 'border-red-500' : 'border-green-300'
+                    }`}
                     required
                     aria-describedby={fieldErrors.companyName ? 'company-name-error' : undefined}
                   />
@@ -506,6 +461,19 @@ const FarmerForm = () => {
                       {fieldErrors.companyName}
                     </p>
                   )}
+                </motion.div>
+                <motion.div variants={inputVariants} whileHover="hover">
+                  <label className="block text-sm font-medium text-green-700 mb-2" htmlFor="registration-number">
+                    Registration Number
+                  </label>
+                  <input
+                    type="text"
+                    id="registration-number"
+                    name="company.registrationNumber"
+                    value={formData.company.registrationNumber}
+                    onChange={handleChange}
+                    className="block w-full p-3 border border-green-300 rounded-lg focus:ring-green-500 focus:border-green-500 bg-green-50/50 transition-all"
+                  />
                 </motion.div>
                 <motion.div variants={inputVariants} whileHover="hover">
                   <label className="block text-sm font-medium text-green-700 mb-2" htmlFor="contact-email">
@@ -517,7 +485,9 @@ const FarmerForm = () => {
                     name="company.contactEmail"
                     value={formData.company.contactEmail}
                     onChange={handleChange}
-                    className={`block w-full p-3 border rounded-lg focus:ring-green-500 focus:border-green-500 bg-green-50/50 transition-all ${fieldErrors.contactEmail ? 'border-red-500' : 'border-green-300'}`}
+                    className={`block w-full p-3 border rounded-lg focus:ring-green-500 focus:border-green-500 bg-green-50/50 transition-all ${
+                      fieldErrors.contactEmail ? 'border-red-500' : 'border-green-300'
+                    }`}
                     required
                     aria-describedby={fieldErrors.contactEmail ? 'contact-email-error' : undefined}
                   />
@@ -528,32 +498,17 @@ const FarmerForm = () => {
                   )}
                 </motion.div>
                 <motion.div variants={inputVariants} whileHover="hover">
-                  <label className="block text-sm font-medium text-green-700 mb-2" htmlFor="company-country">
-                    Country
+                  <label className="block text-sm font-medium text-green-700 mb-2" htmlFor="contact-phone">
+                    Contact Phone
                   </label>
-                  <select
-                    id="company-country"
-                    name="company.address.country"
-                    value={formData.company.address.country}
+                  <input
+                    type="text"
+                    id="contact-phone"
+                    name="company.contactPhone"
+                    value={formData.company.contactPhone}
                     onChange={handleChange}
-                    className={`block w-full p-3 border rounded-lg focus:ring-green-500 focus:border-green-500 bg-green-50/50 transition-all ${fieldErrors.companyCountry ? 'border-red-500' : 'border-green-300'}`}
-                    required
-                    disabled={isLoadingCountries}
-                    aria-describedby={fieldErrors.companyCountry ? 'company-country-error' : undefined}
-                  >
-                    <option value="">Select Country</option>
-                    {countries.map((country) => (
-                      <option key={country} value={country}>
-                        {country}
-                      </option>
-                    ))}
-                  </select>
-                  {isLoadingCountries && <p className="text-sm text-green-600 mt-1">Loading countries...</p>}
-                  {fieldErrors.companyCountry && (
-                    <p id="company-country-error" className="text-red-600 text-sm mt-1" role="alert">
-                      {fieldErrors.companyCountry}
-                    </p>
-                  )}
+                    className="block w-full p-3 border border-green-300 rounded-lg focus:ring-green-500 focus:border-green-500 bg-green-50/50 transition-all"
+                  />
                 </motion.div>
                 <motion.div variants={inputVariants} whileHover="hover">
                   <label className="block text-sm font-medium text-green-700 mb-2" htmlFor="street">
@@ -582,6 +537,36 @@ const FarmerForm = () => {
                   />
                 </motion.div>
                 <motion.div variants={inputVariants} whileHover="hover">
+                  <label className="block text-sm font-medium text-green-700 mb-2" htmlFor="company-country">
+                    Country
+                  </label>
+                  <select
+                    id="company-country"
+                    name="company.address.country"
+                    value={formData.company.address.country}
+                    onChange={handleChange}
+                    className={`block w-full p-3 border rounded-lg focus:ring-green-500 focus:border-green-500 bg-green-50/50 transition-all ${
+                      fieldErrors.companyCountry ? 'border-red-500' : 'border-green-300'
+                    }`}
+                    required
+                    disabled={isLoadingCountries}
+                    aria-describedby={fieldErrors.companyCountry ? 'company-country-error' : undefined}
+                  >
+                    <option value="">Select Country</option>
+                    {countries.map((country) => (
+                      <option key={country} value={country}>
+                        {country}
+                      </option>
+                    ))}
+                  </select>
+                  {isLoadingCountries && <p className="text-sm text-green-600 mt-1">Loading countries...</p>}
+                  {fieldErrors.companyCountry && (
+                    <p id="company-country-error" className="text-red-600 text-sm mt-1" role="alert">
+                      {fieldErrors.companyCountry}
+                    </p>
+                  )}
+                </motion.div>
+                <motion.div variants={inputVariants} whileHover="hover">
                   <label className="block text-sm font-medium text-green-700 mb-2" htmlFor="postal-code">
                     Postal Code
                   </label>
@@ -590,32 +575,6 @@ const FarmerForm = () => {
                     id="postal-code"
                     name="company.address.postalCode"
                     value={formData.company.address.postalCode}
-                    onChange={handleChange}
-                    className="block w-full p-3 border border-green-300 rounded-lg focus:ring-green-500 focus:border-green-500 bg-green-50/50 transition-all"
-                  />
-                </motion.div>
-                <motion.div variants={inputVariants} whileHover="hover">
-                  <label className="block text-sm font-medium text-green-700 mb-2" htmlFor="contact-phone">
-                    Contact Phone
-                  </label>
-                  <input
-                    type="text"
-                    id="contact-phone"
-                    name="company.contactPhone"
-                    value={formData.company.contactPhone}
-                    onChange={handleChange}
-                    className="block w-full p-3 border border-green-300 rounded-lg focus:ring-green-500 focus:border-green-500 bg-green-50/50 transition-all"
-                  />
-                </motion.div>
-                <motion.div variants={inputVariants} whileHover="hover">
-                  <label className="block text-sm font-medium text-green-700 mb-2" htmlFor="registration-number">
-                    Registration Number
-                  </label>
-                  <input
-                    type="text"
-                    id="registration-number"
-                    name="company.registrationNumber"
-                    value={formData.company.registrationNumber}
                     onChange={handleChange}
                     className="block w-full p-3 border border-green-300 rounded-lg focus:ring-green-500 focus:border-green-500 bg-green-50/50 transition-all"
                   />
@@ -641,7 +600,9 @@ const FarmerForm = () => {
                     name="productCategory"
                     value={formData.productCategory}
                     onChange={handleChange}
-                    className={`block w-full p-3 border rounded-lg focus:ring-green-500 focus:border-green-500 bg-green-50/50 transition-all ${fieldErrors.productCategory ? 'border-red-500' : 'border-green-300'}`}
+                    className={`block w-full p-3 border rounded-lg focus:ring-green-500 focus:border-green-500 bg-green-50/50 transition-all ${
+                      fieldErrors.productCategory ? 'border-red-500' : 'border-green-300'
+                    }`}
                     required
                     aria-describedby={fieldErrors.productCategory ? 'product-category-error' : undefined}
                   >
@@ -658,17 +619,19 @@ const FarmerForm = () => {
                   )}
                 </motion.div>
                 <motion.div variants={inputVariants} whileHover="hover">
-                  <label className="block text-sm font-medium text-green-700 mb-2" htmlFor="product-offered">
-                    Product Offered
+                  <label className="block text-sm font-medium text-green-700 mb-2" htmlFor="product-needed">
+                    Product Needed
                   </label>
                   <select
-                    id="product-offered"
-                    name="productOffered"
-                    value={formData.productOffered}
+                    id="product-needed"
+                    name="productNeeded"
+                    value={formData.productNeeded}
                     onChange={handleChange}
-                    className={`block w-full p-3 border rounded-lg focus:ring-green-500 focus:border-green-500 bg-green-50/50 transition-all ${fieldErrors.productOffered ? 'border-red-500' : 'border-green-300'}`}
+                    className={`block w-full p-3 border rounded-lg focus:ring-green-500 focus:border-green-500 bg-green-50/50 transition-all ${
+                      fieldErrors.productNeeded ? 'border-red-500' : 'border-green-300'
+                    }`}
                     required
-                    aria-describedby={fieldErrors.productOffered ? 'product-offered-error' : undefined}
+                    aria-describedby={fieldErrors.productNeeded ? 'product-needed-error' : undefined}
                   >
                     {products.map((product) => (
                       <option key={product} value={product}>
@@ -676,30 +639,32 @@ const FarmerForm = () => {
                       </option>
                     ))}
                   </select>
-                  {fieldErrors.productOffered && (
-                    <p id="product-offered-error" className="text-red-600 text-sm mt-1" role="alert">
-                      {fieldErrors.productOffered}
+                  {fieldErrors.productNeeded && (
+                    <p id="product-needed-error" className="text-red-600 text-sm mt-1" role="alert">
+                      {fieldErrors.productNeeded}
                     </p>
                   )}
                 </motion.div>
                 <motion.div variants={inputVariants} whileHover="hover">
-                  <label className="block text-sm font-medium text-green-700 mb-2" htmlFor="quantity-available">
-                    Quantity Available (tons)
+                  <label className="block text-sm font-medium text-green-700 mb-2" htmlFor="quantity-desired">
+                    Quantity Desired (tons)
                   </label>
                   <input
                     type="number"
-                    id="quantity-available"
-                    name="quantityAvailable.value"
-                    value={formData.quantityAvailable.value}
+                    id="quantity-desired"
+                    name="quantityDesired.value"
+                    value={formData.quantityDesired.value}
                     onChange={handleChange}
-                    className={`block w-full p-3 border rounded-lg focus:ring-green-500 focus:border-green-500 bg-green-50/50 transition-all ${fieldErrors.quantityAvailable ? 'border-red-500' : 'border-green-300'}`}
+                    className={`block w-full p-3 border rounded-lg focus:ring-green-500 focus:border-green-500 bg-green-50/50 transition-all ${
+                      fieldErrors.quantityDesired ? 'border-red-500' : 'border-green-300'
+                    }`}
                     required
                     min="0"
-                    aria-describedby={fieldErrors.quantityAvailable ? 'quantity-available-error' : undefined}
+                    aria-describedby={fieldErrors.quantityDesired ? 'quantity-desired-error' : undefined}
                   />
-                  {fieldErrors.quantityAvailable && (
-                    <p id="quantity-available-error" className="text-red-600 text-sm mt-1" role="alert">
-                      {fieldErrors.quantityAvailable}
+                  {fieldErrors.quantityDesired && (
+                    <p id="quantity-desired-error" className="text-red-600 text-sm mt-1" role="alert">
+                      {fieldErrors.quantityDesired}
                     </p>
                   )}
                 </motion.div>
@@ -713,7 +678,9 @@ const FarmerForm = () => {
                     name="pricePerUnit.value"
                     value={formData.pricePerUnit.value}
                     onChange={handleChange}
-                    className={`block w-full p-3 border rounded-lg focus:ring-green-500 focus:border-green-500 bg-green-50/50 transition-all ${fieldErrors.pricePerUnit ? 'border-red-500' : 'border-green-300'}`}
+                    className={`block w-full p-3 border rounded-lg focus:ring-green-500 focus:border-green-500 bg-green-50/50 transition-all ${
+                      fieldErrors.pricePerUnit ? 'border-red-500' : 'border-green-300'
+                    }`}
                     required
                     min="0"
                     aria-describedby={fieldErrors.pricePerUnit ? 'price-per-unit-error' : undefined}
@@ -733,7 +700,9 @@ const FarmerForm = () => {
                     name="pricePerUnit.currency"
                     value={formData.pricePerUnit.currency}
                     onChange={handleChange}
-                    className={`block w-full p-3 border rounded-lg focus:ring-green-500 focus:border-green-500 bg-green-50/50 transition-all ${fieldErrors.currency ? 'border-red-500' : 'border-green-300'}`}
+                    className={`block w-full p-3 border rounded-lg focus:ring-green-500 focus:border-green-500 bg-green-50/50 transition-all ${
+                      fieldErrors.currency ? 'border-red-500' : 'border-green-300'
+                    }`}
                     required
                     aria-describedby={fieldErrors.currency ? 'currency-error' : undefined}
                   >
@@ -769,20 +738,22 @@ const FarmerForm = () => {
                   </select>
                 </motion.div>
                 <motion.div variants={inputVariants} whileHover="hover">
-                  <label className="block text-sm font-medium text-green-700 mb-2" htmlFor="destination">
-                    Destination
+                  <label className="block text-sm font-medium text-green-700 mb-2" htmlFor="delivery-location">
+                    Delivery Location
                   </label>
                   <select
-                    id="destination"
-                    name="destination"
-                    value={formData.destination}
+                    id="delivery-location"
+                    name="deliveryLocation"
+                    value={formData.deliveryLocation}
                     onChange={handleChange}
-                    className={`block w-full p-3 border rounded-lg focus:ring-green-500 focus:border-green-500 bg-green-50/50 transition-all ${fieldErrors.destination ? 'border-red-500' : 'border-green-300'}`}
+                    className={`block w-full p-3 border rounded-lg focus:ring-green-500 focus:border-green-500 bg-green-50/50 transition-all ${
+                      fieldErrors.deliveryLocation ? 'border-red-500' : 'border-green-300'
+                    }`}
                     required
                     disabled={isLoadingCountries}
-                    aria-describedby={fieldErrors.destination ? 'destination-error' : undefined}
+                    aria-describedby={fieldErrors.deliveryLocation ? 'delivery-location-error' : undefined}
                   >
-                    <option value="">Select Destination</option>
+                    <option value="">Select Delivery Location</option>
                     {countries.map((country) => (
                       <option key={country} value={country}>
                         {country}
@@ -790,20 +761,23 @@ const FarmerForm = () => {
                     ))}
                   </select>
                   {isLoadingCountries && <p className="text-sm text-green-600 mt-1">Loading countries...</p>}
-                  {fieldErrors.destination && (
-                    <p id="destination-error" className="text-red-600 text-sm mt-1" role="alert">
-                      {fieldErrors.destination}
+                  {fieldErrors.deliveryLocation && (
+                    <p id="delivery-location-error" className="text-red-600 text-sm mt-1" role="alert">
+                      {fieldErrors.deliveryLocation}
                     </p>
                   )}
                 </motion.div>
                 <motion.div variants={inputVariants} whileHover="hover">
-                  <label className="block text-sm font-medium text-green-700 mb-2" htmlFor="looking-for-buyers-from">
-                    Looking for Buyers From
+                  <label
+                    className="block text-sm font-medium text-green-700 mb-2"
+                    htmlFor="preferred-suppliers-from"
+                  >
+                    Preferred Suppliers From
                   </label>
                   <select
-                    id="looking-for-buyers-from"
-                    name="lookingForBuyersFrom"
-                    value={formData.lookingForBuyersFrom[0] || ''}
+                    id="preferred-suppliers-from"
+                    name="preferredSuppliersFrom"
+                    value={formData.preferredSuppliersFrom[0] || ''}
                     onChange={handleChange}
                     className="block w-full p-3 border border-green-300 rounded-lg focus:ring-green-500 focus:border-green-500 bg-green-50/50 transition-all"
                   >
@@ -816,22 +790,24 @@ const FarmerForm = () => {
                   </select>
                 </motion.div>
                 <motion.div variants={inputVariants} whileHover="hover">
-                  <label className="block text-sm font-medium text-green-700 mb-2" htmlFor="product-description">
-                    Product Description
+                  <label className="block text-sm font-medium text-green-700 mb-2" htmlFor="product-specifications">
+                    Product Specifications
                   </label>
                   <textarea
-                    id="product-description"
-                    name="productDescription"
-                    value={formData.productDescription}
+                    id="product-specifications"
+                    name="productSpecifications"
+                    value={formData.productSpecifications}
                     onChange={handleChange}
-                    className={`block w-full p-3 border rounded-lg focus:ring-green-500 focus:border-green-500 bg-green-50/50 transition-all ${fieldErrors.productDescription ? 'border-red-500' : 'border-green-300'}`}
+                    className={`block w-full p-3 border rounded-lg focus:ring-green-500 focus:border-green-500 bg-green-50/50 transition-all ${
+                      fieldErrors.productSpecifications ? 'border-red-500' : 'border-green-300'
+                    }`}
                     rows="4"
                     required
-                    aria-describedby={fieldErrors.productDescription ? 'product-description-error' : undefined}
+                    aria-describedby={fieldErrors.productSpecifications ? 'product-specifications-error' : undefined}
                   />
-                  {fieldErrors.productDescription && (
-                    <p id="product-description-error" className="text-red-600 text-sm mt-1" role="alert">
-                      {fieldErrors.productDescription}
+                  {fieldErrors.productSpecifications && (
+                    <p id="product-specifications-error" className="text-red-600 text-sm mt-1" role="alert">
+                      {fieldErrors.productSpecifications}
                     </p>
                   )}
                 </motion.div>
@@ -857,7 +833,9 @@ const FarmerForm = () => {
                     name="contactName"
                     value={formData.contactName}
                     onChange={handleChange}
-                    className={`block w-full p-3 border rounded-lg focus:ring-green-500 focus:border-green-500 bg-green-50/50 transition-all ${fieldErrors.contactName ? 'border-red-500' : 'border-green-300'}`}
+                    className={`block w-full p-3 border rounded-lg focus:ring-green-500 focus:border-green-500 bg-green-50/50 transition-all ${
+                      fieldErrors.contactName ? 'border-red-500' : 'border-green-300'
+                    }`}
                     required
                     aria-describedby={fieldErrors.contactName ? 'contact-name-error' : undefined}
                   />
@@ -884,23 +862,25 @@ const FarmerForm = () => {
                   </select>
                 </motion.div>
                 <motion.div variants={inputVariants} whileHover="hover">
-                  <label className="block text-sm font-medium text-green-700 mb-2" htmlFor="availability-end-date">
-                    Availability End Date
+                  <label className="block text-sm font-medium text-green-700 mb-2" htmlFor="offer-end-date">
+                    Offer End Date
                   </label>
                   <input
                     type="date"
-                    id="availability-end-date"
-                    name="availabilityEndDate"
-                    value={formData.availabilityEndDate}
+                    id="offer-end-date"
+                    name="offerEndDate"
+                    value={formData.offerEndDate}
                     onChange={handleChange}
                     min={today}
-                    className={`block w-full p-3 border rounded-lg focus:ring-green-500 focus:border-green-500 bg-green-50/50 transition-all ${fieldErrors.availabilityEndDate ? 'border-red-500' : 'border-green-300'}`}
+                    className={`block w-full p-3 border rounded-lg focus:ring-green-500 focus:border-green-500 bg-green-50/50 transition-all ${
+                      fieldErrors.offerEndDate ? 'border-red-500' : 'border-green-300'
+                    }`}
                     required
-                    aria-describedby={fieldErrors.availabilityEndDate ? 'availability-end-date-error' : undefined}
+                    aria-describedby={fieldErrors.offerEndDate ? 'offer-end-date-error' : undefined}
                   />
-                  {fieldErrors.availabilityEndDate && (
-                    <p id="availability-end-date-error" className="text-red-600 text-sm mt-1" role="alert">
-                      {fieldErrors.availabilityEndDate}
+                  {fieldErrors.offerEndDate && (
+                    <p id="offer-end-date-error" className="text-red-600 text-sm mt-1" role="alert">
+                      {fieldErrors.offerEndDate}
                     </p>
                   )}
                 </motion.div>
@@ -965,7 +945,7 @@ const FarmerForm = () => {
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
                 </svg>
-                {isEditing ? 'Update Form' : 'Submit Form'}
+                Submit Form
               </motion.button>
             )}
           </div>
@@ -975,4 +955,4 @@ const FarmerForm = () => {
   );
 };
 
-export default FarmerForm;
+export default BuyerForm;

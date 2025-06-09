@@ -21,7 +21,8 @@ import {
   faTrademark,
   faListCheck,
   faFileWaveform,
-  faChartLine, // Added for Trade Wizard icon
+  faChartLine,
+  faShoppingCart, // Added for BuyerOffers icon
 } from "@fortawesome/free-solid-svg-icons";
 import NioBrand from "../NioBrand/NioBrand";
 import { Routes, Route, useNavigate } from "react-router-dom";
@@ -42,13 +43,14 @@ import { useNotifications } from "../Notification/NotificationContext";
 import RecommendationsSelector from "../FarmerDashboard/recommendation/RecommendationsSelector";
 import Recommendations from "../FarmerDashboard/recommendation/recommendationUtils";
 import FarmerOffers from "../FarmerDashboard/farmerform/farmeroffers";
+import BuyerForm from "../FarmerDashboard/buyerform/BuyerForm"; // New import
+import BuyerOffers from "../FarmerDashboard/buyerform/BuyerOffers"; // New import
 import DynamicChartPage from "../FarmerDashboard/dataUpload/DynamicChartPage";
 import TradeChartPage from "../FarmerDashboard/IAanalyst/TradeChartPage";
 import TradeAiReportPage from "../FarmerDashboard/IAanalyst/TradeAiReportPage";
 import { TradeDataProvider } from "../FarmerDashboard/IAanalyst/TradeDataContext";
 import TradingSelectionPage from "../FarmerDashboard/IAanalyst/TradingSelectionPage";
-
-
+import AdminScrapper from "../adminscrapper/adminscrapper";
 
 function Sidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -158,11 +160,13 @@ function Sidebar() {
     { name: "AdminDashboard", icon: faTachometerAlt, path: "/AdminDashboard" },
     { name: "StockManagement", icon: faBoxes, path: "/StockManagement" },
     { name: "WheatPrediction", icon: faMoneyBillWheat, path: "/WheatPrediction" },
-    { name: "farmeroffers", icon: faFileWaveform, path: "/FarmerOffers" },
+    { name: "FarmerOffers", icon: faFileWaveform, path: "/FarmerOffers" },
+    { name: "BuyerOffers", icon: faShoppingCart, path: "/BuyerOffers" }, // New menu item
     { name: "CountryStats", icon: faCalculator, path: "/CountryStats" },
-    { name: "Trading", icon: faTrademark, path: "/trade" }, // Original route
-    { name: "Trade Wizard", icon: faChartLine, path: "/trade-wizard" }, // New wizard route
+    { name: "Trading", icon: faTrademark, path: "/trade" },
+    { name: "Trade Wizard", icon: faChartLine, path: "/trade-wizard" },
     { name: "Recommendations", icon: faListCheck, path: "/recommendations" },
+    { name: "AdminScrapper", icon: faListCheck, path: "/AdminScrapper" },
     ...(isAdmin
       ? [{ name: "Gestion User", icon: faUserCheck, path: "/gestionUser" }]
       : []),
@@ -378,18 +382,19 @@ function Sidebar() {
           <Route path="/StockManagement" element={<StockManagement />} />
           <Route path="/WheatPrediction" element={<WheatPrediction />} />
           <Route path="/CountryStats" element={<CountryStats />} />
-          {/* Original Trade Route - Kept as is */}
           <Route path="/trade" element={<TradeDataManager />} />
           <Route path="/trade-data/:fileId" element={<FileDataManager />} />
           <Route path="/trade-data/:fileId/charts" element={<DynamicChartPage />} />
           <Route path="/recommendations" element={<RecommendationsSelector />} />
           <Route path="/recommendations/:shapeId" element={<Recommendations />} />
-          <Route path='/FarmerOffers' element={<FarmerOffers />} />
+          <Route path="/FarmerOffers" element={<FarmerOffers />} />
+          <Route path="/BuyerForm" element={<BuyerForm />} /> {/* New route */}
+          <Route path="/BuyerOffers" element={<BuyerOffers />} /> {/* New route */}
+          <Route path="/AdminScrapper" element={<AdminScrapper />} />
           <Route
             path="/gestionUser"
             element={isAdmin ? <GestionUser /> : <div>Accès réservé aux administrateurs</div>}
           />
-          {/* New Nested Routes for Trade Wizard */}
           <Route
             path="/trade-wizard/*"
             element={

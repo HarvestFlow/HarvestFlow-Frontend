@@ -77,6 +77,9 @@ import FarmingForm from './components/FarmerDashboard/farmerform/farmerform';
 import FarmerOffers from './components/FarmerDashboard/farmerform/farmeroffers';
 import MarketValuesPage from './components/FarmerDashboard/dataUpload/worldwheatprice';
 import TradeDataPage from './components/FarmerDashboard/dataUpload/TradeDataPage';
+import LandingPage from './pages/home-pages/kids-course/landingpage';
+import AIResponsePage from './components/FarmerDashboard/dataUpload/AIResponsePage';
+import MyOffers from './pages/inner-pages/blogs/offers';
 
 function AppRoutes() {
 
@@ -99,7 +102,8 @@ function AppRoutes() {
       <Route path="/index-bs-management" element={<BusinessManagement />} />
       <Route path="/index-bs-subscription" element={<BusinessSubscription />} />
       <Route path="/index-data-driven" element={<DataDriven />} />
-      <Route path="/index-language-learning" element={<LanguageLearning />} />
+      <Route path="/LandingPage" element={<LandingPage />} />
+      <Route path="/MyOffers" element={<MyOffers />} />
 
       {/* inner page  */}
       <Route path='/about' element={<About />} />
@@ -160,6 +164,7 @@ function AppRoutes() {
 
       <Route path='/MarketValuesPage' element={<MarketValuesPage />} />
       <Route path='/TradeDataPage' element={<TradeDataPage />} />
+      <Route path="/trade-data/:fileId/ai-analysis" element={<AIResponsePage />} />
 
     </Routes>
   );
