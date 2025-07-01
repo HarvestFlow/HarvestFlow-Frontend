@@ -62,8 +62,7 @@ function MapWithComments() {
     try {
       const validShapes = updatedShapes.filter(shape => shape.geometry && shape.geometry.coordinates.length > 0);
       const response = await axios.post("http://localhost:5000/parcelle/parcelle", { userId, shapes: validShapes });
-      setShapes(response.data.shapes);
-      window.location.reload();
+      setShapes(response.data.data.shapes);
     } catch (error) {
       console.error("Error saving shapes:", error);
     }
@@ -97,8 +96,10 @@ function MapWithComments() {
   const _onDeleted = (e) => {
     const deletedIds = new Set();
     e.layers.eachLayer((layer) => {
-      let id = layer.feature?.properties?.id || layer._leaflet_id;
-      if (id) deletedIds.add(id);
+      const id = layer.feature?.properties?.id || layer._leaflet_id;
+      if (id) {
+        deletedIds.add(id);
+      }
     });
     deletedIds.forEach((id) => deleteShapeInBackend(id));
   };

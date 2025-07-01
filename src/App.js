@@ -80,6 +80,9 @@ import TradeDataPage from './components/FarmerDashboard/dataUpload/TradeDataPage
 import LandingPage from './pages/home-pages/kids-course/landingpage';
 import AIResponsePage from './components/FarmerDashboard/dataUpload/AIResponsePage';
 import MyOffers from './pages/inner-pages/blogs/offers';
+import StockManagement from './components/FarmerDashboard/StockManagement/StockManagement';
+import StockDashboard from './components/stockManagement/StockDashboard';
+import Buyers from './pages/inner-pages/blogs/buyers';
 
 function AppRoutes() {
 
@@ -104,6 +107,7 @@ function AppRoutes() {
       <Route path="/index-data-driven" element={<DataDriven />} />
       <Route path="/LandingPage" element={<LandingPage />} />
       <Route path="/MyOffers" element={<MyOffers />} />
+      <Route path="/Buyers" element={<Buyers />} />
 
       {/* inner page  */}
       <Route path='/about' element={<About />} />

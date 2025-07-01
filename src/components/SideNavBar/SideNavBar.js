@@ -22,7 +22,7 @@ import {
   faListCheck,
   faFileWaveform,
   faChartLine,
-  faShoppingCart, // Added for BuyerOffers icon
+  faShoppingCart,
 } from "@fortawesome/free-solid-svg-icons";
 import NioBrand from "../NioBrand/NioBrand";
 import { Routes, Route, useNavigate } from "react-router-dom";
@@ -43,14 +43,16 @@ import { useNotifications } from "../Notification/NotificationContext";
 import RecommendationsSelector from "../FarmerDashboard/recommendation/RecommendationsSelector";
 import Recommendations from "../FarmerDashboard/recommendation/recommendationUtils";
 import FarmerOffers from "../FarmerDashboard/farmerform/farmeroffers";
-import BuyerForm from "../FarmerDashboard/buyerform/BuyerForm"; // New import
-import BuyerOffers from "../FarmerDashboard/buyerform/BuyerOffers"; // New import
+import BuyerForm from "../FarmerDashboard/buyerform/BuyerForm";
+import BuyerOffers from "../FarmerDashboard/buyerform/BuyerOffers";
 import DynamicChartPage from "../FarmerDashboard/dataUpload/DynamicChartPage";
 import TradeChartPage from "../FarmerDashboard/IAanalyst/TradeChartPage";
 import TradeAiReportPage from "../FarmerDashboard/IAanalyst/TradeAiReportPage";
 import { TradeDataProvider } from "../FarmerDashboard/IAanalyst/TradeDataContext";
 import TradingSelectionPage from "../FarmerDashboard/IAanalyst/TradingSelectionPage";
 import AdminScrapper from "../adminscrapper/adminscrapper";
+import FinanceDashboard from "../financialManagement/FinanceDashboard";
+import StockDashboard from "../stockManagement/StockDashboard";
 
 function Sidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -58,7 +60,7 @@ function Sidebar() {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [userRole, setUserRole] = useState(null); // Store user role
   const [loading, setLoading] = useState(true);
   const [showNotifications, setShowNotifications] = useState(false);
   const navigate = useNavigate();
@@ -74,7 +76,7 @@ function Sidebar() {
           withCredentials: true,
           timeout: 5000,
         });
-        setIsAdmin(response.data.role === "admin");
+        setUserRole(response.data.role); // Set role (admin, farmer, distributor, transporter)
         console.log("Profile response:", response.data);
       } catch (err) {
         console.error("Erreur lors de la récupération du profil:", err);
@@ -116,7 +118,7 @@ function Sidebar() {
     };
 
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    return () => document.addEventListener("mousedown", handleClickOutside);
   }, [isMobile, isMobileCollapsed]);
 
   const toggleSidebar = () => {
@@ -133,9 +135,9 @@ function Sidebar() {
     setSearchQuery(e.target.value);
   };
 
-  const handleNavigation = (path) => {
-    if (path === "/gestionUser" && !isAdmin) {
-      alert("Accès réservé aux administrateurs.");
+  const handleNavigation = (path, allowedRoles) => {
+    if (allowedRoles && !allowedRoles.includes(userRole)) {
+      alert(`Accès réservé aux rôles: ${allowedRoles.join(", ")}.`);
       return;
     }
     if (path === "/recommendations") {
@@ -154,21 +156,52 @@ function Sidebar() {
     }
   };
 
+  // Define menu items for each role
   const menuItems = [
-    { name: "Parcel Info", icon: faInfoCircle, path: "/parcelinfo" },
-    { name: "Map", icon: faMapMarkedAlt, path: "/MapSelector" },
-    { name: "AdminDashboard", icon: faTachometerAlt, path: "/AdminDashboard" },
-    { name: "StockManagement", icon: faBoxes, path: "/StockManagement" },
-    { name: "WheatPrediction", icon: faMoneyBillWheat, path: "/WheatPrediction" },
-    { name: "FarmerOffers", icon: faFileWaveform, path: "/FarmerOffers" },
-    { name: "BuyerOffers", icon: faShoppingCart, path: "/BuyerOffers" }, // New menu item
-    { name: "CountryStats", icon: faCalculator, path: "/CountryStats" },
-    { name: "Trading", icon: faTrademark, path: "/trade" },
-    { name: "Trade Wizard", icon: faChartLine, path: "/trade-wizard" },
-    { name: "Recommendations", icon: faListCheck, path: "/recommendations" },
-    { name: "AdminScrapper", icon: faListCheck, path: "/AdminScrapper" },
-    ...(isAdmin
-      ? [{ name: "Gestion User", icon: faUserCheck, path: "/gestionUser" }]
+    // Farmer-specific routes
+    ...(userRole === "farmer"
+      ? [
+          { name: "Parcel Info", icon: faInfoCircle, path: "/parcelinfo", roles: ["farmer"] },
+          { name: "Map", icon: faMapMarkedAlt, path: "/MapSelector", roles: ["farmer"] },
+          { name: "StockManagement", icon: faBoxes, path: "/StockManagement", roles: ["farmer"] },
+          { name: "WheatPrediction", icon: faMoneyBillWheat, path: "/WheatPrediction", roles: ["farmer"] },
+          { name: "FarmerOffers", icon: faFileWaveform, path: "/FarmerOffers", roles: ["farmer"] },
+          { name: "Recommendations", icon: faListCheck, path: "/recommendations", roles: ["farmer"] },
+          { name: "Trade Data", icon: faTrademark, path: "/trade", roles: ["farmer"] },
+          { name: "CountryStats", icon: faCalculator, path: "/CountryStats", roles: ["farmer"] },
+          { name: "Trade Wizard", icon: faChartLine, path: "/trade-wizard", roles: ["farmer"] },
+          { name: "Finance Dashboard", icon: faCalculator, path: "/financialManagment", roles: ["farmer"] },
+          { name: "Stock", icon: faCalculator, path: "/Stock", roles: ["farmer"] },
+
+        ]
+      : []),
+
+    // Distributor-specific routes
+    ...(userRole === "distributor"
+      ? [
+          { name: "BuyerOffers", icon: faShoppingCart, path: "/BuyerOffers", roles: ["distributor"] },
+          { name: "Trade Data", icon: faTrademark, path: "/trade", roles: ["distributor"] },
+          { name: "CountryStats", icon: faCalculator, path: "/CountryStats", roles: ["distributor"] },
+          { name: "Trade Wizard", icon: faChartLine, path: "/trade-wizard", roles: ["distributor"] },
+          { name: "Finance Dashboard", icon: faCalculator, path: "/financialManagment", roles: ["distributor"] },
+        ]
+      : []),
+
+    // Transporter-specific routes
+    ...(userRole === "transporter"
+      ? [
+          { name: "Trade Wizard", icon: faChartLine, path: "/trade-wizard", roles: ["transporter"] },
+          { name: "Finance Dashboard", icon: faCalculator, path: "/financialManagment", roles: ["transporter"] },
+        ]
+      : []),
+
+    // Admin-specific routes
+    ...(userRole === "admin"
+      ? [
+          { name: "AdminDashboard", icon: faTachometerAlt, path: "/AdminDashboard", roles: ["admin"] },
+          { name: "Gestion User", icon: faUserCheck, path: "/gestionUser", roles: ["admin"] },
+          { name: "AdminScrapper", icon: faListCheck, path: "/AdminScrapper", roles: ["admin"] },
+        ]
       : []),
   ];
 
@@ -177,10 +210,10 @@ function Sidebar() {
   );
 
   const toolbarItems = [
-    { name: "Dashboard", icon: faHome, path: "/parcelinfo" },
-    { name: "Profile", icon: faUser, path: "/UpdateFarmerProfile" },
-    { name: "Settings", icon: faCog, path: "/gestionUser" },
-  ];
+    { name: "Dashboard", icon: faHome, path: "/parcelinfo", roles: ["farmer", "admin"] },
+    { name: "Profile", icon: faUser, path: "/UpdateFarmerProfile", roles: ["farmer", "distributor", "transporter", "admin"] },
+    { name: "Settings", icon: faCog, path: "/gestionUser", roles: ["admin"] },
+  ].filter((item) => item.roles.includes(userRole));
 
   if (loading) {
     return <div>Chargement...</div>;
@@ -233,7 +266,7 @@ function Sidebar() {
                 <li className="sidebar-item" key={item.name}>
                   <a
                     className="sidebar-link"
-                    onClick={() => handleNavigation(item.path)}
+                    onClick={() => handleNavigation(item.path, item.roles)}
                   >
                     <FontAwesomeIcon icon={item.icon} className="sidebar-icon" />
                     <span className="sidebar-text">{item.name}</span>
@@ -306,7 +339,7 @@ function Sidebar() {
               <div className="toolbar-item" key={item.name}>
                 <button
                   className="toolbar-button"
-                  onClick={() => handleNavigation(item.path)}
+                  onClick={() => handleNavigation(item.path, item.roles)}
                   title={item.name}
                   aria-label={item.name}
                 >
@@ -374,39 +407,97 @@ function Sidebar() {
         } ${isMobile && !isMobileCollapsed ? "mobile-expanded" : ""}`}
       >
         <Routes>
-          <Route path="/parcelinfo" element={<ParcelInfo />} />
-          <Route path="/observations/:shapeId" element={<Observations />} />
-          <Route path="/MapSelector" element={<MapWithComments />} />
-          <Route path="/observations/add/:shapeId" element={<AddObservation />} />
-          <Route path="/AdminDashboard" element={<AdminDashboard />} />
-          <Route path="/StockManagement" element={<StockManagement />} />
-          <Route path="/WheatPrediction" element={<WheatPrediction />} />
-          <Route path="/CountryStats" element={<CountryStats />} />
-          <Route path="/trade" element={<TradeDataManager />} />
-          <Route path="/trade-data/:fileId" element={<FileDataManager />} />
-          <Route path="/trade-data/:fileId/charts" element={<DynamicChartPage />} />
-          <Route path="/recommendations" element={<RecommendationsSelector />} />
-          <Route path="/recommendations/:shapeId" element={<Recommendations />} />
-          <Route path="/FarmerOffers" element={<FarmerOffers />} />
-          <Route path="/BuyerForm" element={<BuyerForm />} /> {/* New route */}
-          <Route path="/BuyerOffers" element={<BuyerOffers />} /> {/* New route */}
-          <Route path="/AdminScrapper" element={<AdminScrapper />} />
-          <Route
-            path="/gestionUser"
-            element={isAdmin ? <GestionUser /> : <div>Accès réservé aux administrateurs</div>}
-          />
-          <Route
-            path="/trade-wizard/*"
-            element={
-              <TradeDataProvider>
-                <Routes>
-                  <Route path="/" element={<TradingSelectionPage />} />
-                  <Route path="/chart" element={<TradeChartPage />} />
-                  <Route path="/report" element={<TradeAiReportPage />} />
-                </Routes>
-              </TradeDataProvider>
-            }
-          />
+          {/* Farmer Routes */}
+          {userRole === "farmer" && (
+            <>
+              <Route path="/parcelinfo" element={<ParcelInfo />} />
+              <Route path="/observations/:shapeId" element={<Observations />} />
+              <Route path="/MapSelector" element={<MapWithComments />} />
+              <Route path="/observations/add/:shapeId" element={<AddObservation />} />
+              <Route path="/StockManagement" element={<StockManagement />} />
+              <Route path="/WheatPrediction" element={<WheatPrediction />} />
+              <Route path="/FarmerOffers" element={<FarmerOffers />} />
+              <Route path="/recommendations" element={<RecommendationsSelector />} />
+              <Route path="/recommendations/:shapeId" element={<Recommendations />} />
+
+
+              <Route path="/trade" element={<TradeDataManager />} />
+              <Route path="/trade-data/:fileId" element={<FileDataManager />} />
+              <Route path="/trade-data/:fileId/charts" element={<DynamicChartPage />} />
+
+              <Route path="/CountryStats" element={<CountryStats />} />
+              <Route
+                path="/trade-wizard/*"
+                element={
+                  <TradeDataProvider>
+                    <Routes>
+                      <Route path="/" element={<TradingSelectionPage />} />
+                      <Route path="/chart" element={<TradeChartPage />} />
+                      <Route path="/report" element={<TradeAiReportPage />} />
+                    </Routes>
+                  </TradeDataProvider>
+                }
+              />
+              <Route path="/financialManagment" element={<FinanceDashboard />} />
+              <Route path="/stock" element={<StockDashboard />} />
+
+            </>
+          )}
+
+          {/* Distributor Routes */}
+          {userRole === "distributor" && (
+            <>
+              <Route path="/BuyerOffers" element={<BuyerOffers />} />
+              <Route path="/BuyerForm" element={<BuyerForm />} />
+              <Route path="/trade" element={<TradeDataManager />} />
+              <Route path="/trade-data/:fileId" element={<FileDataManager />} />
+              <Route path="/trade-data/:fileId/charts" element={<DynamicChartPage />} />
+              <Route path="/CountryStats" element={<CountryStats />} />
+              <Route
+                path="/trade-wizard/*"
+                element={
+                  <TradeDataProvider>
+                    <Routes>
+                      <Route path="/" element={<TradingSelectionPage />} />
+                      <Route path="/chart" element={<TradeChartPage />} />
+                      <Route path="/report" element={<TradeAiReportPage />} />
+                    </Routes>
+                  </TradeDataProvider>
+                }
+              />
+              <Route path="/financialManagment" element={<FinanceDashboard />} />
+            </>
+          )}
+
+          {/* Transporter Routes */}
+          {userRole === "transporter" && (
+            <>
+              <Route
+                path="/trade-wizard/*"
+                element={
+                  <TradeDataProvider>
+                    <Routes>
+                      <Route path="/" element={<TradingSelectionPage />} />
+                      <Route path="/chart" element={<TradeChartPage />} />
+                      <Route path="/report" element={<TradeAiReportPage />} />
+                    </Routes>
+                  </TradeDataProvider>
+                }
+              />
+              <Route path="/financialManagment" element={<FinanceDashboard />} />
+            </>
+          )}
+
+          {/* Admin Routes */}
+          {userRole === "admin" && (
+            <>
+              <Route path="/AdminDashboard" element={<AdminDashboard />} />
+              <Route path="/gestionUser" element={<GestionUser />} />
+              <Route path="/AdminScrapper" element={<AdminScrapper />} />
+            </>
+          )}
+
+          {/* Fallback Route */}
           <Route path="*" element={<div>Page non trouvée</div>} />
         </Routes>
       </div>

@@ -39,7 +39,6 @@ function ParcelInfo() {
     cropType: "",
     plantingDate: "",
     growthStage: "",
-    estimatedYield: "",
     expectedHarvestDate: "",
   });
   const [currentPage, setCurrentPage] = useState(1);
@@ -145,7 +144,6 @@ function ParcelInfo() {
       cropType: shape.properties.cropType || "",
       plantingDate: shape.properties.plantingDate || "",
       growthStage: shape.properties.growthStage || "",
-      estimatedYield: shape.properties.estimatedYield || "",
       expectedHarvestDate: shape.properties.expectedHarvestDate || "",
     });
     setShowEditModal(true);
@@ -163,7 +161,6 @@ function ParcelInfo() {
       cropType: "",
       plantingDate: "",
       growthStage: "",
-      estimatedYield: "",
       expectedHarvestDate: "",
     });
   };
@@ -181,13 +178,12 @@ function ParcelInfo() {
     e.preventDefault();
     if (!userId || !selectedShape) return;
 
-    const { cropType, plantingDate, growthStage, estimatedYield, expectedHarvestDate } = formData;
+    const { cropType, plantingDate, growthStage, expectedHarvestDate } = formData;
 
     const updatedShape = {
       cropType,
       plantingDate,
       growthStage,
-      estimatedYield,
       expectedHarvestDate,
     };
 
@@ -606,16 +602,7 @@ function ParcelInfo() {
                 ))}
               </select>
             </div>
-            <div className="mb-3">
-              <label className="form-label">Estimated Yield</label>
-              <input
-                type="number"
-                name="estimatedYield"
-                value={formData.estimatedYield}
-                onChange={handleChange}
-                className="form-control"
-              />
-            </div>
+        
             <div className="mb-3">
               <label className="form-label">Expected Harvest Date</label>
               <input
@@ -653,7 +640,6 @@ function ParcelInfo() {
                   <p><strong>Crop Type:</strong> {selectedShape.properties.cropType || "N/A"}</p>
                   <p><strong>Growth Stage:</strong> {selectedShape.properties.growthStage || "N/A"}</p>
                   <p><strong>Planting Date:</strong> {selectedShape.properties.plantingDate || "N/A"}</p>
-                  <p><strong>Estimated Yield:</strong> {selectedShape.properties.estimatedYield || "N/A"}</p>
                   <p><strong>Expected Harvest Date:</strong> {selectedShape.properties.expectedHarvestDate || "N/A"}</p>
                 </>
               ) : (

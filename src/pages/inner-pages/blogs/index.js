@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { Col, Row, Modal, Button } from 'react-bootstrap';
 import axios from 'axios';
+import debounce from 'lodash/debounce';
 
 // layout
 import AppLayout from '../../../layouts/AppLayout/AppLayout';
@@ -12,15 +13,17 @@ import { NioSection, NioField, NioIcon, NioBadge, NioButton, NioMedia, NioCard, 
 // Helper function to get country name from code
 const getCountryName = (code) => {
   const countryMap = {
-    'TH': 'Thailand',
+    'TH': 'Turkey',
     'FR': 'France',
-    'KZ': 'Kazakhstan',
+    'KZ': 'Tunisia',
     'CA': 'Canada',
     'UA': 'Ukraine',
+    'TN': 'Tunisia',
   };
   return countryMap[code?.toUpperCase()] || 'Unknown';
 };
 
+// Constants
 const API_URL = 'http://localhost:5000';
 const WHEAT_IMAGE_URL = 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?q=80&w=1074&auto=format&fit=crop';
 const DEFAULT_ALIBABA_IMAGE_URL = 'https://images.unsplash.com/photo-1605000797499-95a51c5269ae?q=80&w=1471&auto=format&fit=crop';
@@ -46,6 +49,16 @@ function Index() {
   const [totalAlibabaPages, setTotalAlibabaPages] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterCategory, setFilterCategory] = useState('All');
+  const [showExpired, setShowExpired] = useState(false);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [searchSuggestions, setSearchSuggestions] = useState([]);
+  const [selectedFilters, setSelectedFilters] = useState([]);
+  const [priceRange, setPriceRange] = useState([0, 1000]);
+  const [countryFilter, setCountryFilter] = useState('All');
+  const [contactError, setContactError] = useState('');
+  const [contactSuccess, setContactSuccess] = useState('');
+  const [userProfile, setUserProfile] = useState(null);
+  const [isContactLoading, setIsContactLoading] = useState(false);
 
   // Helper function to truncate text
   const truncateText = (text, maxLength) => {
@@ -53,21 +66,123 @@ function Index() {
     return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
   };
 
-  // Fetch paginated farmer offers
+  // Check if farmer offer is active
+  const isFarmerOfferActive = (endDate) => {
+    if (!endDate) return true;
+    return new Date(endDate) >= new Date();
+  };
+
+  // Check if offer is recommended
+  const isRecommended = (offer) => {
+    const isActive = isFarmerOfferActive(offer.availabilityEndDate);
+    const isVerified = offer.verifiedStatus === 'VERIFIED';
+    const createdAt = new Date(offer.createdAt);
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    const isRecent = createdAt >= sevenDaysAgo;
+    return isActive && isVerified && isRecent;
+  };
+
+  // Fetch user profile
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/user/getProfile`, { withCredentials: true });
+        setUserProfile(response.data);
+      } catch (error) {
+        console.error('Failed to fetch user profile:', error);
+        setUserProfile({ firstname: 'Anonymous', email: 'N/A', company: 'N/A' });
+        setContactError('Failed to fetch user profile. Please log in again.');
+      }
+    };
+    fetchUserProfile();
+  }, []);
+
+  // Debounced search handler
+  const debouncedSearch = useCallback(
+    debounce(async (query) => {
+      if (query.length < 2) {
+        setSearchSuggestions([]);
+        return;
+      }
+      try {
+        const response = await axios.get(`${API_URL}/farmerform/search-suggestions`, {
+          params: { query },
+          withCredentials: true,
+        });
+        setSearchSuggestions(response.data.suggestions || []);
+      } catch (error) {
+        console.error('Search Suggestions Error:', error);
+        setSearchSuggestions([]);
+      }
+    }, 300),
+    []
+  );
+
+  // Handle search input change
+  const handleSearchChange = (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+    debouncedSearch(query);
+  };
+
+  // Handle filter chip addition/removal
+  const toggleFilter = (filter) => {
+    if (selectedFilters.includes(filter)) {
+      setSelectedFilters(selectedFilters.filter((f) => f !== filter));
+    } else {
+      setSelectedFilters([...selectedFilters, filter]);
+    }
+  };
+
+  // Apply filters to offers
+  const filteredFarmerOffers = Array.isArray(farmerOffers)
+    ? farmerOffers.filter((offer) => {
+        const matchesSearch = (offer.title || '').toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesCategory = filterCategory === 'All' || (offer.productOffered || '').toLowerCase().includes(filterCategory.toLowerCase());
+        const matchesExpired = showExpired || isFarmerOfferActive(offer.availabilityEndDate);
+        const matchesPrice = (offer.pricePerUnit?.value || 0) >= priceRange[0] && (offer.pricePerUnit?.value || 0) <= priceRange[1];
+        const matchesCountry = countryFilter === 'All' || (offer.company?.address?.country || '').toLowerCase() === countryFilter.toLowerCase();
+        return matchesSearch && matchesCategory && matchesExpired && matchesPrice && matchesCountry;
+      })
+    : [];
+
+  const filteredAlibabaOffers = Array.isArray(alibabaOffers)
+    ? alibabaOffers.filter((offer) => (offer.Title || '').toLowerCase().includes(searchQuery.toLowerCase()))
+    : [];
+
+  // Fetch farmer offers
   useEffect(() => {
     const fetchFarmerOffers = async () => {
       setIsLoadingFarmer(true);
       try {
         const response = await axios.get(`${API_URL}/farmerform/farmer`, {
           params: { page: currentPageFarmer, limit: ITEMS_PER_PAGE },
+          withCredentials: true,
         });
         const offers = Array.isArray(response.data.offers) ? response.data.offers : [];
+        offers.sort((a, b) => {
+          const isActiveA = isFarmerOfferActive(a.availabilityEndDate) ? 0 : 1;
+          const isActiveB = isFarmerOfferActive(b.availabilityEndDate) ? 0 : 1;
+          if (isActiveA !== isActiveB) return isActiveA - isActiveB;
+          const dateA = new Date(a.createdAt).getTime();
+          const dateB = new Date(b.createdAt).getTime();
+          if (dateB !== dateA) return dateB - dateA;
+          return (a.pricePerUnit?.value || Infinity) - (b.pricePerUnit?.value || Infinity);
+        });
         setFarmerOffers(offers);
         setTotalFarmerOffers(response.data.totalOffers || 0);
         setTotalFarmerPages(response.data.totalPages || 1);
+        if (offers.length === 0 && response.data.totalOffers === 0) {
+          setErrorFarmer('No offers available in the database.');
+        } else {
+          setErrorFarmer('');
+        }
       } catch (error) {
         setErrorFarmer(error.response?.data?.error || 'Failed to fetch farmer offers.');
         setFarmerOffers([]);
+        setTotalFarmerOffers(0);
+        setTotalFarmerPages(1);
       } finally {
         setIsLoadingFarmer(false);
       }
@@ -75,13 +190,14 @@ function Index() {
     fetchFarmerOffers();
   }, [currentPageFarmer]);
 
-  // Fetch paginated Alibaba wheat offers
+  // Fetch Alibaba offers
   useEffect(() => {
     const fetchAlibabaOffers = async () => {
       setIsLoadingAlibaba(true);
       try {
         const response = await axios.get(`${API_URL}/farmerform/getAlibabaWheatOffers`, {
           params: { page: currentPageAlibaba, limit: ITEMS_PER_PAGE },
+          withCredentials: true,
         });
         const offers = Array.isArray(response.data.offers) ? response.data.offers : [];
         setAlibabaOffers(offers);
@@ -90,6 +206,8 @@ function Index() {
       } catch (error) {
         setErrorAlibaba(error.response?.data?.error || 'Failed to fetch Alibaba wheat offers.');
         setAlibabaOffers([]);
+        setTotalAlibabaOffers(0);
+        setTotalAlibabaPages(1);
       } finally {
         setIsLoadingAlibaba(false);
       }
@@ -101,11 +219,15 @@ function Index() {
   const handleShowFarmerModal = (offer) => {
     setSelectedFarmerOffer(offer);
     setShowFarmerModal(true);
+    setContactError('');
+    setContactSuccess('');
   };
 
   const handleCloseFarmerModal = () => {
     setShowFarmerModal(false);
     setSelectedFarmerOffer(null);
+    setContactError('');
+    setContactSuccess('');
   };
 
   // Handle Alibaba modal open/close
@@ -119,62 +241,205 @@ function Index() {
     setSelectedAlibabaOffer(null);
   };
 
-  // Handle page change
+  // Handle contact supplier
+  const handleContactSupplier = async () => {
+    if (!selectedFarmerOffer?.company?.contactEmail) {
+      setContactError('No contact email available for this offer.');
+      return;
+    }
+
+    if (!userProfile?.firstname || !userProfile?.email) {
+      setContactError('Please complete your profile (name, email, company) to contact the supplier.');
+      return;
+    }
+
+    setIsContactLoading(true);
+    setContactError('');
+    setContactSuccess('');
+
+    try {
+      const response = await axios.post(
+        `${API_URL}/user/api/contact-offer`,
+        {
+          firstname: userProfile.firstname,
+          email: userProfile.email,
+          company: userProfile.company,
+          toEmail: selectedFarmerOffer.company.contactEmail,
+          offerTitle: selectedFarmerOffer.title,
+        },
+        { withCredentials: true }
+      );
+
+      if (response.status === 200) {
+        setContactSuccess('Your interest has been sent successfully!');
+        setTimeout(() => {
+          setContactSuccess('');
+          setShowFarmerModal(false);
+          setIsContactLoading(false);
+        }, 5000); // Increased to 5 seconds for better readability
+      }
+    } catch (error) {
+      const errorMessage = error.response?.data?.error || 'Failed to send message. Please try again.';
+      setContactError(errorMessage);
+      setIsContactLoading(false);
+    }
+  };
+
+  // Handle page change for Farmer Offers
   const handleFarmerPageChange = (page) => {
     if (page >= 1 && page <= totalFarmerPages) {
       setCurrentPageFarmer(page);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
+  // Handle page change for Alibaba Offers
   const handleAlibabaPageChange = (page) => {
     if (page >= 1 && page <= totalAlibabaPages) {
       setCurrentPageAlibaba(page);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
-  // Check if farmer offer is active
-  const isFarmerOfferActive = (endDate) => {
-    if (!endDate) return true;
-    return new Date(endDate) >= new Date();
+  // Generate pagination items with ellipsis
+  const getPaginationItems = (currentPage, totalPages) => {
+    const delta = 2;
+    const range = [];
+    for (let i = Math.max(2, currentPage - delta); i <= Math.min(totalPages - 1, currentPage + delta); i++) {
+      range.push(i);
+    }
+    if (currentPage - delta > 2) range.unshift('...');
+    if (currentPage + delta < totalPages - 1) range.push('...');
+    if (totalPages > 1) range.unshift(1);
+    if (totalPages > 2) range.push(totalPages);
+    return range;
   };
 
-  // Filter offers with defensive checks
-  const filteredFarmerOffers = Array.isArray(farmerOffers)
-    ? farmerOffers.filter(
-        (offer) =>
-          (offer.title || '').toLowerCase().includes(searchQuery.toLowerCase()) &&
-          (filterCategory === 'All' || (offer.productOffered || '').toLowerCase().includes(filterCategory.toLowerCase()))
-      )
-    : [];
+  // Calculate pagination display range
+  const farmerStartIndex = (currentPageFarmer - 1) * ITEMS_PER_PAGE + 1;
+  const farmerEndIndex = Math.min(currentPageFarmer * ITEMS_PER_PAGE, totalFarmerOffers);
+  const alibabaStartIndex = (currentPageAlibaba - 1) * ITEMS_PER_PAGE + 1;
+  const alibabaEndIndex = Math.min(currentPageAlibaba * ITEMS_PER_PAGE, totalAlibabaOffers);
 
-  const filteredAlibabaOffers = Array.isArray(alibabaOffers)
-    ? alibabaOffers.filter((offer) => (offer.Title || '').toLowerCase().includes(searchQuery.toLowerCase()))
-    : [];
+  // Skeleton loader component
+  const SkeletonCard = () => (
+    <Col xs={12} sm={6} lg={4}>
+      <div className="animate-pulse">
+        <div className="bg-gray-200 rounded-lg h-44 w-full mb-4"></div>
+        <div className="space-y-2 p-4">
+          <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+          <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+          <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+        </div>
+      </div>
+    </Col>
+  );
 
   return (
     <AppLayout title="Farmer Offers" rootClass="layout-1">
+      <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
       <style>
         {`
-          .btn-gradient {
-            background: linear-gradient(90deg, #4CAF50, #2E7D32);
-            border: none;
+          .filter-float {
+            position: fixed;
+            top: 150px;
+            right: 20px;
+            z-index: 1000;
+            width: 300px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
+            max-height: calc(100vh - 170px);
+            overflow-y: auto;
           }
-          .btn-gradient:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
-          }
-          .text-shadow {
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
-          }
-          .line-clamp-2 {
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
+          .filter-float.collapsed {
+            width: 60px;
+            height: 60px;
+            padding: 0;
             overflow: hidden;
           }
+          .filter-toggle-btn {
+            background: #4CAF50;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: 10px;
+            left: 5px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+          }
+          .filter-toggle-btn:hover {
+            transform: scale(1.1);
+          }
+          .filter-chip {
+            background: #e6f3e6;
+            color: #2e7d32;
+            border-radius: 16px;
+            padding: 6px 12px;
+            margin: 4px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+          }
+          .filter-chip:hover {
+            background: #d0e8d0;
+          }
+          .filter-chip .remove {
+            font-size: 12px;
+            color: #e65100;
+          }
+          .suggestion-item {
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+          }
+          .suggestion-item:hover {
+            background: #f5f5f5;
+          }
+          .price-range {
+            padding: 0 10px;
+          }
+          .price-range input {
+            width: 100%;
+          }
+          .fade-in {
+            animation: fadeIn 0.3s ease-in;
+          }
+          @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+          .btn-farmer {
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            transition: all 0.3s ease;
+          }
+          .btn-farmer:hover {
+            background-color: #2E7D32;
+            transform: scale(1.05);
+          }
+          .btn-alibaba {
+            background-color: #FF6200;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            transition: all 0.3s ease;
+          }
+          .btn-alibaba:hover {
+            background-color: #E65100;
+            transform: scale(1.05);
+          }
           .card-shadow {
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease-in-out;
           }
           .card-shadow:hover {
@@ -184,596 +449,697 @@ function Index() {
           .gradient-overlay {
             background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
           }
-          .icon-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+          .recommended-badge {
+            background-color: #28a745;
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 12px;
           }
-          .card-fixed-height {
-            height: 350px;
-            display: flex;
-            flex-direction: column;
+          .tooltip {
+            position: relative;
           }
-          .card-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-          }
-          .text-truncate {
+          .tooltip:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
             white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 100%;
+            z-index: 20;
+          }
+          .contact-info:hover {
+            text-decoration: underline;
+            color: #4CAF50;
           }
         `}
       </style>
 
-      {/* Resource Section Start */}
-      <NioSection className="overflow-hidden pt-100 pt-lg-120" masks={["blur-1 left center"]}>
+      {/* Hero Section */}
+      <NioSection className="bg-gradient-to-b from-green-50 to-white pt-20 pb-10 mt-20">
         <NioSection.Content>
           <Row className="justify-content-center text-center">
-            <Col lg={8} xl={6}>
-              <div className="nk-section-head">
-                <span className="d-inline-block fs-12 text-uppercase text-primary fw-semibold mb-2">Farmer Nexus Marketplace</span>
-                <h2 className="mb-3 fs-4 fw-bold">Explore Farmer Offers</h2>
-                <p className="fs-16 text-muted">Discover a wide range of agricultural offers from farmers worldwide, connecting suppliers and buyers seamlessly.</p>
-              </div>
-            </Col>
             <Col lg={8}>
-              <div className="nk-filter-wrap pb-4 pb-md-6">
-                <div className="position-relative mb-3">
-                  <NioField.Input
-                    icon="search before z-1"
-                    placeholder="Search for offers..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    aria-label="Search offers"
-                    className="ps-5 py-2"
-                  />
-                </div>
-                <ul className="nk-tag justify-content-center pt-2 gap-2">
-                  {['All', 'Wheat', 'Corn', 'Rice'].map((category) => (
-                    <li key={category}>
-                      <Link
-                        to="#"
-                        className={`nk-tag-item px-2 py-1 rounded-2 fs-12 ${filterCategory === category ? 'bg-primary text-white' : 'bg-white text-dark'} hover-bg-primary hover-text-white`}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          setFilterCategory(category);
-                        }}
-                      >
-                        {category}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              <h1 className="text-4xl md:text-5xl font-bold text-green-800 mb-4 animate-fade-in">
+                Harvest Flow Offers
+              </h1>
+              <p className="text-lg text-gray-600 mb-6 max-w-2xl mx-auto">
+                Connect with farmers and suppliers worldwide to discover premium agricultural offers.
+              </p>
             </Col>
           </Row>
         </NioSection.Content>
       </NioSection>
-      {/* Resource Section End */}
 
-      {/* Latest Farmer Offers Section Start */}
-      <NioSection className="nk-offer-section py-4" masks={["blur-1 right bottom"]}>
-        <NioSection.Head className="pb-4" space={false}>
-          <h2 className="mb-0 fs-5 fw-bold">Latest Farmer Offers</h2>
+      {/* Floating Filter Section */}
+      <div className={`filter-float ${isFilterOpen ? 'fade-in' : 'collapsed'}`} style={{ top: '150px' }}>
+        <div
+          className="filter-toggle-btn"
+          onClick={() => setIsFilterOpen(!isFilterOpen)}
+          title={isFilterOpen ? 'Collapse Filters' : 'Open Filters'}
+        >
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/5281/5281558.png"
+            alt="Filter Toggle"
+            className="w-8 h-8"
+          />
+        </div>
+        {isFilterOpen && (
+          <div className="p-4">
+            <h4 className="text-lg font-semibold text-green-800 mb-3">Filters</h4>
+            <div className="relative mb-4">
+              <NioField.Input
+                icon="search before z-1"
+                placeholder="Search offers..."
+                value={searchQuery}
+                onChange={handleSearchChange}
+                className="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500"
+              />
+              {searchSuggestions.length > 0 && (
+                <div className="absolute top-full left-0 w-full bg-white border border-gray-200 rounded-lg mt-1 shadow-lg z-20">
+                  {searchSuggestions.map((suggestion, index) => (
+                    <div
+                      key={index}
+                      className="suggestion-item"
+                      onClick={() => {
+                        setSearchQuery(suggestion);
+                        setSearchSuggestions([]);
+                      }}
+                    >
+                      {suggestion}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            {selectedFilters.length > 0 && (
+              <div className="flex flex-wrap gap-2 mb-4">
+                {selectedFilters.map((filter) => (
+                  <div key={filter} className="filter-chip">
+                    {filter}
+                    <span className="remove" onClick={() => toggleFilter(filter)}>✕</span>
+                  </div>
+                ))}
+              </div>
+            )}
+            <div className="mb-4">
+              <h5 className="text-sm font-medium text-gray-600 mb-2">Category</h5>
+              <div className="flex flex-wrap gap-2">
+                {['All', 'Wheat', 'Corn', 'Barley'].map((category) => (
+                  <button
+                    key={category}
+                    className={`px-3 py-1 rounded-lg text-sm font-medium transition-all ${
+                      filterCategory === category
+                        ? 'bg-green-500 text-white'
+                        : 'bg-gray-100 text-gray-700 hover:bg-green-100'
+                    }`}
+                    onClick={() => {
+                      setFilterCategory(category);
+                      toggleFilter(category);
+                    }}
+                  >
+                    {category}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="mb-4">
+              <h5 className="text-sm font-medium text-gray-600 mb-2">Country</h5>
+              <select
+                value={countryFilter}
+                onChange={(e) => {
+                  setCountryFilter(e.target.value);
+                  toggleFilter(e.target.value);
+                }}
+                className="w-full p-2 rounded-lg border border-gray-300"
+              >
+                <option value="All">All Countries</option>
+                {Object.values(getCountryName).map((country) => (
+                  <option key={country} value={country}>
+                    {country}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="mb-4">
+              <h5 className="text-sm font-medium text-gray-600 mb-2">Price Range ($)</h5>
+              <div className="price-range">
+                <input
+                  type="range"
+                  min="0"
+                  max="1000"
+                  value={priceRange[0]}
+                  onChange={(e) => setPriceRange([+e.target.value, priceRange[1]])}
+                  className="mb-2"
+                />
+                <input
+                  type="range"
+                  min="0"
+                  max="1000"
+                  value={priceRange[1]}
+                  onChange={(e) => setPriceRange([priceRange[0], +e.target.value])}
+                  className="mb-2"
+                />
+                <div className="flex justify-between text-xs text-gray-600">
+                  <span>${priceRange[0]}</span>
+                  <span>${priceRange[1]}</span>
+                </div>
+              </div>
+            </div>
+            <div className="mb-4">
+              <label className="flex items-center text-sm text-gray-600">
+                <input
+                  type="checkbox"
+                  checked={showExpired}
+                  onChange={(e) => {
+                    setShowExpired(e.target.checked);
+                    toggleFilter('Show Expired');
+                  }}
+                  className="mr-2"
+                />
+                Show expired offers
+              </label>
+            </div>
+            <NioButton
+              className="btn-farmer w-full mt-4"
+              label="Clear Filters"
+              onClick={() => {
+                setSearchQuery('');
+                setFilterCategory('All');
+                setShowExpired(false);
+                setPriceRange([0, 1000]);
+                setCountryFilter('All');
+                setSelectedFilters([]);
+              }}
+            />
+          </div>
+        )}
+      </div>
+
+      {/* Latest Farmer Offers Section */}
+      <NioSection className="py-10 bg-gray-50">
+        <NioSection.Head className="pb-6">
+          <h2 className="text-3xl font-bold text-green-800">Latest Farmer Offers</h2>
         </NioSection.Head>
         <NioSection.Content>
           {errorFarmer && (
-            <div className="text-center text-danger bg-danger-soft p-3 rounded-2 mb-3">
-              <p className="fs-14">{errorFarmer}</p>
+            <div className="bg-red-100 text-red-700 p-4 rounded-lg text-center mb-6">
+              {errorFarmer}
             </div>
           )}
           {isLoadingFarmer ? (
-            <div className="text-center text-primary">
-              <NioIcon name="spinner" className="me-2" /> Loading farmer offers...
-            </div>
+            <Row className="gy-4">
+              {[...Array(6)].map((_, i) => <SkeletonCard key={i} />)}
+            </Row>
           ) : filteredFarmerOffers.length === 0 ? (
-            <div className="text-center text-muted py-8">
-              <p className="fs-16">No farmer offers found.</p>
-              <p className="fs-14 text-gray-600">Try adjusting your search or filter criteria.</p>
+            <div className="text-center py-12">
+              <p className="text-lg text-gray-600">No farmer offers found.</p>
+              <p className="text-sm text-gray-500">Try adjusting your search or filters.</p>
             </div>
           ) : (
-            <Row className="gy-3 gx-2">
+            <Row className="gy-4">
               {filteredFarmerOffers.map((offer) => (
                 <Col xs={12} sm={6} lg={4} key={offer._id}>
-                  <NioCard className="border-0 rounded-3 overflow-hidden bg-white card-shadow card-fixed-height position-relative transition-all duration-300 hover:shadow-lg hover:scale-[1.02] mx-auto" style={{ maxWidth: '95%' }}>
-                    <NioCard.Body className="p-0 h-100 d-flex flex-column">
-                      <div className="card-image position-relative overflow-hidden">
-                        <img
-                          src={WHEAT_IMAGE_URL}
-                          alt={offer.title || 'Farmer Offer'}
-                          loading="lazy"
-                          className="card-img w-100"
-                          style={{ height: '180px', objectFit: 'cover' }}
-                          onError={(e) => (e.target.src = WHEAT_IMAGE_URL)}
+                  <NioCard className="border-0 rounded-xl bg-white card-shadow overflow-hidden transform transition-all hover:scale-105">
+                    <div className="relative">
+                      <img
+                        src={WHEAT_IMAGE_URL}
+                        alt={offer.title}
+                        className="w-full h-48 object-cover"
+                        onError={(e) => (e.target.src = WHEAT_IMAGE_URL)}
+                      />
+                      <div className="absolute top-2 left-2 right-2 flex flex-wrap gap-2">
+                        {isRecommended(offer) && (
+                          <NioBadge
+                            rounded
+                            className="recommended-badge tooltip"
+                            data-tooltip="Recommended: Active, verified, and recent"
+                            label={<><NioIcon name="star" size="xs" /> Recommandé</>}
+                          />
+                        )}
+                        <NioBadge
+                          rounded
+                          className={`text-bg-${isFarmerOfferActive(offer.availabilityEndDate) ? 'success' : 'danger'}-soft text-xs tooltip`}
+                          data-tooltip={isFarmerOfferActive(offer.availabilityEndDate) ? 'Active offer' : 'Expired offer'}
+                          label={isFarmerOfferActive(offer.availabilityEndDate) ? 'Active' : 'Expired'}
                         />
-                        <div className="position-absolute top-0 left-0 right-0 p-2 d-flex justify-content-between align-items-center">
-                          <NioBadge
-                            rounded
-                            className={`text-bg-${isFarmerOfferActive(offer.availabilityEndDate) ? 'success' : 'danger'}-soft fs-12 fw-bold`}
-                            label={isFarmerOfferActive(offer.availabilityEndDate) ? 'Actif' : 'Expiré'}
-                          />
-                          <NioBadge
-                            rounded
-                            className={`text-bg-${offer.verifiedStatus === 'VERIFIED' ? 'success' : 'warning'}-soft fs-12 fw-bold`}
-                            label={offer.verifiedStatus === 'VERIFIED' ? '✓ Vérifié' : '⏱ En attente'}
-                          />
+                        <NioBadge
+                          rounded
+                          className={`text-bg-${offer.verifiedStatus === 'VERIFIED' ? 'success' : 'warning'}-soft text-xs tooltip`}
+                          data-tooltip={offer.verifiedStatus === 'VERIFIED' ? 'Verified supplier' : 'Pending verification'}
+                          label={offer.verifiedStatus === 'VERIFIED' ? '✓ Verified' : '⏱ Pending'}
+                        />
+                      </div>
+                      <div className="absolute bottom-0 left-0 right-0 gradient-overlay p-4">
+                        <h5 className="text-white text-lg font-bold">{truncateText(offer.title, 20)}</h5>
+                      </div>
+                    </div>
+                    <div className="p-4 flex flex-col flex-grow">
+                      <div className="mb-4">
+                        <div className="flex justify-between text-sm text-gray-600">
+                          <span className="flex items-center gap-1">
+                            <NioIcon name="map-pin" className="text-green-500" size="sm" />
+                            {truncateText(offer.company?.address?.country, 12)}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <NioIcon name="package" className="text-green-500" size="sm" />
+                            {`${offer.quantityAvailable?.value || 'N/A'} ${offer.quantityAvailable?.unit || ''}`}
+                          </span>
                         </div>
-                        <div className="position-absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-3">
-                          <h5 className="text-white fs-5 fw-bold mb-1 text-shadow">{truncateText(offer.title || 'Untitled Offer', 20)}</h5>
+                        <div className="flex justify-between text-sm text-gray-600 mt-2">
+                          <span className="flex items-center gap-1">
+                            <NioIcon name="clock" className="text-blue-500" size="sm" />
+                            {truncateText(offer.destination, 12)}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <NioIcon name="trending-up" className="text-blue-500" size="sm" />
+                            {truncateText(offer.paymentTerms, 12)}
+                          </span>
                         </div>
                       </div>
-                      <div className="card-content p-3 flex-grow-1 d-flex flex-column justify-content-between">
-                        <div>
-                          <div className="mb-3">
-                            <div className="d-flex justify-content-between text-sm text-gray-700">
-                              <span className="flex items-center gap-1">
-                                <NioIcon name="map-pin" className="text-green-600" size="sm" />
-                                {truncateText(offer.company?.address?.country || 'Unknown', 15)}
-                              </span>
-                              <span className="flex items-center gap-1">
-                                <NioIcon name="package" className="text-green-600" size="sm" />
-                                {`${offer.quantityAvailable?.value || 'N/A'} ${offer.quantityAvailable?.unit || ''}`}
-                              </span>
-                            </div>
-                            <div className="d-flex justify-content-between text-sm text-gray-700 mt-1">
-                              <span className="flex items-center gap-1">
-                                <NioIcon name="clock" className="text-blue-500" size="sm" />
-                                {truncateText(offer.destination || 'N/A', 15)}
-                              </span>
-                              <span className="flex items-center gap-1">
-                                <NioIcon name="trending-up" className="text-blue-500" size="sm" />
-                                {truncateText(offer.paymentTerms || 'N/A', 15)}
-                              </span>
-                            </div>
-                          </div>
-                          <p className="fs-12 text-gray-600 mb-3 line-clamp-2">
-                            <span className="font-semibold">Détails:</span> {truncateText(offer.productDescription || 'No description', 50)}
-                          </p>
-                        </div>
-                        <div className="d-flex justify-content-between align-items-center">
-                          <div className="flex items-center space-x-2">
-                            <NioMedia size="xs" rounded img={USER_AVATAR_URL} />
-                            <div>
-                              <span className="fs-12 fw-medium text-gray-700">{truncateText(offer.contactName || 'Anonymous', 15)}</span>
-                              <p className="fs-10 text-gray-500 mb-0">{new Date(offer.createdAt).toLocaleDateString()}</p>
-                            </div>
-                          </div>
-                          <NioButton
-                            className="btn-gradient btn-sm rounded-full px-4 py-2 text-white shadow-md hover:shadow-xl transition-all duration-200"
-                            label="Détails"
-                            onClick={() => handleShowFarmerModal(offer)}
-                            icon="arrow-right after"
-                            iconClass="ml-2"
-                          />
-                        </div>
+                      <p className="text-xs text-gray-500 mb-4 flex-grow">{truncateText(offer.productDescription, 50)}</p>
+                      <div className="flex justify-between items-center">
+                        <NioMedia size="sm" rounded img={USER_AVATAR_URL} />
+                        <NioButton
+                          className="btn-farmer text-sm px-4 py-2"
+                          label="Details"
+                          onClick={() => handleShowFarmerModal(offer)}
+                          icon="arrow-right after"
+                        />
                       </div>
-                    </NioCard.Body>
+                    </div>
                   </NioCard>
                 </Col>
               ))}
             </Row>
           )}
-          {!isLoadingFarmer && filteredFarmerOffers.length > 0 && (
-            <div className="nk-pagination-wrap d-flex flex-wrap flex-sm-nowrap align-items-center gap-2 justify-content-center justify-content-md-between pt-4">
-              <div className="nk-pagination-col">
-                <p className="fs-12 text-gray-600">
-                  Affichage: <span>{Math.min(ITEMS_PER_PAGE, filteredFarmerOffers.length)} de {totalFarmerOffers} Offres</span>
-                </p>
-              </div>
-              <div className="nk-pagination-col">
-                <nav aria-label="Farmer offers pagination">
-                  <ul className="pagination pagination-s1">
-                    <li className={`page-item ${currentPageFarmer === 1 ? 'disabled' : ''}`}>
-                      <Button
-                        variant="outline-primary"
-                        size="sm"
-                        disabled={currentPageFarmer === 1}
-                        onClick={() => handleFarmerPageChange(currentPageFarmer - 1)}
-                      >
-                        <NioIcon name="chevron-left" size="sm" />
-                        <span className="d-none d-sm-inline-block">Prev</span>
-                      </Button>
+          {!isLoadingFarmer && totalFarmerOffers > 0 && (
+            <div className="mt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+              <p className="text-sm text-gray-600">
+                Showing {farmerStartIndex}-{farmerEndIndex} of {totalFarmerOffers} Farmer Offers
+              </p>
+              <nav>
+                <ul className="flex items-center gap-2">
+                  <li>
+                    <Button
+                      className={`btn-farmer px-3 py-1 text-sm ${currentPageFarmer === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                      disabled={currentPageFarmer === 1}
+                      onClick={() => handleFarmerPageChange(currentPageFarmer - 1)}
+                    >
+                      Prev
+                    </Button>
+                  </li>
+                  {getPaginationItems(currentPageFarmer, totalFarmerPages).map((item, i) => (
+                    <li key={i}>
+                      {item === '...' ? (
+                        <span className="px-3 py-1 text-sm">...</span>
+                      ) : (
+                        <Button
+                          className={`px-3 py-1 text-sm ${
+                            currentPageFarmer === item ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-green-100'
+                          }`}
+                          onClick={() => handleFarmerPageChange(item)}
+                        >
+                          {item}
+                        </Button>
+                      )}
                     </li>
-                    <li className="page-item active">
-                      <span className="page-link fs-12">{currentPageFarmer}</span>
-                    </li>
-                    <li className={`page-item ${currentPageFarmer === totalFarmerPages ? 'disabled' : ''}`}>
-                      <Button
-                        variant="outline-primary"
-                        size="sm"
-                        disabled={currentPageFarmer === totalFarmerPages}
-                        onClick={() => handleFarmerPageChange(currentPageFarmer + 1)}
-                      >
-                        <span className="d-none d-sm-inline-block">Next</span>
-                        <NioIcon name="chevron-right" size="sm" />
-                      </Button>
-                    </li>
-                  </ul>
-                </nav>
-              </div>
+                  ))}
+                  <li>
+                    <Button
+                      className={`btn-farmer px-3 py-1 text-sm ${currentPageFarmer === totalFarmerPages ? 'opacity-50 cursor-not-allowed' : ''}`}
+                      disabled={currentPageFarmer === totalFarmerPages}
+                      onClick={() => handleFarmerPageChange(currentPageFarmer + 1)}
+                    >
+                      Next
+                    </Button>
+                  </li>
+                </ul>
+              </nav>
             </div>
           )}
         </NioSection.Content>
       </NioSection>
-      {/* Latest Farmer Offers Section End */}
 
-      {/* Latest Alibaba Wheat Offers Section Start */}
-      <NioSection className="nk-offer-section pt-5 pt-lg-100" masks={["blur-1 left top"]}>
-        <NioSection.Head className="pb-4" space={false}>
-          <h2 className="mb-0 fs-5 fw-bold">Latest Alibaba Wheat Offers</h2>
+      {/* Latest Alibaba Wheat Offers Section */}
+      <NioSection className="py-10">
+        <NioSection.Head className="pb-6">
+          <h2 className="text-3xl font-bold text-orange-800">Latest Alibaba Wheat Offers</h2>
         </NioSection.Head>
         <NioSection.Content>
           {errorAlibaba && (
-            <div className="text-center text-danger bg-danger-soft p-3 rounded-2 mb-3">
-              <p className="fs-14">{errorAlibaba}</p>
+            <div className="bg-red-100 text-red-700 p-4 rounded-lg text-center mb-6">
+              {errorAlibaba}
             </div>
           )}
           {isLoadingAlibaba ? (
-            <div className="text-center text-primary">
-              <NioIcon name="spinner" className="me-2" /> Loading Alibaba wheat offers...
-            </div>
+            <Row className="gy-4">
+              {[...Array(6)].map((_, i) => <SkeletonCard key={i} />)}
+            </Row>
           ) : filteredAlibabaOffers.length === 0 ? (
-            <div className="text-center text-muted py-8">
-              <p className="fs-16">No Alibaba wheat offers found.</p>
-              <p className="fs-14 text-gray-600">Try adjusting your search criteria.</p>
+            <div className="text-center py-12">
+              <p className="text-lg text-gray-600">No Alibaba wheat offers found.</p>
+              <p className="text-sm text-gray-500">Try adjusting your search.</p>
             </div>
           ) : (
-            <Row className="gy-3 gx-2">
+            <Row className="gy-4">
               {filteredAlibabaOffers.map((offer, index) => (
-                <Col xs={12} sm={6} lg={4} key={index}>
-                  <NioCard className="border-0 rounded-3 overflow-hidden bg-white card-shadow card-fixed-height position-relative transition-all duration-300 hover:shadow-lg hover:scale-[1.02] mx-auto" style={{ maxWidth: '95%' }}>
-                    <NioCard.Body className="p-0 h-100 d-flex flex-column">
-                      <div className="card-image position-relative overflow-hidden">
-                        <img
-                          src={offer['Image URL'] !== 'N/A' ? offer['Image URL'] : DEFAULT_ALIBABA_IMAGE_URL}
-                          alt={offer.Title || 'Alibaba Offer'}
-                          loading="lazy"
-                          className="card-img w-100"
-                          style={{ height: '180px', objectFit: 'cover' }}
-                          onError={(e) => (e.target.src = WHEAT_IMAGE_URL)}
+                <Col xs={6} key={index}>
+                  <NioCard className="border-0 rounded-xl bg-white card-shadow-zero overflow-hidden transform transition-all">
+                    <div className="relative">
+                      <img
+                        src={offer['Image URL'] !== 'N/A' ? offer['Image URL'] : DEFAULT_ALIBABA_IMAGE_URL}
+                        alt={offer.Title}
+                        className="w-full h-48 object-cover"
+                        onError={(e) => (e.target.src = WHEAT_IMAGE_URL)}
+                      />
+                      <div className="absolute top-2 left-2">
+                        <NioBadge rounded className="text-bg-orange-500 text-xs" label="Alibaba" />
+                      </div>
+                      <div className="absolute bottom-0 left-0 right-0 gradient-overlay p-4">
+                        <h5 className="text-white text-lg font-bold">{truncateText(offer.Title, 20)}</h5>
+                      </div>
+                    </div>
+                    <div className="p-4 flex flex-col flex-grow">
+                      <div className="mb-4">
+                        <div className="flex justify-between items-center">
+                          <h5 className="text-base font-semibold text-gray-800">{truncateText(offer.Title, 20)}</h5>
+                          <NioBadge rounded className="text-bg-success text-xs" label={truncateText(offer.Price, 15)} />
+                        </div>
+                        <div className="mt-2 text-sm text-gray-600">
+                          <span className="flex items-center gap-1">
+                            <span className={`flag-icon flag-icon-${offer['Supplier Info (Years & Location)']?.slice(-2).toLowerCase() || 'unknown'}`}></span>
+                            {getCountryName(offer['Supplier Info (Years & Location)']?.slice(-2))}
+                          </span>
+                        </div>
+                        <div className="mt-1 text-sm text-gray-600">
+                          <span className="flex items-center gap-1">
+                            <NioIcon name="user-alt" className="text-orange-500" size="sm" />
+                            {truncateText(offer.Supplier, 15)}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex justify-end">
+                        <NioButton
+                          className="btn-alibaba text-sm px-4 py-2"
+                          label="Details"
+                          onClick={() => handleShowAlibabaModal(offer)}
+                          icon="arrow-right after"
                         />
-                        <div className="position-absolute top-0 left-0 p-2">
-                          <NioBadge rounded className="text-bg-primary-soft fs-12 fw-bold" label="Alibaba" />
-                        </div>
-                        <div className="position-absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-3">
-                          <h5 className="text-white fs-5 fw-bold mb-1 text-shadow">{truncateText(offer.Title || 'Untitled Offer', 20)}</h5>
-                        </div>
                       </div>
-                      <div className="card-content p-3 flex-grow-1 d-flex flex-column justify-content-between">
-                        <div>
-                          <div className="d-flex justify-content-between items-center mb-2">
-                            <h5 className="fs-6 fw-bold text-gray-800 text-truncate">
-                              {truncateText(offer.Title || 'Untitled Offer', 20)}
-                            </h5>
-                            <NioBadge rounded className="text-bg-success-soft fs-12 fw-bold" label={truncateText(offer.Price || 'N/A', 15)} />
-                          </div>
-                          <div className="icon-wrapper mb-2">
-                            <span className={`flag-icon flag-icon-${offer['Supplier Info (Years & Location)']?.slice(-2).toLowerCase() || 'unknown'}`} style={{ marginRight: '0.5rem' }}></span>
-                            <span className="fs-12 text-gray-600">
-                              <strong>Pays:</strong> {truncateText(getCountryName(offer['Supplier Info (Years & Location)']?.slice(-2)) || 'Unknown', 15)}
-                            </span>
-                          </div>
-                          <div className="icon-wrapper mb-2">
-                            <NioIcon name="user-alt" className="text-green-600 me-1" size="sm" />
-                            <span className="fs-12 text-gray-600">
-                              <strong>Fournisseur:</strong> <i>{truncateText(offer.Supplier || 'Unknown', 15)}</i>
-                            </span>
-                          </div>
-                        </div>
-                        <div className="text-end">
-                          <NioButton
-                            className="btn-gradient btn-sm rounded-full px-4 py-2 text-white shadow-md hover:shadow-xl transition-all duration-200"
-                            label="Détails"
-                            onClick={() => handleShowAlibabaModal(offer)}
-                            icon="arrow-right after"
-                            iconClass="ml-2"
-                          />
-                        </div>
-                      </div>
-                    </NioCard.Body>
+                    </div>
                   </NioCard>
                 </Col>
               ))}
             </Row>
           )}
-          {!isLoadingAlibaba && filteredAlibabaOffers.length > 0 && (
-            <div className="nk-pagination-wrap d-flex flex-wrap flex-sm-nowrap align-items-center gap-2 justify-content-center justify-content-md-between pt-4">
-              <div className="nk-pagination-col">
-                <p className="fs-12 text-gray-600">
-                  Affichage: <span>{Math.min(ITEMS_PER_PAGE, filteredAlibabaOffers.length)} de {totalAlibabaOffers} Offres</span>
-                </p>
-              </div>
-              <div className="nk-pagination-col">
-                <nav aria-label="Alibaba offers pagination">
-                  <ul className="pagination pagination-s1">
-                    <li className={`page-item ${currentPageAlibaba === 1 ? 'disabled' : ''}`}>
-                      <Button
-                        variant="outline-primary"
-                        size="sm"
-                        disabled={currentPageAlibaba === 1}
-                        onClick={() => handleAlibabaPageChange(currentPageAlibaba - 1)}
-                      >
-                        <NioIcon name="chevron-left" size="sm" />
-                        <span className="d-none d-sm-inline-block">Prev</span>
-                      </Button>
+          {!isLoadingAlibaba && totalAlibabaOffers > 0 && (
+            <div className="mt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+              <p className="text-sm text-gray-600">
+                Showing {alibabaStartIndex}-{alibabaEndIndex} of {totalAlibabaOffers} Alibaba Offers
+              </p>
+              <nav>
+                <ul className="flex items-center gap-2">
+                  <li>
+                    <Button
+                      className={`btn-alibaba px-3 py-1 text-sm ${currentPageAlibaba === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                      disabled={currentPageAlibaba === 1}
+                      onClick={() => handleAlibabaPageChange(currentPageAlibaba - 1)}
+                    >
+                      Prev
+                    </Button>
+                  </li>
+                  {getPaginationItems(currentPageAlibaba, totalAlibabaPages).map((item, i) => (
+                    <li key={i}>
+                      {item === '...' ? (
+                        <span className="px-3 py-1 text-sm">...</span>
+                      ) : (
+                        <Button
+                          className={`px-3 py-1 text-sm ${
+                            currentPageAlibaba === item ? 'bg-orange-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-orange-100'
+                          }`}
+                          onClick={() => handleAlibabaPageChange(item)}
+                        >
+                          {item}
+                        </Button>
+                      )}
                     </li>
-                    <li className="page-item active">
-                      <span className="page-link fs-12">{currentPageAlibaba}</span>
-                    </li>
-                    <li className={`page-item ${currentPageAlibaba === totalAlibabaPages ? 'disabled' : ''}`}>
-                      <Button
-                        variant="outline-primary"
-                        size="sm"
-                        disabled={currentPageAlibaba === totalAlibabaPages}
-                        onClick={() => handleAlibabaPageChange(currentPageAlibaba + 1)}
-                      >
-                        <span className="d-none d-sm-inline-block">Next</span>
-                        <NioIcon name="chevron-right" size="sm" />
-                      </Button>
-                    </li>
-                  </ul>
-                </nav>
-              </div>
+                  ))}
+                  <li>
+                    <Button
+                      className={`btn-alibaba px-3 py-1 text-sm ${currentPageAlibaba === totalAlibabaPages ? 'opacity-50 cursor-not-allowed' : ''}`}
+                      disabled={currentPageAlibaba === totalAlibabaPages}
+                      onClick={() => handleAlibabaPageChange(currentPageAlibaba + 1)}
+                    >
+                      Next
+                    </Button>
+                  </li>
+                </ul>
+              </nav>
             </div>
           )}
         </NioSection.Content>
       </NioSection>
-      {/* Latest Alibaba Wheat Offers Section End */}
 
       {/* Farmer Offer Details Modal */}
       <Modal show={showFarmerModal} onHide={handleCloseFarmerModal} size="lg" centered>
-        <Modal.Header closeButton className="border-0 pb-2">
-          <Modal.Title className="fs-5 fw-bold d-flex align-items-center">
+        <Modal.Header closeButton className="border-0">
+          <Modal.Title className="text-xl font-bold text-green-800">
             {selectedFarmerOffer?.title || 'Untitled Offer'}
             <NioBadge
-              className={`ms-2 text-bg-${isFarmerOfferActive(selectedFarmerOffer?.availabilityEndDate) ? 'success' : 'danger'}-soft fs-12`}
-              label={isFarmerOfferActive(selectedFarmerOffer?.availabilityEndDate) ? 'Actif' : 'Expiré'}
+              className={`ml-2 text-bg-${isFarmerOfferActive(selectedFarmerOffer?.availabilityEndDate) ? 'success' : 'danger'}-soft text-xs`}
+              label={isFarmerOfferActive(selectedFarmerOffer?.availabilityEndDate) ? 'Active' : 'Expired'}
             />
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body className="p-3">
+        <Modal.Body className="p-4">
           {selectedFarmerOffer && (
-            <Row className="g-3">
+            <Row className="g-4">
               <Col md={6}>
-                <div className="rounded-2 overflow-hidden">
-                  <img
-                    src={WHEAT_IMAGE_URL}
-                    alt={selectedFarmerOffer.title || 'Farmer Offer'}
-                    loading="lazy"
-                    className="img-fluid"
-                    style={{ maxHeight: '200px', objectFit: 'cover', width: '100%' }}
-                    onError={(e) => (e.target.src = WHEAT_IMAGE_URL)}
-                  />
-                </div>
-                <div className="mt-3">
-                  <h5 className="text-primary fs-6 fw-semibold mb-2">Contact</h5>
-                  <div className="p-3 bg-light rounded-2">
-                    <div className="d-flex align-items-center">
-                      <NioMedia size="xs" rounded img={USER_AVATAR_URL} />
-                      <div className="ms-2">
-                        <p className="fs-14 fw-medium">{selectedFarmerOffer.contactName || 'Anonymous'}</p>
-                        <p className="fs-12 text-gray-500 d-flex align-items-center gap-1">
-                          <NioBadge
-                            className={`text-bg-${selectedFarmerOffer.verifiedStatus === 'VERIFIED' ? 'success' : 'warning'}-soft fs-12`}
-                            label={selectedFarmerOffer.verifiedStatus === 'VERIFIED' ? '✓ Vérifié' : '⏱ En attente'}
-                          />
-                          <span> • {new Date(selectedFarmerOffer.createdAt).toLocaleDateString()}</span>
-                        </p>
-                      </div>
+                <img
+                  src={WHEAT_IMAGE_URL}
+                  alt={selectedFarmerOffer.title}
+                  className="w-full h-48 object-cover rounded-lg mb-4"
+                />
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <h5 className="text-lg font-semibold text-green-800 mb-3">Contact Supplier</h5>
+                  {contactError && (
+                    <div className="bg-red-100 text-red-700 p-2 rounded-lg mb-3">
+                      {contactError}
                     </div>
-                    <NioButton
-                      className="btn-outline-primary w-100 mt-2"
-                      label="Contacter"
-                      onClick={() => alert('Contact supplier feature coming soon!')}
-                    />
+                  )}
+                  {contactSuccess && (
+                    <div className="bg-green-100 text-green-700 p-2 rounded-lg mb-3">
+                      {contactSuccess}
+                    </div>
+                  )}
+                  <div className="flex items-center mb-3">
+                    <NioMedia size="sm" rounded img={USER_AVATAR_URL} />
+                    <div className="ml-3">
+                      <p className="text-sm font-medium">{selectedFarmerOffer.contactName || 'Anonymous'}</p>
+                      <p className="text-xs text-gray-500">
+                        <a href={`mailto:${selectedFarmerOffer.company?.contactEmail}`} className="contact-info">
+                          {selectedFarmerOffer.company?.contactEmail || 'N/A'}
+                        </a>
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        <a href={`tel:${selectedFarmerOffer.company?.contactPhone}`} className="contact-info">
+                          {selectedFarmerOffer.company?.contactPhone || 'N/A'}
+                        </a>
+                      </p>
+                    </div>
                   </div>
+                  <NioButton
+                    className="btn-farmer w-full"
+                    label={isContactLoading ? 'Sending...' : 'Send Interest'}
+                    onClick={handleContactSupplier}
+                    disabled={isContactLoading}
+                  />
                 </div>
               </Col>
               <Col md={6}>
-                <h5 className="text-primary fs-6 fw-semibold mb-2">Détails de l'offre</h5>
-                <div className="row g-2">
-                  <div className="col-6 p-2 bg-light rounded-2">
-                    <p className="fs-12 fw-medium mb-1">Pays</p>
-                    <p className="fs-14">{selectedFarmerOffer.company?.address?.country || 'Unknown'}</p>
+                <h5 className="text-lg font-semibold text-green-800 mb-3">Offer Details</h5>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-gray-50 p-3 rounded-lg">
+                    <p className="text-xs font-medium text-gray-600">Company</p>
+                    <p className="text-sm">{selectedFarmerOffer.company?.name || 'N/A'}</p>
                   </div>
-                  <div className="col-6 p-2 bg-light rounded-2">
-                    <p className="fs-12 fw-medium mb-1">Quantité</p>
-                    <p className="fs-14">{`${selectedFarmerOffer.quantityAvailable?.value || 'N/A'} ${selectedFarmerOffer.quantityAvailable?.unit || ''}`}</p>
+                  <div className="bg-gray-50 p-3 rounded-lg">
+                    <p className="text-xs font-medium text-gray-600">Country</p>
+                    <p className="text-sm">{selectedFarmerOffer.company?.address?.country || 'N/A'}</p>
                   </div>
-                  <div className="col-6 p-2 bg-light rounded-2">
-                    <p className="fs-12 fw-medium mb-1">Destination</p>
-                    <p className="fs-14">{selectedFarmerOffer.destination || 'N/A'}</p>
+                  <div className="bg-gray-50 p-3 rounded-lg">
+                    <p className="text-xs font-medium text-gray-600">Product</p>
+                    <p className="text-sm">{selectedFarmerOffer.productOffered || 'N/A'}</p>
                   </div>
-                  <div className="col-6 p-2 bg-light rounded-2">
-                    <p className="fs-12 fw-medium mb-1">Acheteurs</p>
-                    <p className="fs-14">{selectedFarmerOffer.lookingForBuyersFrom?.join(', ') || 'Any'}</p>
+                  <div className="bg-gray-50 p-3 rounded-lg">
+                    <p className="text-xs font-medium text-gray-600">Quantity</p>
+                    <p className="text-sm">{`${selectedFarmerOffer.quantityAvailable?.value || 'N/A'} ${selectedFarmerOffer.quantityAvailable?.unit || ''}`}</p>
                   </div>
-                  <div className="col-6 p-2 bg-light rounded-2">
-                    <p className="fs-12 fw-medium mb-1">Paiement</p>
-                    <p className="fs-14">{selectedFarmerOffer.paymentTerms || 'N/A'}</p>
+                  <div className="bg-gray-50 p-3 rounded-lg">
+                    <p className="text-xs font-medium text-gray-600">Price</p>
+                    <p className="text-sm">{`${selectedFarmerOffer.pricePerUnit?.value || 'N/A'} ${selectedFarmerOffer.pricePerUnit?.currency || ''}`}</p>
                   </div>
-                  <div className="col-6 p-2 bg-light rounded-2">
-                    <p className="fs-12 fw-medium mb-1">Disponible jusqu'au</p>
-                    <p className="fs-14">
-                      {selectedFarmerOffer.availabilityEndDate
-                        ? new Date(selectedFarmerOffer.availabilityEndDate).toLocaleDateString()
-                        : 'Sans expiration'}
-                    </p>
+                  <div className="bg-gray-50 p-3 rounded-lg">
+                    <p className="text-xs font-medium text-gray-600">Payment Terms</p>
+                    <p className="text-sm">{selectedFarmerOffer.paymentTerms || 'N/A'}</p>
+                  </div>
+                  <div className="bg-gray-50 p-3 rounded-lg">
+                    <p className="text-xs font-medium text-gray-600">Destination</p>
+                    <p className="text-sm">{selectedFarmerOffer.destination || 'N/A'}</p>
+                  </div>
+                  <div className="bg-gray-50 p-3 rounded-lg">
+                    <p className="text-xs font-medium text-gray-600">Buyers</p>
+                    <p className="text-sm">{selectedFarmerOffer.lookingForBuyersFrom?.join(', ') || 'Any'}</p>
+                  </div>
+                  <div className="bg-gray-50 p-3 rounded-lg">
+                    <p className="text-xs font-medium text-gray-600">Email</p>
+                    <p className="text-sm">{selectedFarmerOffer.company?.contactEmail || 'N/A'}</p>
+                  </div>
+                  <div className="bg-gray-50 p-3 rounded-lg">
+                    <p className="text-xs font-medium text-gray-600">Phone</p>
+                    <p className="text-sm">{selectedFarmerOffer.company?.contactPhone || 'N/A'}</p>
+                  </div>
+                  <div className="bg-gray-50 p-3 rounded-lg">
+                    <p className="text-xs font-medium text-gray-600">Registration</p>
+                    <p className="text-sm">{selectedFarmerOffer.company?.registrationNumber || 'N/A'}</p>
+                  </div>
+                  <div className="bg-gray-50 p-3 rounded-lg">
+                    <p className="text-xs font-medium text-gray-600">Category</p>
+                    <p className="text-sm">{selectedFarmerOffer.productCategory || 'N/A'}</p>
                   </div>
                 </div>
-                <div className="mt-3">
-                  <h5 className="text-primary fs-6 fw-semibold mb-2">Description du produit</h5>
-                  <pre
-                    className="fs-12 text-gray-600 bg-light p-3 rounded-2"
-                    style={{ whiteSpace: 'pre-wrap' }}
-                  >
+                <div className="mt-4">
+                  <h5 className="text-lg font-semibold text-green-800 mb-3">Description</h5>
+                  <p className="text-sm text-gray-600 bg-gray-50 p-4 rounded-lg">
                     {selectedFarmerOffer.productDescription || 'No description provided'}
-                  </pre>
+                  </p>
                 </div>
               </Col>
             </Row>
           )}
         </Modal.Body>
-        <Modal.Footer className="border-0 pt-2">
-          <Button variant="outline-secondary" size="sm" onClick={handleCloseFarmerModal}>
-            Fermer
+        <Modal.Footer className="border-0">
+          <Button variant="outline-secondary" onClick={handleCloseFarmerModal} disabled={isContactLoading}>
+            Close
           </Button>
           <NioButton
             href="/farmingform"
-            className="btn-primary btn-sm"
-            label="Créer une offre similaire"
+            className="btn-farmer"
+            label="Create Similar Offer"
             icon="plus before"
+            disabled={isContactLoading}
           />
         </Modal.Footer>
       </Modal>
-      {/* Farmer Offer Details Modal End */}
 
       {/* Alibaba Offer Details Modal */}
       <Modal show={showAlibabaModal} onHide={handleCloseAlibabaModal} size="lg" centered>
-        <Modal.Header closeButton className="border-0 pb-2">
-          <Modal.Title className="fs-5 fw-bold d-flex align-items-center justify-content-between w-100">
+        <Modal.Header closeButton className="border-0">
+          <Modal.Title className="text-xl font-bold text-orange-800">
             {selectedAlibabaOffer?.Title || 'Untitled Offer'}
-            <NioBadge rounded className="text-bg-success-soft fs-12" label={selectedAlibabaOffer?.Price || 'N/A'} />
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body className="p-3">
+        <Modal.Body className="p-4">
           {selectedAlibabaOffer && (
-            <Row className="g-3">
+            <Row className="g-4">
               <Col md={6}>
-                <div className="rounded-2 overflow-hidden">
-                  <img
-                    src={selectedAlibabaOffer['Image URL'] !== 'N/A' ? selectedAlibabaOffer['Image URL'] : DEFAULT_ALIBABA_IMAGE_URL}
-                    alt={selectedAlibabaOffer.Title || 'Alibaba Offer'}
-                    loading="lazy"
-                    className="img-fluid"
-                    style={{ maxHeight: '200px', objectFit: 'cover', width: '100%' }}
-                    onError={(e) => (e.target.src = WHEAT_IMAGE_URL)}
+                <img
+                  src={selectedAlibabaOffer['Image URL'] !== 'N/A' ? selectedAlibabaOffer['Image URL'] : DEFAULT_ALIBABA_IMAGE_URL}
+                  alt={selectedAlibabaOffer.Title}
+                  className="w-full h-48 object-cover rounded-lg mb-4"
+                />
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <h5 className="text-lg font-semibold text-orange-800 mb-3">Supplier Info</h5>
+                  <p className="text-sm">{selectedAlibabaOffer.Supplier || 'Unknown'}</p>
+                  <p className="text-xs text-gray-500">{selectedAlibabaOffer['Supplier Info (Years & Location)'] || 'N/A'}</p>
+                  <NioButton
+                    className="btn-alibaba w-full mt-3"
+                    label="Contact Supplier"
+                    onClick={() => alert('Contact feature coming soon!')}
                   />
-                </div>
-                <div className="mt-3">
-                  <h5 className="text-primary fs-6 fw-semibold mb-2">Informations du fournisseur</h5>
-                  <div className="p-3 bg-light rounded-2">
-                    <h6 className="fs-14 fw-medium mb-1">{selectedAlibabaOffer.Supplier || 'Unknown'}</h6>
-                    <p className="fs-12 text-gray-600">
-                      {selectedAlibabaOffer['Supplier Info (Years & Location)'] || 'No info available'}
-                    </p>
-                    <NioButton
-                      className="btn-outline-primary w-100 mt-2"
-                      label="Contacter le fournisseur"
-                      onClick={() => alert('Contact supplier feature coming soon!')}
-                    />
-                  </div>
                 </div>
               </Col>
               <Col md={6}>
-                <h5 className="text-primary fs-6 fw-semibold mb-2">Détails du contact</h5>
-                <div className="p-3 bg-light rounded-2 space-y-3">
+                <h5 className="text-lg font-semibold text-orange-800 mb-3">Contact Details</h5>
+                <div className="bg-gray-50 p-4 rounded-lg mb-4">
                   {selectedAlibabaOffer['Contact Name'] !== 'N/A' && (
-                    <div>
-                      <p className="fs-12 fw-medium mb-1">Nom du contact</p>
-                      <p className="fs-14">{selectedAlibabaOffer['Contact Name']}</p>
-                    </div>
+                    <p className="text-sm mb-2"><strong>Name:</strong> {selectedAlibabaOffer['Contact Name']}</p>
                   )}
                   {selectedAlibabaOffer.Email !== 'N/A' && (
-                    <div>
-                      <p className="fs-12 fw-medium mb-1">Email</p>
-                      <p className="fs-14">{selectedAlibabaOffer.Email}</p>
-                    </div>
+                    <p className="text-sm mb-2"><strong>Email:</strong> {selectedAlibabaOffer.Email}</p>
                   )}
                   {selectedAlibabaOffer.Phone !== 'N/A' && (
-                    <div>
-                      <p className="fs-12 fw-medium mb-1">Téléphone</p>
-                      <p className="fs-14">{selectedAlibabaOffer.Phone}</p>
-                    </div>
+                    <p className="text-sm"><strong>Phone:</strong> {selectedAlibabaOffer.Phone}</p>
                   )}
-                  {selectedAlibabaOffer['Contact Name'] === 'N/A' &&
-                    selectedAlibabaOffer.Email === 'N/A' &&
-                    selectedAlibabaOffer.Phone === 'N/A' && (
-                      <div className="text-center py-3">
-                        <p className="fs-12 text-gray-500">Aucune information de contact disponible</p>
-                        <p className="fs-12 text-gray-500">Veuillez contacter directement via Alibaba</p>
-                      </div>
-                    )}
+                  {!selectedAlibabaOffer['Contact Name'] && !selectedAlibabaOffer.Email && !selectedAlibabaOffer.Phone && (
+                    <p className="text-sm text-gray-500">No contact info available.</p>
+                  )}
                 </div>
-                <div className="mt-3">
-                  <h5 className="text-primary fs-6 fw-semibold mb-2">Informations produit</h5>
-                  <div className="p-3 bg-light rounded-2">
-                    <div className="d-flex justify-content-between align-items-center mb-2">
-                      <span className="fs-12 fw-medium">Prix:</span>
-                      <span className="fs-14 text-success fw-bold">{selectedAlibabaOffer.Price || 'N/A'}</span>
-                    </div>
-                    <NioButton
-                      className="btn-primary w-100 btn-sm"
-                      label="Voir sur Alibaba"
-                      onClick={() => alert('Redirecting to Alibaba product page!')}
-                    />
-                  </div>
+                <h5 className="text-lg font-semibold text-orange-800 mb-3">Product Info</h5>
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <p className="text-sm mb-2"><strong>Price:</strong> {selectedAlibabaOffer.Price || 'N/A'}</p>
+                  <NioButton
+                    className="btn-alibaba w-full"
+                    label="View on Alibaba"
+                    onClick={() => alert('Redirecting to Alibaba!')}
+                  />
                 </div>
               </Col>
             </Row>
           )}
         </Modal.Body>
-        <Modal.Footer className="border-0 pt-2">
-          <Button variant="outline-secondary" size="sm" onClick={handleCloseAlibabaModal}>
-            Fermer
+        <Modal.Footer className="border-0">
+          <Button variant="outline-secondary" onClick={handleCloseAlibabaModal}>
+            Close
           </Button>
         </Modal.Footer>
       </Modal>
-      {/* Alibaba Offer Details Modal End */}
 
-      {/* CTA Section Start */}
-      <NioSection className="py-4">
+      {/* CTA Section */}
+      <NioSection className="py-10 bg-gradient-to-r from-green-600 to-green-800 text-white">
         <NioSection.Content>
-          <div className="nk-cta-wrap nk-cta-card bg-primary-gradient rounded-2 is-theme position-relative overflow-hidden p-3 p-md-4">
-            <Row className="g-0 align-items-center">
-              <Col xs={{ order: 2 }} lg={{ span: 7, order: 0 }}>
-                <div className="nk-block-head-content mb-0">
-                  <h2 className="newsletter-heading text-capitalize fs-3 m-0 mb-3 mb-lg-4">
-                    Rejoignez le marché agricole mondial
-                  </h2>
-                  <p className="fs-16 text-white/80 max-w-lg">
-                    Connectez-vous avec des agriculteurs et fournisseurs pour développer votre activité et accéder à de nouvelles opportunités commerciales.
-                  </p>
-                  <ul className="nk-btn-group flex-wrap ps-1">
-                    <li>
-                      <NioButton href="/pricing" className="btn-sm btn-outline-white" label="S'inscrire" />
-                    </li>
-                    <li>
-                      <NioButton href="/about" className="btn-sm btn-outline-white" label="En savoir plus" />
-                    </li>
-                  </ul>
-                </div>
-              </Col>
-              <Col xs={{ order: 1 }} lg={{ span: 5, order: 0 }}>
-                <div className="nk-cta-img-wrap text-end ps-4 pt-4 pt-lg-0 ps-sm-5 ps-lg-0">
-                  <img src="/images/thumb/farmer.png" alt="farmer-offer-thumb" className="me-n1" style={{ maxWidth: '100%' }} />
-                </div>
-              </Col>
-            </Row>
-          </div>
+          <Row className="items-center">
+            <Col lg={6}>
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">Join the Global Agricultural Market</h2>
+              <p className="text-lg mb-6">
+                Connect with farmers and suppliers to grow your business and access new opportunities.
+              </p>
+              <div className="flex gap-4">
+                <NioButton href="/pricing" className="btn-farmer px-6 py-3" label="Sign Up" />
+                <NioButton href="/about" className="btn-outline-white px-6 py-3" label="Learn More" />
+              </div>
+            </Col>
+            <Col lg={6} className="text-center">
+              <img
+                src="/images/thumb/farmer.png"
+                alt="farmer"
+                className="max-w-full h-auto animate-pulse"
+              />
+            </Col>
+          </Row>
         </NioSection.Content>
       </NioSection>
-      {/* CTA Section End */}
 
-      {/* Newsletter Section Start */}
-      <NioSection className="nk-newsletter-section pb-lg-0">
-        <Row className="justify-content-center justify-content-lg-between align-items-center pb-4 border-bottom border-lighter">
-          <Col lg={6} xl={4}>
-            <div className="nk-newsletter-content text-center text-lg-start pb-4 pb-lg-0">
-              <h4 className="text-capitalize fs-5 fw-semibold">Abonnez-vous à notre newsletter</h4>
-              <p className="fs-14 text-gray-600">Recevez les dernières offres et actualités agricoles.</p>
-            </div>
-          </Col>
-          <Col md={10} lg={6} xl={5}>
-            <NioSubscribeField variant="one" />
-          </Col>
-        </Row>
+      {/* Newsletter Section */}
+      <NioSection className="py-10 bg-gray-50">
+        <NioSection.Content>
+          <Row className="justify-content-between align-items-center">
+            <Col lg={5}>
+              <h4 className="text-2xl font-bold text-green-800 mb-2">Subscribe to Our Newsletter</h4>
+              <p className="text-sm text-gray-600">Get the latest agricultural offers and updates.</p>
+            </Col>
+            <Col lg={5}>
+              <NioSubscribeField variant="one" />
+            </Col>
+          </Row>
+        </NioSection.Content>
       </NioSection>
-      {/* Newsletter Section End */}
     </AppLayout>
   );
 }

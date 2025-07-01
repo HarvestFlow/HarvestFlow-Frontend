@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { NioSection, NioButton, NioIcon, NioBadge } from '../../../components';
@@ -6,21 +6,27 @@ import AppLayout from '../../../layouts/AppLayout/AppLayout';
 
 const API_URL = 'http://localhost:5000';
 const WHEAT_IMAGE_URL = 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?q=80&w=1074&auto=format&fit=crop';
+const LOCAL_PLACEHOLDER_URL = 'https://via.placeholder.com/380x192';
 const USER_PROFILE_URL = 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80';
+const HEADER_IMAGE_URL = 'https://images.unsplash.com/photo-1500076656116-558758c991c1?q=80&w=1920&auto=format&fit=crop';
 
 function MyOffers() {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userId, setUserId] = useState(null);
-  const [offers, setOffers] = useState([]);
+  const [farmerOffers, setFarmerOffers] = useState([]);
+  const [buyerOffers, setBuyerOffers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [expandedOffer, setExpandedOffer] = useState(null);
   const [filter, setFilter] = useState('all');
   const [recommendations, setRecommendations] = useState({});
   const [selectedRecommendation, setSelectedRecommendation] = useState(null);
+  const [recommendationError, setRecommendationError] = useState('');
+  const [offerType, setOfferType] = useState('farmer');
+  const [sortBy, setSortBy] = useState('similarity');
+  const [expandedDetails, setExpandedDetails] = useState({});
 
-  // Check authentication status
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
@@ -36,295 +42,589 @@ function MyOffers() {
     checkAuthStatus();
   }, [navigate]);
 
-  // Fetch user offers
   useEffect(() => {
-    if (!isAuthenticated || !userId) {
-      console.log('Skipping fetch: Not authenticated or no userId', { isAuthenticated, userId });
-      return;
-    }
+    if (!isAuthenticated || !userId) return;
 
     const fetchOffers = async () => {
       setIsLoading(true);
       try {
-        const url = `${API_URL}/farmerform/farmer/${userId}`;
-        const response = await axios.get(url, { withCredentials: true });
-        const validOffers = response.data.filter(
-          (offer) =>
-            offer &&
-            offer.quantityAvailable?.value != null &&
-            offer.pricePerUnit?.value != null
-        );
-        setOffers(validOffers);
-        if (validOffers.length < response.data.length) {
+        const farmerUrl = `${API_URL}/farmerform/farmer/${userId}`;
+        const farmerResponse = await axios.get(farmerUrl, { withCredentials: true });
+        setFarmerOffers(farmerResponse.data.filter(offer => offer && offer.quantityAvailable?.value != null && offer.pricePerUnit?.value != null));
+
+        const buyerUrl = `${API_URL}/farmerform/buyer/${userId}`;
+        const buyerResponse = await axios.get(buyerUrl, { withCredentials: true });
+        setBuyerOffers(buyerResponse.data.filter(offer => offer && (offer.quantityDesired?.value != null || offer.quantityDesired) && (offer.pricePerUnit?.value != null || offer.pricePerUnit)));
+
+        if (farmerResponse.data.length > farmerOffers.length || buyerResponse.data.length > buyerOffers.length) {
           setError('Some offers were excluded due to missing data.');
         }
       } catch (err) {
-        setError(err.response?.data?.error || 'Failed to fetch your offers.');
-        setOffers([]);
+        setError(err.response?.data?.error || 'Failed to fetch offers.');
+        setFarmerOffers([]);
+        setBuyerOffers([]);
       } finally {
         setIsLoading(false);
       }
     };
-
     fetchOffers();
   }, [isAuthenticated, userId]);
 
-  // Fetch recommendations for an offer
-  const fetchRecommendations = async (offerId) => {
+  const fetchRecommendations = async (offerId, type) => {
     try {
-      const response = await axios.get(`${API_URL}/farmerform/recommendations/${offerId}`);
-      setRecommendations((prev) => ({
+      setRecommendationError('');
+      const url = type === 'farmer'
+        ? `${API_URL}/farmerform/recommendations/${offerId}`
+        : `${API_URL}/farmerform/buyer/recommendations/${offerId}`;
+      const response = await axios.get(url, { withCredentials: true });
+      setRecommendations(prev => ({
         ...prev,
-        [offerId]: response.data,
+        [offerId]: response.data.sort((a, b) => b.similarity - a.similarity),
       }));
     } catch (err) {
-      setRecommendations((prev) => ({
-        ...prev,
-        [offerId]: [],
-      }));
+      setRecommendationError(err.response?.data?.details || 'Failed to load recommendations.');
+      setRecommendations(prev => ({ ...prev, [offerId]: [] }));
     }
   };
 
-  // Toggle recommendations visibility
-  const toggleRecommendations = (offerId) => {
+  const toggleRecommendations = (offerId, type) => {
     if (expandedOffer === offerId) {
       setExpandedOffer(null);
     } else {
       setExpandedOffer(offerId);
-      if (!recommendations[offerId]) {
-        fetchRecommendations(offerId);
-      }
+      if (!recommendations[offerId]) fetchRecommendations(offerId, type);
     }
   };
 
-  // Filter offers
-  const filteredOffers = offers.filter((offer) => {
-    if (filter === 'active') return isOfferActive(offer.availabilityEndDate);
-    if (filter === 'expired') return !isOfferActive(offer.availabilityEndDate);
-    return true;
-  });
+  const toggleDetails = (offerId) => {
+    setExpandedDetails(prev => ({ ...prev, [offerId]: !prev[offerId] }));
+  };
 
-  // Format helpers
+  const filteredOffers = useMemo(() => {
+    return (offerType === 'farmer' ? farmerOffers : buyerOffers).filter(offer => {
+      const endDate = offerType === 'farmer' ? offer.availabilityEndDate : offer.offerEndDate;
+      if (filter === 'active') return !endDate || new Date(endDate) >= new Date();
+      if (filter === 'expired') return endDate && new Date(endDate) < new Date();
+      return true;
+    });
+  }, [farmerOffers, buyerOffers, offerType, filter]);
+
   const formatQuantity = (quantity) => {
-    if (quantity && typeof quantity === 'object' && 'value' in quantity) {
-      return `${quantity.value} ${quantity.unit || 'tonnes'}`;
-    }
-    if (typeof quantity === 'string') {
-      const match = quantity.match(/^(\d+)([a-zA-Z]*)$/);
-      if (match) {
-        const [, value, unit] = match;
-        return `${value} ${unit || 'tonnes'}`;
-      }
-      return `${quantity} tonnes`;
-    }
-    if (typeof quantity === 'number') {
-      return `${quantity} tonnes`;
-    }
+    if (quantity?.value) return `${quantity.value} ${quantity.unit || 'tonnes'}`;
+    if (typeof quantity === 'string') return quantity || 'N/A';
+    if (typeof quantity === 'number') return `${quantity} tonnes`;
     return 'N/A';
   };
 
   const formatPrice = (price) => {
-    if (price && typeof price === 'object' && 'value' in price) {
-      return `${price.value} ${price.currency || 'USD'}/ton`;
-    }
-    if (typeof price === 'string') {
-      return price.includes('USD') ? price : `${price}/ton`;
-    }
+    if (price?.value) return `${price.value} ${price.currency || '€'}/tonne`;
+    if (typeof price === 'string') return price || 'N/A';
+    if (typeof price === 'number') return `${price} €/tonne`;
     return 'N/A';
   };
 
-  const formatDate = (date) => date ? new Date(date).toLocaleDateString() : 'N/A';
-  const isOfferActive = (endDate) => !endDate || new Date(endDate) >= new Date();
+  const formatDate = (date) => (date ? new Date(date).toLocaleDateString() : 'N/A');
 
-  const renderRecommendationCard = (rec, index, offerId) => {
-    const item = rec.item || {};
-    const status = rec.status || 'Vérifié'; // Default to 'Vérifié' if not provided
-    const statusClass = {
-      'Expire': 'bg-red-100 text-red-800',
-      'Vérifié': 'bg-green-100 text-green-800',
-      'En attente': 'bg-yellow-100 text-yellow-800',
-    }[status] || 'bg-gray-100 text-gray-800';
-    const endDate = item.availabilityEndDate || new Date().toISOString().split('T')[0];
-    const contactName = item.contactName || 'N/A';
+  const calculateExpiryProgress = (endDate) => {
+    if (!endDate) return 100;
+    const now = new Date();
+    const expiry = new Date(endDate);
+    const total = expiry - now;
+    const elapsed = total - (expiry - now);
+    return Math.max(0, Math.min(100, (elapsed / total) * 100));
+  };
+
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text);
+    alert('Copié dans le presse-papiers !');
+  };
+
+  const renderOfferCard = (offer) => {
+    const isActive = !offer[offerType === 'farmer' ? 'availabilityEndDate' : 'offerEndDate'] || new Date(offer[offerType === 'farmer' ? 'availabilityEndDate' : 'offerEndDate']) >= new Date();
+    const rating = offer.rating || 4.9;
+    const reviewCount = offer.reviewCount || 127;
+    const expiryProgress = calculateExpiryProgress(offer[offerType === 'farmer' ? 'availabilityEndDate' : 'offerEndDate']);
+    const isExpanded = expandedDetails[offer._id];
+
+    const handleImageError = (e) => {
+      try {
+        console.log('Image load failed for src:', e.target.src, 'Falling back to:', LOCAL_PLACEHOLDER_URL);
+        e.target.src = LOCAL_PLACEHOLDER_URL;
+        e.target.parentElement.style.backgroundColor = '#e5e7eb';
+        e.target.nextSibling.style.display = 'block';
+      } catch (error) {
+        console.error('Error in handleImageError:', error);
+      }
+    };
 
     return (
-      <div
-        key={`${offerId}-rec-${index}`}
-        className="relative w-full max-w-sm bg-white rounded-lg shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-105"
-      >
-        <img
-          src={WHEAT_IMAGE_URL}
-          alt={item.title || 'Product Image'}
-          className="w-full h-48 object-cover"
-        />
-        <div className="absolute top-2 left-2">
-          <NioBadge rounded className={`text-xs ${statusClass}`} label={status} />
+      <div className="offer-card bg-white rounded-2xl shadow-md p-4 border border-green-200 transform transition-all duration-300 hover:scale-105 hover:shadow-lg max-w-[380px] mx-auto relative overflow-hidden">
+        <div className="relative h-48 bg-gray-200 flex items-center justify-center">
+          <img
+            loading="lazy"
+            src={offer.photo || WHEAT_IMAGE_URL}
+            alt={offer.title || 'Offer'}
+            className="w-full h-full object-cover rounded-t-2xl"
+            onError={handleImageError}
+            onLoad={(e) => console.log('Image loaded successfully:', e.target.src)}
+          />
+          <span className="absolute text-gray-500 text-center z-10" style={{ display: 'none' }}>Image non disponible</span>
         </div>
-        <div className="p-4">
-          <h4 className="text-lg font-semibold text-gray-800 mb-2 truncate">{item.title || 'Untitled'}</h4>
-          <div className="space-y-2 text-sm text-gray-600">
-            <p className="flex items-center"><NioIcon name="map-pin" className="mr-2 text-indigo-600" size="sm" />Pays: {item.country || 'N/A'}</p>
-            <p className="flex items-center"><NioIcon name="package" className="mr-2 text-indigo-600" size="sm" />Quantité: {formatQuantity(item.quantity)}</p>
-            <p className="flex items-center"><NioIcon name="leaf" className="mr-2 text-indigo-600" size="sm" />Produit: {item.productCategory || 'N/A'}</p>
-            <p className="flex items-center"><NioIcon name="calendar" className="mr-2 text-indigo-600" size="sm" />Durée: {formatDate(endDate)}</p>
+        <div className="mt-3">
+          <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-2">{offer.title || 'Offre sans titre'}</h3>
+          <div className="text-sm text-gray-600 mb-2 grid grid-cols-2 gap-1">
+            <p className="flex items-center"><NioIcon name="tag" className="mr-1 text-green-500" /> {offer.productCategory || 'N/A'}</p>
+            <p className="flex items-center"><NioIcon name="box" className="mr-1 text-green-500" /> {offerType === 'farmer' ? offer.productOffered : offer.productNeeded || 'N/A'}</p>
+            <p className="flex items-center"><NioIcon name="package" className="mr-1 text-green-500" /> {formatQuantity(offerType === 'farmer' ? offer.quantityAvailable : offer.quantityDesired)}</p>
+            <p className="flex items-center"><NioIcon name="money" className="mr-1 text-green-500" /> {formatPrice(offer.pricePerUnit)}</p>
+            <p className="flex items-center"><NioIcon name="map-pin" className="mr-1 text-green-500" /> {offerType === 'farmer' ? offer.destination : offer.deliveryLocation || 'N/A'}</p>
+            <p className="flex items-center"><NioIcon name="credit-card" className="mr-1 text-green-500" /> {offer.paymentTerms || 'N/A'}</p>
           </div>
-          <div className="mt-4 flex items-center justify-between">
-            <div className="flex items-center">
-              <NioIcon name="user" className="mr-2 text-indigo-600" size="sm" />
-              <span>{contactName} {formatDate(endDate)}</span>
+          <div className="relative mb-2">
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div className="bg-green-500 h-2 rounded-full transition-all duration-500" style={{ width: `${100 - expiryProgress}%` }}></div>
             </div>
+            <p className="text-xs text-gray-500 mt-1">Expire le: {formatDate(offerType === 'farmer' ? offer.availabilityEndDate : offer.offerEndDate)}</p>
+          </div>
+          <button onClick={() => toggleDetails(offer._id)} className="text-sm text-green-600 hover:underline flex items-center mb-2">
+            {isExpanded ? 'Masquer les détails' : 'Voir plus de détails'} <NioIcon name={isExpanded ? 'chevron-up' : 'chevron-down'} className="ml-1" />
+          </button>
+          {isExpanded && (
+            <div className="text-sm text-gray-600 mb-2 animate-slide-down">
+              <p className="mb-1"><strong>Description:</strong> {offer.productDescription || offer.productSpecifications || 'N/A'}</p>
+              <p><strong>Préférences régionales:</strong> {(offerType === 'farmer' ? offer.lookingForBuyersFrom : offer.preferredSuppliersFrom)?.join(', ') || 'N/A'}</p>
+            </div>
+          )}
+          <div className="flex items-center mb-2">
+            <img loading="lazy" src={USER_PROFILE_URL} alt="User" className="w-8 h-8 rounded-full mr-1 transition-transform hover:scale-110" />
+            <div>
+              <p className="text-sm font-medium text-gray-800">{offer.contactName || 'N/A'}</p>
+              <p className="text-xs text-gray-600">{offer.company?.name || 'N/A'}</p>
+              <a href={`mailto:${offer.company?.contactEmail}`} className="text-xs text-green-600 hover:underline">{offer.company?.contactEmail || 'N/A'}</a>
+              <a href={`tel:${offer.company?.contactPhone}`} className="text-xs text-green-600 hover:underline block">{offer.company?.contactPhone || 'N/A'}</a>
+            </div>
+          </div>
+          <div className="flex space-x-2">
             <NioButton
-              className="px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition"
+              className="flex-1 px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-sm"
+              label="Recommandations"
+              icon="users"
+              onClick={() => toggleRecommendations(offer._id, offerType)}
+            />
+            <NioButton
+              className="flex-1 px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
               label="Détails"
-              onClick={() => setSelectedRecommendation(rec)}
+              icon="eye"
+              onClick={() => setSelectedRecommendation({ item: offer })}
             />
           </div>
         </div>
+        <div className="absolute top-1 left-1 w-2 h-2 bg-green-400 rounded-full animate-ping" style={{ display: isActive ? 'block' : 'none' }}></div>
+      </div>
+    );
+  };
+
+  const renderRecommendationCard = (rec, index, offerId) => {
+    const item = rec.item || {};
+    const status = item.verifiedStatus || 'En attente';
+    const statusClass = {
+      Expire: 'bg-red-500 text-white',
+      VERIFIED: 'bg-green-500 text-white',
+      'NOT_VERIFIED': 'bg-yellow-500 text-white',
+      'PENDING': 'bg-yellow-500 text-white',
+      'En attente': 'bg-yellow-500 text-white',
+    }[status] || 'bg-gray-500 text-white';
+    const currentDate = new Date();
+    const endDate = item.offerEndDate || item.availabilityEndDate || currentDate.toISOString().split('T')[0];
+    const isActive = new Date(endDate) >= currentDate;
+    const rating = item.rating || 4.9;
+    const reviewCount = item.reviewCount || 127;
+    const similarity = rec.similarity || 0.95;
+    const expiryProgress = calculateExpiryProgress(endDate);
+    const isExpanded = expandedDetails[`${offerId}-rec-${index}`];
+
+    const formattedItem = {
+      title: item.title || 'N/A',
+      quantity: formatQuantity(item.quantityDesired || item.quantityAvailable || { value: item.min_quantity, unit: 'tonnes' }) || 'N/A',
+      price: formatPrice(item.pricePerUnit || { value: item.price, currency: item.currency || 'USD' }) || 'N/A',
+      location: item.deliveryLocation || item.destination || item.country || 'N/A',
+      contact: item.contactName || item.contact_name || 'N/A',
+      email: item.company?.contactEmail || item.email || 'N/A',
+      phone: item.company?.contactPhone || item.phone || 'N/A',
+      company: item.company?.name || item.supplier || 'N/A',
+      category: item.productCategory || item.crop_type || 'N/A',
+      product: item.productNeeded || item.productOffered || item.cereal_type || 'N/A',
+      paymentTerms: item.paymentTerms || item.payment_terms || 'N/A',
+      description: item.productDescription || item.productSpecifications || item.product_needed || 'N/A',
+      id: item._id || item.offer_id || 'N/A',
+    };
+
+    return (
+      <div key={`${offerId}-rec-${index}`} className="recommendation-card bg-white rounded-2xl shadow-md p-4 border border-green-200 transform transition-all duration-300 hover:scale-105 hover:shadow-lg max-w-[380px] mx-auto relative overflow-hidden">
+        <div className="relative h-48 bg-gray-200 flex items-center justify-center">
+          <img
+            loading="lazy"
+            src={item.photo || item.image_url || WHEAT_IMAGE_URL}
+            alt={formattedItem.title}
+            className="w-full h-full object-cover rounded-t-2xl"
+            onError={(e) => {
+              try {
+                console.log('Recommendation image load failed for src:', e.target.src, 'Falling back to:', LOCAL_PLACEHOLDER_URL);
+                e.target.src = LOCAL_PLACEHOLDER_URL;
+                e.target.parentElement.style.backgroundColor = '#e5e7eb';
+                e.target.nextSibling.style.display = 'block';
+              } catch (error) {
+                console.error('Error in handleImageError:', error);
+              }
+            }}
+            onLoad={(e) => console.log('Recommendation image loaded successfully:', e.target.src)}
+          />
+          <span className="absolute text-gray-500 text-center z-10" style={{ display: 'none' }}>Image non disponible</span>
+        </div>
+        <div className="mt-3">
+          <h4 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2">{formattedItem.title}</h4>
+          <div className="relative w-16 h-16 mx-auto mb-3">
+            <svg className="w-full h-full transform -rotate-90">
+              <circle cx="32" cy="32" r="30" fill="none" stroke="#e5e7eb" strokeWidth="4" />
+              <circle cx="32" cy="32" r="30" fill="none" stroke="#10b981" strokeWidth="4" strokeDasharray="188.5" strokeDashoffset={188.5 * (1 - similarity)} />
+            </svg>
+            <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-sm font-bold text-green-600">{Math.round(similarity * 100)}%</span>
+          </div>
+          <div className="text-sm text-gray-600 mb-2 grid grid-cols-2 gap-1">
+            <p className="flex items-center"><NioIcon name="tag" className="mr-1 text-green-500" /> {formattedItem.category}</p>
+            <p className="flex items-center"><NioIcon name="box" className="mr-1 text-green-500" /> {formattedItem.product}</p>
+            <p className="flex items-center"><NioIcon name="package" className="mr-1 text-green-500" /> {formattedItem.quantity}</p>
+            <p className="flex items-center"><NioIcon name="money" className="mr-1 text-green-500" /> {formattedItem.price}</p>
+            <p className="flex items-center"><NioIcon name="map-pin" className="mr-1 text-green-500" /> {formattedItem.location}</p>
+            <p className="flex items-center"><NioIcon name="credit-card" className="mr-1 text-green-500" /> {formattedItem.paymentTerms}</p>
+          </div>
+          <div className="relative mb-2">
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div className="bg-green-500 h-2 rounded-full transition-all duration-500" style={{ width: `${100 - expiryProgress}%` }}></div>
+            </div>
+            <p className="text-xs text-gray-500 mt-1">Expire le: {formatDate(endDate)}</p>
+          </div>
+          <button onClick={() => toggleDetails(`${offerId}-rec-${index}`)} className="text-sm text-green-600 hover:underline flex items-center mb-2">
+            {isExpanded ? 'Masquer les détails' : 'Voir plus de détails'} <NioIcon name={isExpanded ? 'chevron-up' : 'chevron-down'} className="ml-1" />
+          </button>
+          {isExpanded && (
+            <div className="text-sm text-gray-600 mb-2 animate-slide-down">
+              <p className="mb-1"><strong>Description:</strong> {formattedItem.description}</p>
+              <p><strong>Raison:</strong> {rec.reason || 'N/A'}</p>
+            </div>
+          )}
+          <div className="flex items-center mb-2">
+            <img loading="lazy" src={USER_PROFILE_URL} alt="User" className="w-8 h-8 rounded-full mr-1 transition-transform hover:scale-110" />
+            <div>
+              <p className="text-sm font-medium text-gray-800">{formattedItem.contact}</p>
+              <p className="text-xs text-gray-600">{formattedItem.company}</p>
+              <a href={`mailto:${formattedItem.email}`} className="text-xs text-green-600 hover:underline">{formattedItem.email}</a>
+              <a href={`tel:${formattedItem.phone}`} className="text-xs text-green-600 hover:underline block">{formattedItem.phone}</a>
+            </div>
+          </div>
+          <NioButton
+            className="w-full px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
+            label="Détails"
+            icon="eye"
+            onClick={() => setSelectedRecommendation(rec)}
+          />
+        </div>
+        <div className="absolute top-1 left-1 w-2 h-2 bg-green-400 rounded-full animate-ping" style={{ display: isActive ? 'block' : 'none' }}></div>
       </div>
     );
   };
 
   return (
-    <AppLayout title="My Offers" rootClass="layout-1">
+    <AppLayout title="Mes Offres" rootClass="layout-1">
       <>
         <style>
           {`
-            .offer-card { transition: transform 0.3s ease, box-shadow 0.3s ease; max-width: 448px; } /* Increased from max-w-xs (320px) to max-w-md (448px) */
-            .offer-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15); }
-            .cta-section { background: linear-gradient(135deg, #4f46e5, #7c3aed); animation: gradientShift 10s ease infinite; }
-            @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-            .filter-button { transition: all 0.2s ease; }
-            .filter-button.active { background-color: #4f46e5; color: white; }
-            .verified-badge { background-color: #10b981; color: white; }
-            .modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); display: flex; justify-content: center; align-items: center; z-index: 1000; }
-            .modal-content { background: white; padding: 2rem; border-radius: 0.5rem; max-width: 600px; max-height: 80vh; overflow-y: auto; }
-            .recommendation-card { min-height: 150px; }
-            .recommendations-section { background: linear-gradient(135deg, #f3f4f6, #e5e7eb); border-radius: 1rem; padding: 1.5rem; margin-top: 1rem; transition: all 0.3s ease; }
-            .recommendations-section.expanded { box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); }
+            .offer-card, .recommendation-card {
+              max-width: 380px;
+              border-radius: 1.5rem;
+              overflow: hidden;
+              transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+            .offer-card:hover, .recommendation-card:hover {
+              transform: scale(1.05);
+              box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            }
+            .header-section {
+              background: url(${HEADER_IMAGE_URL}) no-repeat center center;
+              background-size: cover;
+              position: relative;
+              overflow: hidden;
+              height: 500px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              text-align: center;
+              color: white;
+            }
+            .header-section::before {
+              content: '';
+              position: absolute;
+              top: 0;
+              left: 0;
+              right: 0;
+              bottom: 0;
+              background: rgba(0, 0, 0, 0.5);
+              z-index: 1;
+            }
+            .header-content {
+              position: relative;
+              z-index: 2;
+              max-width: 800px;
+              padding: 2rem;
+            }
+            .stats-grid {
+              display: grid;
+              grid-template-columns: repeat(3, 1fr);
+              gap: 1rem;
+              margin-top: 2rem;
+            }
+            .stat-item {
+              background: rgba(255, 255, 255, 0.2);
+              padding: 1rem;
+              border-radius: 0.75rem;
+              text-align: center;
+            }
+            .filter-button {
+              transition: all 0.2s ease;
+              padding: 0.5rem 1rem;
+              border-radius: 0.75rem;
+              background: #f5f7f6;
+              color: #4a5568;
+            }
+            .filter-button.active {
+              background: #10b981;
+              color: white;
+            }
+            .modal {
+              position: fixed;
+              top: 0;
+              left: 0;
+              right: 0;
+              bottom: 0;
+              background: rgba(0, 0, 0, 0.7);
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              z-index: 1000;
+              animation: fadeIn 0.3s ease;
+            }
+            .modal-content {
+              background:rgb(217, 249, 237); /* bg-green-200 */
+              padding: 2rem;
+              border-radius: 1.5rem;
+              max-width: 1400px;
+              width: 90%;
+              max-height: 85vh;
+              overflow-y: auto;
+              box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+              animation: slideUp 0.3s ease;
+            }
+            .recommendations-grid {
+              display: grid;
+              grid-template-columns: repeat(3, 1fr);
+              gap: 1.5rem;
+              padding: 1rem 0;
+            }
+            .offer-type-toggle {
+              background: #f5f7f6;
+              border: 1px solid #e2e8f0;
+              border-radius: 0.75rem;
+              padding: 0.25rem;
+              display: inline-flex;
+            }
+            .offer-type-toggle button {
+              padding: 0.5rem 1.25rem;
+              border-radius: 0.5rem;
+              font-size: 0.875rem;
+              color: #4a5568;
+            }
+            .offer-type-toggle button.active {
+              background: #10b981;
+              color: white;
+            }
+            .sort-select {
+              padding: 0.5rem 1rem;
+              border-radius: 0.75rem;
+              border: 1px solid #e2e8f0;
+              margin-left: 1rem;
+              background: #f5f7f6;
+              color: #4a5568;
+            }
+            .animate-slide-down {
+              animation: slideDown 0.3s ease;
+            }
+            @keyframes slideDown {
+              from { transform: translateY(-10px); opacity: 0; }
+              to { transform: translateY(0); opacity: 1; }
+            }
+            @keyframes fadeIn {
+              from { opacity: 0; }
+              to { opacity: 1; }
+            }
+            @keyframes slideUp {
+              from { transform: translateY(20px); opacity: 0; }
+              to { transform: translateY(0); opacity: 1; }
+            }
+            @keyframes ping {
+              75%, 100% { transform: scale(2); opacity: 0; }
+            }
+            @media (max-width: 1024px) {
+              .recommendations-grid {
+                grid-template-columns: repeat(2, 1fr);
+              }
+            }
+            @media (max-width: 640px) {
+              .offer-card, .recommendation-card {
+                max-width: 100%;
+              }
+              .recommendations-grid {
+                grid-template-columns: 1fr;
+              }
+              .header-section {
+                height: 400px;
+              }
+              .stats-grid {
+                grid-template-columns: 1fr;
+              }
+            }
           `}
         </style>
 
-        <NioSection className="pt-16 md:pt-24 bg-gradient-to-b from-gray-50 to-white">
-          <NioSection.Content>
-            <div className="text-center max-w-3xl mx-auto">
-              <span className="inline-block text-xs uppercase tracking-wider text-indigo-600 font-semibold mb-4">Farmer Nexus</span>
-              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Votre marché agricole</h1>
-              <p className="text-lg text-gray-600 mb-8">Découvrez, gérez et élargissez vos offres pour connecter avec des acheteurs mondiaux.</p>
-              <NioButton as={Link} to="/farmer-form" className="inline-flex items-center px-6 py-3 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition" label="Créer une nouvelle offre" icon="plus before" />
+        <header className="header-section">
+          <div className="header-content">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4 animate-fade-in">Bienvenue sur Farmer Nexus</h1>
+            <p className="text-lg mb-6 animate-fade-in" style={{ animationDelay: '0.2s' }}>
+              Connectez-vous à un réseau mondial d’agriculteurs et d’acheteurs pour cultiver des opportunités durables et prospères. Découvrez des offres et des demandes adaptées à vos besoins.
+            </p>
+            <div className="stats-grid">
+              <div className="stat-item animate-fade-in" style={{ animationDelay: '0.4s' }}>
+                <h3 className="text-2xl font-bold">1,200+</h3>
+                <p className="text-sm">Offres actives</p>
+              </div>
+              <div className="stat-item animate-fade-in" style={{ animationDelay: '0.6s' }}>
+                <h3 className="text-2xl font-bold">850+</h3>
+                <p className="text-sm">Agriculteurs connectés</p>
+              </div>
+              <div className="stat-item animate-fade-in" style={{ animationDelay: '0.8s' }}>
+                <h3 className="text-2xl font-bold">30+</h3>
+                <p className="text-sm">Pays représentés</p>
+              </div>
             </div>
-          </NioSection.Content>
-        </NioSection>
+          </div>
+        </header>
 
-        <NioSection className="py-12 bg-gray-100">
+        <NioSection className="py-12 bg-gradient-to-b from-yellow-50 to-green-50">
           <NioSection.Content>
-            <div className="flex justify-center mb-8 space-x-4">
-              {['all', 'active', 'expired'].map((status) => (
+            <div className="flex justify-center items-center mb-8 space-x-4 flex-wrap gap-2">
+              <div className="offer-type-toggle">
                 <button
-                  key={status}
-                  onClick={() => setFilter(status)}
-                  className={`filter-button px-4 py-2 rounded-full text-sm font-medium ${filter === status ? 'active' : 'bg-white text-gray-600 hover:bg-gray-200'}`}
-                >
-                  {status.charAt(0).toUpperCase() + status.slice(1)}
-                </button>
-              ))}
+                  onClick={() => setOfferType('farmer')}
+                  className={offerType === 'farmer' ? 'filter-button active' : 'filter-button hover:bg-gray-100'}
+                >Offres</button>
+                <button
+                  onClick={() => setOfferType('buyer')}
+                  className={offerType === 'buyer' ? 'filter-button active' : 'filter-button hover:bg-gray-100'}
+                >Demandes</button>
+              </div>
+              <div className="flex space-x-2">
+                {['all', 'active', 'expired'].map(status => (
+                  <button
+                    key={status}
+                    onClick={() => setFilter(status)}
+                    className={filter === status ? 'filter-button active' : 'filter-button hover:bg-gray-100'}
+                  >{status.charAt(0).toUpperCase() + status.slice(1)}</button>
+                ))}
+              </div>
+              <select className="sort-select" value={sortBy} onChange={e => setSortBy(e.target.value)}>
+                <option value="similarity">Trier par Similitude</option>
+                <option value="quantity">Trier par Quantité</option>
+                <option value="price">Trier par Prix</option>
+              </select>
             </div>
 
-            {error && <div className="text-center bg-red-100 p-4 rounded-lg mb-6"><p className="text-sm text-red-600">{error}</p></div>}
+            {error && <div className="text-center bg-red-100 p-4 rounded-xl mb-6"><p className="text-sm text-red-600">{error}</p></div>}
 
             {isLoading ? (
-              <div className="text-center text-indigo-600"><NioIcon name="spinner" className="inline-block mr-2 animate-spin" /> Chargement des offres...</div>
+              <div className="text-center"><NioIcon name="spinner" className="animate-spin text-green-600 mr-2" /> Chargement...</div>
             ) : filteredOffers.length === 0 ? (
               <div className="text-center py-16">
                 <NioIcon name="inbox" className="text-4xl text-gray-400 mb-4" />
-                <p className="text-lg text-gray-600 mb-4">Aucune offre trouvée.</p>
-                <p className="text-sm text-gray-500"><Link to="/farmer-form" className="text-indigo-600 hover:underline">Créez votre première offre</Link> pour vous connecter avec des acheteurs.</p>
+                <p className="text-lg text-gray-700">Aucune {offerType === 'farmer' ? 'offre' : 'demande'} trouvée.</p>
               </div>
             ) : (
-              <div className="space-y-6">
-                {filteredOffers.map((offer) => (
-                  <div key={offer._id} className="offer-card rounded-xl overflow-hidden">
-                    <div className="relative">
-                      <img src={offer.photo || WHEAT_IMAGE_URL} alt={offer.title || 'Farmer Offer'} loading="lazy" className="w-full h-40 object-cover" onError={(e) => (e.target.src = WHEAT_IMAGE_URL)} /> {/* Increased from h-32 to h-40 */}
-                      <div className="absolute top-3 left-3 flex space-x-2">
-                        <NioBadge rounded className={`text-xs ${isOfferActive(offer.availabilityEndDate) ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`} label={isOfferActive(offer.availabilityEndDate) ? 'Actif' : 'Expiré'} />
-                        {offer.verifiedStatus === 'VERIFIED' && <NioBadge rounded className="text-xs verified-badge" label="Vérifié" />}
-                      </div>
-                      <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent"> {/* Reverted padding to p-4 */}
-                        <h3 className="text-white text-lg font-semibold truncate">{offer.title || 'Offre sans titre'}</h3>
-                      </div>
-                    </div>
-                    <div className="p-6"> {/* Reverted padding to p-6 */}
-                      <div className="space-y-2 mb-4"> {/* Reverted margin-bottom to mb-4 */}
-                        <p className="text-sm text-gray-600 flex items-center"><NioIcon name="leaf" className="mr-2 text-indigo-600" size="sm" /><span><strong>Culture:</strong> {offer.productCategory || 'N/A'}</span></p>
-                        <p className="text-sm text-gray-600 flex items-center"><NioIcon name="package" className="mr-2 text-indigo-600" size="sm" /><span><strong>Quantité:</strong> {formatQuantity(offer.quantityAvailable)}</span></p>
-                        <p className="text-sm text-gray-600 flex items-center"><NioIcon name="money" className="mr-2 text-indigo-600" size="sm" /><span><strong>Prix:</strong> {formatPrice(offer.pricePerUnit)}</span></p>
-                        <p className="text-sm text-gray-600 flex items-center"><NioIcon name="map-pin" className="mr-2 text-indigo-600" size="sm" /><span><strong>Destination:</strong> {offer.destination || 'N/A'}</span></p>
-                      </div>
-                      <div className="border-t pt-4 flex items-center justify-between"> {/* Reverted padding-top to pt-4 */}
-                        <div className="flex items-center">
-                          <img src={USER_PROFILE_URL} alt="User" className="w-8 h-8 rounded-full" />
-                          <div className="ml-3"> {/* Reverted margin-left to ml-3 */}
-                            <span className="text-sm font-medium text-gray-800">{offer.contactName || 'N/A'}</span>
-                            <p className="text-xs text-gray-500">Expire: {formatDate(offer.availabilityEndDate)}</p>
-                          </div>
-                        </div>
-                        <NioButton
-                          className="text-sm text-indigo-600 hover:text-indigo-800"
-                          label="Afficher les recommandations"
-                          icon={expandedOffer === offer._id ? 'chevron-up' : 'chevron-down'}
-                          onClick={() => toggleRecommendations(offer._id)}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                ))}
-                {expandedOffer && recommendations[expandedOffer] && recommendations[expandedOffer].length > 0 && (
-                  <div className="recommendations-section w-full">
-                    <h4 className="text-md font-semibold mb-4 text-indigo-800 flex items-center">
-                      <NioIcon name="star" className="mr-2 text-yellow-500" size="sm" />
-                      Correspondances recommandées ({recommendations[expandedOffer].length})
-                    </h4>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {recommendations[expandedOffer].map((rec, index) => renderRecommendationCard(rec, index, expandedOffer))}
-                    </div>
-                  </div>
-                )}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredOffers.map(offer => renderOfferCard(offer))}
               </div>
             )}
           </NioSection.Content>
         </NioSection>
 
-        <NioSection className="py-16 cta-section">
-          <NioSection.Content>
-            <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center rounded-2xl overflow-hidden bg-white shadow-2xl">
-              <div className="p-8 md:p-12 md:w-1/2">
-                <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">Développez votre portée</h2>
-                <p className="text-gray-600 mb-6">Lancez de nouvelles offres pour vous connecter avec des acheteurs dans le monde entier et développer votre entreprise agricole.</p>
-                <div className="flex space-x-4">
-                  <NioButton as={Link} to="/farmer-form" className="px-6 py-3 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition" label="Créer une offre" />
-                  <NioButton href="/about" className="px-6 py-3 bg-transparent border border-white text-white rounded-full hover:bg-white/10 transition" label="En savoir plus" />
+        {expandedOffer && recommendations[expandedOffer] && (
+          <div className="modal" onClick={() => setExpandedOffer(null)}>
+            <div className="modal-content" onClick={e => e.stopPropagation()}>
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold text-brown-800">Recommandations pour "{filteredOffers.find(o => o._id === expandedOffer)?.title || 'Offre'}"</h2>
+                <NioButton icon="cross" className="text-gray-600 hover:text-gray-800" onClick={() => setExpandedOffer(null)} />
+              </div>
+              {recommendationError ? (
+                <div className="text-center bg-red-100 p-4 rounded-xl"><p className="text-sm text-red-600">{recommendationError}</p></div>
+              ) : recommendations[expandedOffer].length > 0 ? (
+                <div className="recommendations-grid">
+                  {recommendations[expandedOffer]
+                    .sort((a, b) => {
+                      if (sortBy === 'quantity') return (b.item.quantityDesired?.value || b.item.quantityAvailable?.value || b.item.min_quantity || 0) - (a.item.quantityDesired?.value || a.item.quantityAvailable?.value || a.item.min_quantity || 0);
+                      if (sortBy === 'price') return (b.item.pricePerUnit?.value || b.item.price || 0) - (a.item.pricePerUnit?.value || a.item.price || 0);
+                      return b.similarity - a.similarity;
+                    })
+                    .map((rec, index) => renderRecommendationCard(rec, index, expandedOffer))}
                 </div>
-              </div>
-              <div className="md:w-1/2">
-                <img src="/images/thumb/farmer.png" alt="Farmer" className="w-full h-64 md:h-full object-cover" />
-              </div>
+              ) : (
+                <p className="text-center text-gray-700">Aucune recommandation disponible.</p>
+              )}
             </div>
-          </NioSection.Content>
-        </NioSection>
+          </div>
+        )}
 
         {selectedRecommendation && (
-          <div className="modal">
-            <div className="modal-content">
-              <h3 className="text-lg font-semibold mb-4">Détails complets de la recommandation ({selectedRecommendation.type === 'farmer_form' ? 'Offre Agriculteur' : 'Offre Externe'})</h3>
-              <div className="space-y-2">
-                <p className="text-sm text-gray-600"><strong>Titre:</strong> {selectedRecommendation.item.title || 'N/A'}</p>
-                <p className="text-sm text-gray-600"><strong>Quantité:</strong> {formatQuantity(selectedRecommendation.item.quantity)}</p>
-                <p className="text-sm text-gray-600"><strong>Prix:</strong> {formatPrice(selectedRecommendation.item.price)}</p>
-                <p className="text-sm text-gray-600"><strong>Pays:</strong> {selectedRecommendation.item.country || 'N/A'}</p>
-                <p className="text-sm text-gray-600"><strong>Similitude:</strong> {(selectedRecommendation.similarity * 100).toFixed(2)}%</p>
-                <p className="text-sm text-gray-600"><strong>Raison:</strong> {selectedRecommendation.reason || 'Aucune raison fournie'}</p>
+          <div className="modal" onClick={() => setSelectedRecommendation(null)}>
+            <div className="modal-content" onClick={e => e.stopPropagation()}>
+              <h2 className="text-2xl font-bold text-brown-800 mb-4">Détails de la Recommandation</h2>
+              <div className="flex space-x-4 mb-4">
+                <button className="px-4 py-2 bg-green-600 text-white rounded-xl hover:bg-green-700">Général</button>
+                <button className="px-4 py-2 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300">Produit</button>
+                <button className="px-4 py-2 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300">Contact</button>
               </div>
-              <NioButton className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700" label="Fermer" onClick={() => setSelectedRecommendation(null)} />
+              <div className="space-y-3 text-sm text-gray-700">
+                <p><strong>Titre:</strong> {selectedRecommendation.item.title || 'N/A'}</p>
+                <p><strong>Entreprise:</strong> {selectedRecommendation.item.company?.name || selectedRecommendation.item.supplier || 'N/A'}</p>
+                <p><strong>Catégorie:</strong> {selectedRecommendation.item.productCategory || selectedRecommendation.item.crop_type || 'N/A'}</p>
+                <p><strong>Produit:</strong> {selectedRecommendation.item.productNeeded || selectedRecommendation.item.productOffered || selectedRecommendation.item.cereal_type || 'N/A'}</p>
+                <p><strong>Quantité:</strong> {formatQuantity(selectedRecommendation.item.quantityDesired || selectedRecommendation.item.quantityAvailable || { value: selectedRecommendation.item.min_quantity, unit: 'tonnes' })}</p>
+                <p><strong>Prix:</strong> {formatPrice(selectedRecommendation.item.pricePerUnit || { value: selectedRecommendation.item.price, currency: selectedRecommendation.item.currency || 'USD' })}</p>
+                <p><strong>Conditions de paiement:</strong> {selectedRecommendation.item.paymentTerms || selectedRecommendation.item.payment_terms || 'N/A'}</p>
+                <p><strong>Destination:</strong> {selectedRecommendation.item.deliveryLocation || selectedRecommendation.item.destination || selectedRecommendation.item.country || 'N/A'}</p>
+                <p><strong>Description:</strong> {selectedRecommendation.item.productDescription || selectedRecommendation.item.productSpecifications || selectedRecommendation.item.product_needed || 'N/A'}</p>
+                <div className="flex items-center">
+                  <p><strong>Email:</strong> {selectedRecommendation.item.company?.contactEmail || selectedRecommendation.item.email || 'N/A'}</p>
+                  <NioButton icon="copy" className="ml-2 text-gray-600 hover:text-green-600" onClick={() => copyToClipboard(selectedRecommendation.item.company?.contactEmail || selectedRecommendation.item.email || '')} />
+                </div>
+                <div className="flex items-center">
+                  <p><strong>Téléphone:</strong> {selectedRecommendation.item.company?.contactPhone || selectedRecommendation.item.phone || 'N/A'}</p>
+                  <NioButton icon="copy" className="ml-2 text-gray-600 hover:text-green-600" onClick={() => copyToClipboard(selectedRecommendation.item.company?.contactPhone || selectedRecommendation.item.phone || '')} />
+                </div>
+                <p><strong>Nom du contact:</strong> {selectedRecommendation.item.contactName || selectedRecommendation.item.contact_name || 'N/A'}</p>
+                <p><strong>Statut:</strong> {selectedRecommendation.item.verifiedStatus || 'En attente'}</p>
+                <p><strong>Similitude:</strong> {(selectedRecommendation.similarity * 100).toFixed(2)}%</p>
+                <p><strong>Raison:</strong> {selectedRecommendation.reason || 'N/A'}</p>
+                <p><strong>Expire le:</strong> {formatDate(selectedRecommendation.item.offerEndDate || selectedRecommendation.item.availabilityEndDate)}</p>
+                <p><strong>Localisation:</strong> <span className="text-gray-500">[Carte à venir]</span></p>
+              </div>
+              <NioButton className="mt-6 px-4 py-2 bg-green-600 text-white rounded-xl hover:bg-green-700" label="Fermer" onClick={() => setSelectedRecommendation(null)} />
             </div>
           </div>
         )}
