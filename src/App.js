@@ -83,6 +83,8 @@ import MyOffers from './pages/inner-pages/blogs/offers';
 import StockManagement from './components/FarmerDashboard/StockManagement/StockManagement';
 import StockDashboard from './components/stockManagement/StockDashboard';
 import Buyers from './pages/inner-pages/blogs/buyers';
+import InternalOffersSection from './pages/landing/InternalOffersSection';
+import LandingPages from './pages/landing/landingpages';
 
 function AppRoutes() {
 
@@ -169,6 +171,12 @@ function AppRoutes() {
       <Route path='/MarketValuesPage' element={<MarketValuesPage />} />
       <Route path='/TradeDataPage' element={<TradeDataPage />} />
       <Route path="/trade-data/:fileId/ai-analysis" element={<AIResponsePage />} />
+
+
+
+      <Route path='/InternalOffersSection' element={<InternalOffersSection />} />
+      <Route path='/LandingPages' element={<LandingPages />} />
+
 
     </Routes>
   );

@@ -15,6 +15,7 @@ import { NioCount, NioMedia,NioIcon, NioButton, NioSection, NioCard, NioSubscrib
 // section content 
 import PreBuiltContent from '../../components/PageComponents/Landing/PreBuiltContent/PreBuiltContent';
 import LottieAnimation from './LottieAnimation';
+import NioSectionSignUp from './NioSectionSignUp';
 
 
 function index() {
@@ -299,105 +300,106 @@ function index() {
     </Col>
   </Row>
 
-  <NioSection.Content>
-    <ul className="nk-schedule d-flex flex-column gap-3 gap-md-5 gap-lg-60 nk-schedule-s1">
-      <li className="nk-schedule-item p-0">
-        <div className="nk-schedule-item-inner">
-          <div className="nk-schedule-symbol">
-            <NioMedia size="lg" rounded variant="primary-soft" className="fw-bold">
-              1
-            </NioMedia>
-          </div>
-          <div className="nk-schedule-content">
-            <Row className="flex-row-reverse justify-content-between">
-              <Col lg={4}>
-                <div className="nk-feature-overview-img text-lg-end mb-n2 mb-lg-n0 mt-lg-n9">
-                  <img src="https://img.freepik.com/free-vector/memory-storage-concept-illustration_114360-2942.jpg?t=st=1744117637~exp=1744121237~hmac=0fc413c85944c7acecd05b46c8155fc88f2d064e8d8c1745f1dff97cc2820d64&w=826" alt="data-background" />
-                </div>
-              </Col>
-              <Col lg={5}>
-                <div className="nk-section-head">
-                  <h3 className="text-capitalize mb-3">Importez vos <span className="text-primary-alt">Données</span></h3>
-                  <p className="fs-20 text-base">
-                    Importez vos historiques de ventes (CSV, Excel) et transformez-les en analyses prédictives pour mieux négocier et planifier.
-                  </p>
-                  <ul className="nk-btn-group pt-3 pt-md-5">
-                    <li>
-                      <NioButton href="#" className="btn-outline-primary-alt" icon="arrow-right after" label="Learn More" />
-                    </li>
-                  </ul>
-                </div>
-              </Col>
-            </Row>
-          </div>
+<NioSection.Content>
+  <ul className="nk-schedule d-flex flex-column gap-3 gap-md-5 gap-lg-60 nk-schedule-s1">
+    <li className="nk-schedule-item p-0">
+      <div className="nk-schedule-item-inner">
+        <div className="nk-schedule-symbol">
+          <NioMedia size="lg" rounded variant="primary-soft" className="fw-bold">
+            1
+          </NioMedia>
         </div>
-      </li>
+        <div className="nk-schedule-content">
+          <Row className="flex-row-reverse justify-content-between">
+            <Col lg={4}>
+              <div className="nk-feature-overview-img text-lg-end mb-n2 mb-lg-n0 mt-lg-n9">
+                <img src="/images/image-removebg-preview (7).png" alt="agriculture-background" style={{ maxWidth: '75%' }} />
+              </div>
+            </Col>
+            <Col lg={5}>
+              <div className="nk-section-head">
+                <h3 className="text-capitalize mb-3">Importez vos <span className="text-primary-alt">Données</span></h3>
+                <p className="fs-20 text-base">
+                  Importez vos historiques de ventes (CSV, Excel) et transformez-les en analyses prédictives pour mieux négocier et planifier.
+                </p>
+                <ul className="nk-btn-group pt-3 pt-md-5">
+                  <li>
+                    <NioButton href="#" className="btn-outline-primary-alt" icon="arrow-right after" label="Learn More" />
+                  </li>
+                </ul>
+              </div>
+            </Col>
+          </Row>
+        </div>
+      </div>
+    </li>
 
-      <li className="nk-schedule-item p-0">
-        <div className="nk-schedule-item-inner">
-          <div className="nk-schedule-symbol">
-            <NioMedia size="lg" rounded variant="warning-soft" className="fw-bold">
-              2
-            </NioMedia>
-          </div>
-          <div className="nk-schedule-content">
-            <Row className="flex-row-reverse justify-content-between">
-              <Col lg={4}>
-                <div className="nk-feature-overview-img text-lg-end mb-4 mb-sm-0 mb-sm-n3 mb-lg-n0 mt-lg-n9">
-                  <img src="https://img.freepik.com/free-vector/sales-representative-abstract-concept_335657-3002.jpg?t=st=1744117670~exp=1744121270~hmac=fa8a526e5f3d52df6e9fcf119423161620e99bd1b205bd2d71799df6b42f0a38&w=826" alt="connection-background" />
-                </div>
-              </Col>
-              <Col lg={5}>
-                <div className="nk-section-head">
-                  <h3 className="text-capitalize mb-3">Connectez Offre et <span className="text-warning">Demande</span></h3>
-                  <p className="fs-20 text-base">
-                    Notre algorithme relie vos récoltes aux besoins des distributeurs locaux, en temps réel, pour vendre au meilleur moment.
-                  </p>
-                  <ul className="nk-btn-group pt-3 pt-md-5">
-                    <li>
-                      <NioButton href="#" className="btn-outline-warning" icon="arrow-right after" label="Learn More" />
-                    </li>
-                  </ul>
-                </div>
-              </Col>
-            </Row>
-          </div>
+    <li className="nk-schedule-item p-0">
+      <div className="nk-schedule-item-inner">
+        <div className="nk-schedule-symbol">
+          <NioMedia size="lg" rounded variant="warning-soft" className="fw-bold">
+            2
+          </NioMedia>
         </div>
-      </li>
+        <div className="nk-schedule-content">
+          <Row className="flex-row-reverse justify-content-between">
+            <Col lg={4}>
+              <div className="nk-feature-overview-img text-lg-end mb-4 mb-sm-0 mb-sm-n3 mb-lg-n0 mt-lg-n9">
+                <img src="/images/image-removebg-preview (8).png" alt="agriculture-background" style={{ maxWidth: '75%' }} />
+              </div>
+            </Col>
+            <Col lg={5}>
+              <div className="nk-section-head">
+                <h3 className="text-capitalize mb-3">Connectez Offre et <span className="text-warning">Demande</span></h3>
+                <p className="fs-20 text-base">
+                  Notre algorithme relie vos récoltes aux besoins des distributeurs locaux, en temps réel, pour vendre au meilleur moment.
+                </p>
+                <ul className="nk-btn-group pt-3 pt-md-5">
+                  <li>
+                    <NioButton href="#" className="btn-outline-warning" icon="arrow-right after" label="Learn More" />
+                  </li>
+                </ul>
+              </div>
+            </Col>
+          </Row>
+        </div>
+      </div>
+    </li>
 
-      <li className="nk-schedule-item p-0">
-        <div className="nk-schedule-item-inner p-0">
-          <div className="nk-schedule-symbol">
-            <NioMedia size="lg" rounded variant="danger-soft" className="fw-bold">
-              3
-            </NioMedia>
-          </div>
-          <div className="nk-schedule-content">
-            <Row className="flex-row-reverse justify-content-between">
-              <Col lg={4}>
-                <div className="nk-feature-overview-img text-lg-end mb-4 mb-sm-0 mb-sm-n3 mb-lg-n0 mt-lg-n9">
-                  <img src="https://img.freepik.com/free-vector/paper-cash-bundle-with-red-arrow-money-exchange_107791-15900.jpg?t=st=1744117797~exp=1744121397~hmac=8406f16f5c08bbcd4a3d987b756aa2ff120726d483fe03a290111670ef7bc5d4&w=996" alt="agriculture-background" />
-                </div>
-              </Col>
-              <Col lg={5}>
-                <div className="nk-section-head">
-                  <h3 className="text-capitalize mb-3">Boostez Votre <span className="text-danger">Agriculture</span></h3>
-                  <p className="fs-20 text-base">
-                    Optimisez vos récoltes, réduisez les pertes et maximisez vos profits grâce à une plateforme pensée pour l’agriculture de demain.
-                  </p>
-                  <ul className="nk-btn-group pt-3 pt-md-5">
-                    <li>
-                      <NioButton href="#" className="btn-outline-danger" icon="arrow-right after" label="Learn More" />
-                    </li>
-                  </ul>
-                </div>
-              </Col>
-            </Row>
-          </div>
+    <li className="nk-schedule-item p-0">
+      <div className="nk-schedule-item-inner p-0">
+        <div className="nk-schedule-symbol">
+          <NioMedia size="lg" rounded variant="danger-soft" className="fw-bold">
+            3
+          </NioMedia>
         </div>
-      </li>
-    </ul>
-  </NioSection.Content>
+        <div className="nk-schedule-content">
+          <Row className="flex-row-reverse justify-content-between">
+            <Col lg={4}>
+              <div className="nk-feature-overview-img text-lg-end mb-4 mb-sm-0 mb-sm-n3 mb-lg-n0 mt-30">
+                <img src="/images/image-removebg-preview (9).png" alt="agriculture-background" style={{ maxWidth: '75%' }} />
+              </div>
+            </Col>
+            <Col lg={5}>
+              <div className="nk-section-head">
+                <h3 className="text-capitalize mb-3">Boostez Votre <span className="text-danger">Agriculture</span></h3>
+                <p className="fs-20 text-base">
+                  Optimisez vos récoltes, réduisez les pertes et maximisez vos profits grâce à une plateforme pensée pour l’agriculture de demain.
+                </p>
+                <ul className="nk-btn-group pt-3 pt-md-5">
+                  <li>
+                    <NioButton href="#" className="btn-outline-danger" icon="arrow-right after" label="Learn More" />
+                  </li>
+                </ul>
+              </div>
+            </Col>
+          </Row>
+        </div>
+      </div>
+    </li>
+  </ul>
+</NioSection.Content>
+
 </NioSection>
 
 
@@ -490,260 +492,6 @@ function index() {
 <LottieAnimation />
 
 
-
-<NioSection className="nk-section-roles py-7 py-lg-120">
-  <NioSection.Head alignX="center">
-    <h2>HarvestFlow <span className="text-indigo">S’Adapte à Vous</span></h2>
-    <p className="fs-20 mb-0">Que vous cultiviez, transportiez ou distribuiez, notre plateforme vous connecte au cœur de l’agriculture moderne.</p>
-  </NioSection.Head>
-  <NioSection.Content>
-    <Row className="g-5 align-items-stretch">
-      {/* Agriculteur Card - Spans 6 Columns */}
-      <Col md={12} lg={6}>
-        <div
-          className="farmer-hub"
-          style={{
-            backgroundImage: 'url(https://www.synox.io/wp-content/uploads/2022/04/smart-farming-transition-agricole.jpg)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            borderRadius: '20px',
-            padding: '2.5rem',
-            position: 'relative',
-            overflow: 'hidden',
-            height: '100%',
-            boxShadow: '0 10px 25px rgba(102, 51, 153, 0.1)',
-            transition: 'transform 0.4s ease',
-          }}
-          onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
-          onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
-        >
-          {/* Innovative Touch: Dark Overlay with Gradient */}
-          <div
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              background: 'linear-gradient(145deg, rgba(0, 0, 0, 0.5), rgba(102, 51, 153, 0.3))',
-              zIndex: 0,
-            }}
-          />
-          {/* Floating Icon Orbit */}
-          <div
-            style={{
-              position: 'absolute',
-              top: '20px',
-              left: '20px',
-              width: '80px',
-              height: '80px',
-              animation: 'orbit 6s infinite linear',
-              zIndex: 1,
-            }}
-          >
-          </div>
-          <h3
-            className="text-white fw-bold"
-            style={{ fontSize: '2rem', marginBottom: '1rem', position: 'relative', zIndex: 1 }}
-          >
-            Agriculteur
-          </h3>
-          <p
-            className="fs-18 text-white"
-            style={{ maxWidth: '80%', marginBottom: '2rem', position: 'relative', zIndex: 1 }}
-          >
-            Analysez, produisez, vendez mieux. Transformez vos données en stratégies gagnantes.
-          </p>
-          <Link
-            to="/farmers"
-            className="btn-indigo"
-            style={{
-              padding: '0.75rem 1.5rem',
-              borderRadius: '50px',
-              fontWeight: 'bold',
-              position: 'relative',
-              zIndex: 1,
-              transition: 'background-color 0.3s ease',
-              color: '#fff',
-            }}
-            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#4b2e83'}
-            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#663399'}
-          >
-            Votre Espace
-          </Link>
-          {/* Subtle Background Wave */}
-          <div
-            style={{
-              position: 'absolute',
-              bottom: '-50px',
-              right: '-50px',
-              width: '200px',
-              height: '200px',
-              background: 'rgba(255, 255, 255, 0.1)',
-              borderRadius: '50%',
-              animation: 'wave 8s infinite ease-in-out',
-              zIndex: 0,
-            }}
-          />
-        </div>
-      </Col>
-
-      {/* Right Column: Transporteur and Distributeur Stacked */}
-      <Col md={12} lg={6}>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '2rem',
-            height: '100%',
-          }}
-        >
-          {/* Transporteur Card */}
-          <div
-            className="role-stack"
-            style={{
-              backgroundImage: 'url(https://media.licdn.com/dms/image/v2/D4D12AQEMx0aJh191gw/article-cover_image-shrink_720_1280/article-cover_image-shrink_720_1280/0/1716489337568?e=2147483647&v=beta&t=gH3bBg6OYxLvzBIGbOtgBWWJh5lwegJJKghDX5KmtrI)',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              borderRadius: '15px 50px 15px 15px',
-              padding: '2rem',
-              flex: '1',
-              boxShadow: '0 8px 20px rgba(0, 0, 0, 0.05)',
-              position: 'relative',
-              overflow: 'hidden',
-              transition: 'all 0.3s ease',
-            }}
-            onMouseEnter={(e) => e.currentTarget.style.transform = 'translateX(10px)'}
-            onMouseLeave={(e) => e.currentTarget.style.transform = 'translateX(0)'}
-          >
-            {/* Innovative Touch: Frosted Glass Effect */}
-            <div
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                background: 'rgba(245, 250, 255, 0.7)',
-                zIndex: 0,
-              }}
-            />
-            <div
-              style={{
-                position: 'absolute',
-                top: '15px',
-                right: '15px',
-                width: '50px',
-                height: '50px',
-                animation: 'spin 4s infinite linear',
-                zIndex: 1,
-              }}
-            >
-            </div>
-            <h4
-              className="text-cyan-600 fw-semibold"
-              style={{ marginBottom: '0.75rem', position: 'relative', zIndex: 1 }}
-            >
-              Transporteur
-            </h4>
-            <p
-              className="fs-16 text-gray-800"
-              style={{ position: 'relative', zIndex: 1 }}
-            >
-              Livrez efficacement, gagnez du temps.
-            </p>
-            <Link
-              to="/transporters"
-              className="btn-outline-cyan"
-              style={{
-                marginTop: '1rem',
-                padding: '0.5rem 1rem',
-                borderRadius: '25px',
-                display: 'inline-block',
-                position: 'relative',
-                zIndex: 1,
-              }}
-            >
-              Planifiez
-            </Link>
-          </div>
-
-          {/* Distributeur Card */}
-          <div
-            className="role-stack"
-            style={{
-              backgroundImage: 'url(https://www.shutterstock.com/image-photo/outside-logistics-distributions-warehouse-diverse-260nw-2042952425.jpg)',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              borderRadius: '15px 15px 50px 15px',
-              padding: '2rem',
-              flex: '1',
-              boxShadow: '0 8px 20px rgba(0, 0, 0, 0.05)',
-              position: 'relative',
-              overflow: 'hidden',
-              transition: 'all 0.3s ease',
-            }}
-            onMouseEnter={(e) => e.currentTarget.style.transform = 'translateX(10px)'}
-            onMouseLeave={(e) => e.currentTarget.style.transform = 'translateX(0)'}
-          >
-            {/* Innovative Touch: Diagonal Overlay */}
-            <div
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                background: 'linear-gradient(45deg, rgba(0, 0, 0, 0.6), rgba(255, 255, 255, 0.2))',
-                zIndex: 0,
-              }}
-            />
-            <div
-              style={{
-                position: 'absolute',
-                top: '15px',
-                right: '15px',
-                width: '50px',
-                height: '50px',
-                animation: 'bounce 3s infinite ease',
-                zIndex: 1,
-              }}
-            >
-            </div>
-            <h4
-              className="text-white fw-semibold"
-              style={{ marginBottom: '0.75rem', position: 'relative', zIndex: 1 }}
-            >
-              Distributeur
-            </h4>
-            <p
-              className="fs-16 text-white"
-              style={{ position: 'relative', zIndex: 1 }}
-            >
-              Achetez au bon prix, au bon moment.
-            </p>
-            <Link
-              to="/distributors"
-              className="btn-outline-purple"
-              style={{
-                marginTop: '1rem',
-                padding: '0.5rem 1rem',
-                borderRadius: '25px',
-                display: 'inline-block',
-                position: 'relative',
-                zIndex: 1,
-                color: '#fff',
-                borderColor: '#fff',
-              }}
-            >
-              Explorez
-            </Link>
-          </div>
-        </div>
-      </Col>
-    </Row>
-  </NioSection.Content>
-</NioSection>
 
 
 
@@ -1380,98 +1128,12 @@ At HarvestFlow, we value your time and inbox space. Rest assured, our communicat
       
       {/* Demos Section End*/}
 
-      {/* Pre-Built Section Start  */}
-      <NioSection masks={["green-1 right center"]}>
-        <NioSection.Head alignX="center">
-          <span className="d-inline-block fs-16 text-uppercase text-green fw-semibold mb-2">Press &amp; Media</span>
-          <h2>NioLand In The News</h2>
-          <p className="fs-20">Discover the latest news and updates about NioLand, featured in top publications and media outlets.</p>
-        </NioSection.Head>
-        <NioSection.Content>
-          <Row className="gy-5">
-            <Col lg={6}>
-              <NioCard className="card-gutter-lg bg-green-300 is-theme h-100" >
-                <NioCard.Body className="p-5 p-md-7">
-                  <div className="card-content h-100 d-flex flex-column justify-content-between">
-                    <div className="card-image mb-3">
-                      <Link to="#">
-                        <img src="images/brands/a-light.png" alt="brand" className="h-24px" />
-                      </Link>
-                    </div>
-                    <h3 className="card-title text-capitalize"> NioLand raises $84M in Series C funding </h3>
-                    <p> NioLand, a rapidly growing technology company, recently announced the successful completion of its Series C funding round, securing a substantial investment of $84 million. <br /><br /> The funding will be utilized to further enhance and expand NioLand's products and services, solidifying its position as a market leader in the industry. The significant investment highlights the confidence and support from investors in NioLand's vision and potential for continued success. </p>
-                    <div>
-                      <NioButton
-                        label="Read More"
-                        href="/blog-details"
-                        className="btn-link"
-                        icon="arrow-right after"
-                      />
-                    </div>
-                  </div>
-                </NioCard.Body>
-              </NioCard>
-            </Col>
-            <Col lg={6}>
-              <Row className="gy-5">
-                <Col xs={12}>
-                  <NioCard className="card-gutter-md bg-indigo-alt is-theme" >
-                    <NioCard.Body className="p-5">
-                      <div className="card-content">
-                        <div className="card-image mb-3 mb-md-5 brand">
-                          <Link to="#">
-                            <img src="images/brands/b.png" alt="brand" className="h-24px" />
-                          </Link>
-                        </div>
-                        <h4 className="card-title text-capitalize mb-3 mb-md-5">
-                          <Link to="/blog-details">NioLand claims to be the #1 player in the analytics industry</Link>
-                        </h4>
-                        <div>
-                          <NioButton
-                            label="Read More"
-                            href="/blog-details"
-                            className="btn-link"
-                            icon="arrow-right after"
-                          />
-                        </div>
-                      </div>
-                    </NioCard.Body>
-                  </NioCard>
-                </Col>
-                <Col xs={12} >
-                  <NioCard className="card-gutter-md bg-dark is-theme">
-                    <NioCard.Body className="p-5">
-                      <div className="card-content">
-                        <div className="card-image mb-3 mb-md-5 brand">
-                          <Link to="#">
-                            <img src="images/brands/c.png" alt="brand" className="h-24px" />
-                          </Link>
-                        </div>
-                        <h4 className="card-title text-capitalize mb-3 mb-md-5">
-                          <Link to="/blog-details">NioLand CEO steps-back, new CEO comes in September after the board decisions</Link>
-                        </h4>
-                        <div>
-                          <NioButton
-                            label="Read More"
-                            href="/blog-details"
-                            className="btn-link"
-                            icon="arrow-right after"
-                          />
-                        </div>
-                      </div>
-                    </NioCard.Body>
-                  </NioCard>
-                </Col>
-              </Row>
-            </Col>
-          </Row>
-        </NioSection.Content>
-      </NioSection>
+     
 
       {/* Features Section Start  */}
       
       {/* Features Section End  */}
-
+<NioSectionSignUp/>
     </AppLayout >
   )
 }

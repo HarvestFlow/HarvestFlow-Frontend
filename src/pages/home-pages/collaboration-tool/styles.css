@@ -1,0 +1,226 @@
+/* Gradient background with subtle agricultural theme */
+.bg-agri-gradient {
+    background: linear-gradient(135deg, #e8f5e9 0%, #d4e4d2 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  /* Subtle leaf pattern overlay */
+  .bg-agri-gradient::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.05"><path d="M50 10 C60 20, 70 40, 50 60 C30 40, 40 20, 50 10 Z" fill="%2328a745"/></svg>') repeat;
+    opacity: 0.05;
+  }
+  
+  /* Carousel styling */
+  .nk-tool-carousel {
+    padding: 0 2rem;
+  }
+  
+  .nk-tool-carousel .slick-slide {
+    padding: 0 1rem;
+    transition: transform 0.3s ease;
+  }
+  
+  .nk-tool-carousel .slick-slide:not(.slick-center) {
+    transform: scale(0.9);
+    opacity: 0.7;
+  }
+  
+  .nk-tool-carousel .slick-center {
+    transform: scale(1.1);
+    z-index: 10;
+  }
+  
+  /* Card styling for Management Tools */
+  .tool-card {
+    border-radius: 16px;
+    background: #fff;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    min-height: 350px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Description wrapper for Management Tools */
+  .description-wrapper {
+    background: #fff;
+    width: 100%;
+    text-align: center;
+  }
+  
+  /* Card styling for Highlighted Offer */
+  .offer-card {
+    border-radius: 12px;
+    background: #fff;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .offer-card .w-full {
+    width: 100%;
+  }
+  
+  .offer-card .h-48 {
+    height: 12rem; /* 48 * 0.25rem */
+  }
+  
+  .offer-card .object-cover {
+    object-fit: cover;
+  }
+  
+  .offer-card .card-img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+  
+  .offer-card .card-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .offer-card .nk-list-meta {
+    margin-bottom: 1rem;
+    color: #555;
+  }
+  
+  .offer-card .nk-list-meta li {
+    margin-bottom: 0.5rem;
+  }
+  
+  .offer-card .badge {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.6rem;
+  }
+  
+  /* Gradient overlay for images */
+  .gradient-overlay {
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+  }
+  
+  /* Tooltip styling */
+  .tooltip {
+    position: relative;
+  }
+  
+  .tooltip:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 20;
+  }
+  
+  /* Button styling */
+  .btn-green-600,
+  .btn-outline-green-600 {
+    border-radius: 8px;
+    padding: 10px 20px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .btn-green-600 {
+    background-color: #28a745;
+    color: #fff;
+  }
+  
+  .btn-green-600:hover {
+    background-color: #2e7d32;
+    transform: scale(1.05);
+  }
+  
+  .btn-outline-green-600 {
+    border: 2px solid #28a745;
+    color: #28a745;
+  }
+  
+  .btn-outline-green-600:hover {
+    background-color: #28a745;
+    color: #fff;
+    transform: scale(1.05);
+  }
+  
+  /* Icon wrapper */
+  .icon-wrapper {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .icon-xl {
+    font-size: 2.5rem;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+  }
+  
+  /* Slick dots and arrows */
+  .slick-dots li button:before {
+    color: #28a745;
+    font-size: 12px;
+  }
+  
+  .slick-prev,
+  .slick-next {
+    z-index: 20;
+    width: 40px;
+    height: 40px;
+    background: #28a745;
+    border-radius: 50%;
+  }
+  
+  .slick-prev:before,
+  .slick-next:before {
+    color: #fff;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .nk-product-section .nk-section-head h2,
+    .nk-section-offer .nk-section-head h2 {
+      font-size: 1.75rem;
+    }
+  
+    .tool-card,
+    .offer-card {
+      min-height: 300px;
+      padding: 1rem;
+    }
+  
+    .offer-card .card-img {
+      height: 150px;
+    }
+  
+    .icon-xl {
+      font-size: 2rem;
+      width: 60px;
+      height: 60px;
+    }
+  
+    .nk-tool-carousel {
+      padding: 0 1rem;
+    }
+  
+    .nk-tool-carousel .slick-slide {
+      padding: 0 0.5rem;
+    }
+  }

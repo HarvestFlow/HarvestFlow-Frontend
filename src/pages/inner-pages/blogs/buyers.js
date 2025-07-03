@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Col, Row, Modal, Button } from 'react-bootstrap';
 import axios from 'axios';
 import debounce from 'lodash/debounce';
+import { useNavigate } from 'react-router-dom'; // For redirecting to sign-in page
 
 // layout
 import AppLayout from '../../../layouts/AppLayout/AppLayout';
@@ -56,6 +57,8 @@ function Buyers() {
   const [userProfile, setUserProfile] = useState({ name: '', email: '', company: '' });
   const [loggedInUserId, setLoggedInUserId] = useState(null);
   const [userRole, setUserRole] = useState(null);
+  const [showSignInPrompt, setShowSignInPrompt] = useState(false); // New state for sign-in prompt modal
+  const navigate = useNavigate(); // For navigation to sign-in page
 
   // Fetch logged-in user profile
   const fetchLoggedInUser = async () => {
@@ -75,6 +78,7 @@ function Buyers() {
     } catch (error) {
       console.error('Error fetching user profile:', error.response || error.message);
       setContactError('Failed to fetch user profile. Please log in again.');
+      setLoggedInUserId(null); // Ensure loggedInUserId is null if fetch fails
     }
   };
 
@@ -103,7 +107,6 @@ function Buyers() {
         return;
       }
       try {
-        // Mock API call for suggestions (replace with real endpoint if available)
         const response = await axios.get(`${API_URL}/farmerform/search-suggestions`, {
           params: { query },
         });
@@ -134,6 +137,10 @@ function Buyers() {
 
   // Handle contact buyer
   const handleContactBuyer = async () => {
+    if (!loggedInUserId) {
+      setShowSignInPrompt(true);
+      return;
+    }
     if (!userProfile.email) {
       setContactError('User email not available. Please log in again.');
       return;
@@ -224,6 +231,10 @@ function Buyers() {
 
   // Handle modals
   const handleShowBuyerFormModal = (form) => {
+    if (!loggedInUserId) {
+      setShowSignInPrompt(true);
+      return;
+    }
     setSelectedBuyerForm(form);
     setShowBuyerFormModal(true);
     setContactError('');
@@ -238,6 +249,10 @@ function Buyers() {
   };
 
   const handleShowWheatBuyerModal = (buyer) => {
+    if (!loggedInUserId) {
+      setShowSignInPrompt(true);
+      return;
+    }
     setSelectedWheatBuyer(buyer);
     setShowWheatBuyerModal(true);
   };
@@ -322,6 +337,12 @@ function Buyers() {
       </div>
     </Col>
   );
+
+  // Handle sign-in redirect
+  const handleSignInRedirect = () => {
+    navigate('/signin'); // Redirect to sign-in page
+    setShowSignInPrompt(false);
+  };
 
   return (
     <AppLayout title="Buyer Offers" rootClass="layout-1">
@@ -417,9 +438,15 @@ function Buyers() {
             background-color: #006666;
             transform: scale(1.05);
           }
+          .btn-disabled {
+            background-color: #b0b0b0;
+            cursor: not-allowed;
+            transform: none;
+          }
           .card-tilt {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             transform-style: preserve-3d;
+            position: relative;
           }
           .card-tilt:hover {
             transform: perspective(1000px) rotateX(2deg) rotateY(2deg);
@@ -435,6 +462,46 @@ function Buyers() {
             text-decoration: underline;
             color: #008080;
           }
+          .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            border-radius: 12px;
+            backdrop-filter: blur(3px);
+          }
+          .overlay-text {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.5s ease-in;
+          }
+          .tooltip {
+            position: absolute;
+            background: #333;
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            z-index: 20;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+          }
+          .tooltip-container:hover .tooltip {
+            opacity: 1;
+          }
         `}
       </style>
 
@@ -448,6 +515,11 @@ function Buyers() {
               </h1>
               <p className="text-lg text-gray-600 mb-6 max-w-2xl mx-auto">
                 Discover buyer offers and connect with global agricultural buyers seeking premium products.
+                {!loggedInUserId && (
+                  <span className="block mt-2 text-sm text-teal-600">
+                    Sign in to unlock full access to offers and interactions.
+                  </span>
+                )}
               </p>
             </Col>
           </Row>
@@ -470,8 +542,6 @@ function Buyers() {
         {isFilterOpen && (
           <div className="p-4">
             <h4 className="text-lg font-semibold text-teal-800 mb-3">Filters</h4>
-
-            {/* Search Input with Suggestions */}
             <div className="relative mb-4">
               <NioField.Input
                 icon="search before z-1"
@@ -479,8 +549,9 @@ function Buyers() {
                 value={searchQuery}
                 onChange={handleSearchChange}
                 className="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-teal-500"
+                disabled={!loggedInUserId} // Disable search for non-logged-in users
               />
-              {searchSuggestions.length > 0 && (
+              {searchSuggestions.length > 0 && loggedInUserId && (
                 <div className="absolute top-full left-0 w-full bg-white border border-gray-200 rounded-lg mt-1 shadow-lg z-20">
                   {searchSuggestions.map((suggestion, index) => (
                     <div
@@ -496,10 +567,11 @@ function Buyers() {
                   ))}
                 </div>
               )}
+              {!loggedInUserId && (
+                <div className="text-xs text-red-500 mt-1">Sign in to use search.</div>
+              )}
             </div>
-
-            {/* Selected Filter Chips */}
-            {selectedFilters.length > 0 && (
+            {selectedFilters.length > 0 && loggedInUserId && (
               <div className="flex flex-wrap gap-2 mb-4">
                 {selectedFilters.map((filter) => (
                   <div key={filter} className="filter-chip">
@@ -509,8 +581,6 @@ function Buyers() {
                 ))}
               </div>
             )}
-
-            {/* Category Filter */}
             <div className="mb-4">
               <h5 className="text-sm font-medium text-gray-600 mb-2">Category</h5>
               <div className="flex flex-wrap gap-2">
@@ -523,26 +593,34 @@ function Buyers() {
                         : 'bg-gray-100 text-gray-700 hover:bg-teal-100'
                     }`}
                     onClick={() => {
-                      setFilterCategory(category);
-                      toggleFilter(category);
+                      if (loggedInUserId) {
+                        setFilterCategory(category);
+                        toggleFilter(category);
+                      } else {
+                        setShowSignInPrompt(true);
+                      }
                     }}
+                    disabled={!loggedInUserId}
                   >
                     {category}
                   </button>
                 ))}
               </div>
             </div>
-
-            {/* Country Filter */}
             <div className="mb-4">
               <h5 className="text-sm font-medium text-gray-600 mb-2">Country</h5>
               <select
                 value={countryFilter}
                 onChange={(e) => {
-                  setCountryFilter(e.target.value);
-                  toggleFilter(e.target.value);
+                  if (loggedInUserId) {
+                    setCountryFilter(e.target.value);
+                    toggleFilter(e.target.value);
+                  } else {
+                    setShowSignInPrompt(true);
+                  }
                 }}
                 className="w-full p-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-teal-500"
+                disabled={!loggedInUserId}
               >
                 <option value="All">All Countries</option>
                 {Object.values(getCountryName).map((country) => (
@@ -552,8 +630,6 @@ function Buyers() {
                 ))}
               </select>
             </div>
-
-            {/* Price Range Filter */}
             <div className="mb-4">
               <h5 className="text-sm font-medium text-gray-600 mb-2">Price Range ($)</h5>
               <div className="price-range">
@@ -562,16 +638,30 @@ function Buyers() {
                   min="0"
                   max="1000"
                   value={priceRange[0]}
-                  onChange={(e) => setPriceRange([+e.target.value, priceRange[1]])}
+                  onChange={(e) => {
+                    if (loggedInUserId) {
+                      setPriceRange([+e.target.value, priceRange[1]]);
+                    } else {
+                      setShowSignInPrompt(true);
+                    }
+                  }}
                   className="mb-2"
+                  disabled={!loggedInUserId}
                 />
                 <input
                   type="range"
                   min="0"
                   max="1000"
                   value={priceRange[1]}
-                  onChange={(e) => setPriceRange([priceRange[0], +e.target.value])}
+                  onChange={(e) => {
+                    if (loggedInUserId) {
+                      setPriceRange([priceRange[0], +e.target.value]);
+                    } else {
+                      setShowSignInPrompt(true);
+                    }
+                  }}
                   className="mb-2"
+                  disabled={!loggedInUserId}
                 />
                 <div className="flex justify-between text-xs text-gray-600">
                   <span>${priceRange[0]}</span>
@@ -579,35 +669,41 @@ function Buyers() {
                 </div>
               </div>
             </div>
-
-            {/* Show Active Toggle */}
             <div className="mb-4">
               <label className="flex items-center text-sm text-gray-600">
                 <input
                   type="checkbox"
                   checked={showActive}
                   onChange={(e) => {
-                    setShowActive(e.target.checked);
-                    toggleFilter('Show Active');
+                    if (loggedInUserId) {
+                      setShowActive(e.target.checked);
+                      toggleFilter('Show Active');
+                    } else {
+                      setShowSignInPrompt(true);
+                    }
                   }}
                   className="mr-2"
+                  disabled={!loggedInUserId}
                 />
                 Show active offers
               </label>
             </div>
-
-            {/* Clear Filters Button */}
             <NioButton
               className="btn-buyer w-full mt-4"
               label="Clear Filters"
               onClick={() => {
-                setSearchQuery('');
-                setFilterCategory('All');
-                setShowActive(true);
-                setPriceRange([0, 1000]);
-                setCountryFilter('All');
-                setSelectedFilters([]);
+                if (loggedInUserId) {
+                  setSearchQuery('');
+                  setFilterCategory('All');
+                  setShowActive(true);
+                  setPriceRange([0, 1000]);
+                  setCountryFilter('All');
+                  setSelectedFilters([]);
+                } else {
+                  setShowSignInPrompt(true);
+                }
               }}
+              disabled={!loggedInUserId}
             />
           </div>
         )}
@@ -696,12 +792,18 @@ function Buyers() {
                       <p className="text-xs text-gray-500 mb-4 flex-grow">{truncateText(form.productSpecifications, 50)}</p>
                       <div className="flex justify-between items-center">
                         <NioMedia size="sm" rounded img={USER_AVATAR_URL} />
-                        <NioButton
-                          className="btn-buyer text-sm px-4 py-2"
-                          label="Details"
-                          onClick={() => handleShowBuyerFormModal(form)}
-                          icon="arrow-right after"
-                        />
+                        <div className="tooltip-container relative">
+                          <NioButton
+                            className={`text-sm px-4 py-2 ${loggedInUserId ? 'btn-buyer' : 'btn-disabled'}`}
+                            label="Details"
+                            onClick={() => handleShowBuyerFormModal(form)}
+                            icon="arrow-right after"
+                            disabled={!loggedInUserId}
+                          />
+                          {!loggedInUserId && (
+                            <span className="tooltip">Sign in to view details</span>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </NioCard>
@@ -781,7 +883,7 @@ function Buyers() {
             <Row className="gy-4">
               {paginatedWheatBuyers.map((buyer) => (
                 <Col xs={12} sm={6} lg={4} key={buyer.buyer_id}>
-                  <NioCard className="border-0 rounded-xl bg-white card-tilt overflow-hidden animate__animated animate__fadeInUp">
+                  <NioCard className="border-0 rounded-xl bg-white card-tilt overflow-hidden animate__animated animate__fadeInUp relative">
                     <div className="relative">
                       <img
                         src={DEFAULT_IMAGE_URL}
@@ -803,6 +905,19 @@ function Buyers() {
                       <div className="absolute bottom-0 left-0 right-0 gradient-overlay p-4">
                         <h5 className="text-white text-lg font-bold">{truncateText(buyer.title, 20)}</h5>
                       </div>
+                      {!loggedInUserId && (
+                        <div className="overlay" onClick={() => setShowSignInPrompt(true)}>
+                          <div className="overlay-text">
+                            <h5 className="text-lg font-semibold text-teal-800">Sign In Required</h5>
+                            <p className="text-sm text-gray-600">Please sign in to view this offer.</p>
+                            <NioButton
+                              className="btn-buyer mt-2"
+                              label="Sign In"
+                              onClick={handleSignInRedirect}
+                            />
+                          </div>
+                        </div>
+                      )}
                     </div>
                     <div className="p-4 flex flex-col flex-grow">
                       <div className="mb-4">
@@ -830,12 +945,18 @@ function Buyers() {
                       <p className="text-xs text-gray-500 mb-4 flex-grow">{truncateText(buyer.product_description, 50)}</p>
                       <div className="flex justify-between items-center">
                         <NioMedia size="sm" rounded img={USER_AVATAR_URL} />
-                        <NioButton
-                          className="btn-buyer text-sm px-4 py-2"
-                          label="Details"
-                          onClick={() => handleShowWheatBuyerModal(buyer)}
-                          icon="arrow-right after"
-                        />
+                        <div className="tooltip-container relative">
+                          <NioButton
+                            className={`text-sm px-4 py-2 ${loggedInUserId ? 'btn-buyer' : 'btn-disabled'}`}
+                            label="Details"
+                            onClick={() => handleShowWheatBuyerModal(buyer)}
+                            icon="arrow-right after"
+                            disabled={!loggedInUserId}
+                          />
+                          {!loggedInUserId && (
+                            <span className="tooltip">Sign in to view details</span>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </NioCard>
@@ -949,6 +1070,7 @@ function Buyers() {
                     className="btn-buyer w-full"
                     label="Send Interest"
                     onClick={handleContactBuyer}
+                    disabled={!loggedInUserId}
                   />
                 </div>
               </Col>
@@ -1023,6 +1145,7 @@ function Buyers() {
             className="btn-buyer"
             label="Create Similar Offer"
             icon="plus before"
+            disabled={!loggedInUserId}
           />
         </Modal.Footer>
       </Modal>
@@ -1059,7 +1182,14 @@ function Buyers() {
                   <NioButton
                     className="btn-buyer w-full"
                     label="Contact Buyer"
-                    onClick={() => alert('Contact feature coming soon!')}
+                    onClick={() => {
+                      if (loggedInUserId) {
+                        alert('Contact feature coming soon!');
+                      } else {
+                        setShowSignInPrompt(true);
+                      }
+                    }}
+                    disabled={!loggedInUserId}
                   />
                 </div>
               </Col>
@@ -1103,6 +1233,28 @@ function Buyers() {
         </Modal.Body>
         <Modal.Footer className="border-0">
           <Button variant="outline-secondary" onClick={handleCloseWheatBuyerModal}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Sign-In Prompt Modal */}
+      <Modal show={showSignInPrompt} onHide={() => setShowSignInPrompt(false)} centered>
+        <Modal.Header closeButton className="border-0">
+          <Modal.Title className="text-xl font-bold text-teal-800">Sign In Required</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="p-4 text-center">
+          <p className="text-lg text-gray-600 mb-4">
+            Please sign in to access this feature and interact with buyer offers.
+          </p>
+          <NioButton
+            className="btn-buyer"
+            label="Sign In"
+            onClick={handleSignInRedirect}
+          />
+        </Modal.Body>
+        <Modal.Footer className="border-0">
+          <Button variant="outline-secondary" onClick={() => setShowSignInPrompt(false)}>
             Close
           </Button>
         </Modal.Footer>
