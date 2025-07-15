@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Col, Row, Modal, Button } from 'react-bootstrap';
 import axios from 'axios';
 import debounce from 'lodash/debounce';
-import { useNavigate } from 'react-router-dom'; // For redirecting to sign-in page
+import { useNavigate } from 'react-router-dom';
 
 // layout
 import AppLayout from '../../../layouts/AppLayout/AppLayout';
@@ -57,10 +57,13 @@ function Buyers() {
   const [userProfile, setUserProfile] = useState({ name: '', email: '', company: '' });
   const [loggedInUserId, setLoggedInUserId] = useState(null);
   const [userRole, setUserRole] = useState(null);
-  const [showSignInPrompt, setShowSignInPrompt] = useState(false); // New state for sign-in prompt modal
-  const navigate = useNavigate(); // For navigation to sign-in page
+  const [showSignInPrompt, setShowSignInPrompt] = useState(false);
+  const [contactAttemptsLeft, setContactAttemptsLeft] = useState(3);
+  const [isContactLoading, setIsContactLoading] = useState(false);
+  const [isFetchingAttempts, setIsFetchingAttempts] = useState(false);
+  const navigate = useNavigate();
 
-  // Fetch logged-in user profile
+  // Fetch logged-in user profile and contact attempts
   const fetchLoggedInUser = async () => {
     try {
       const response = await axios.get(`${API_URL}/user/getProfile`, {
@@ -75,14 +78,28 @@ function Buyers() {
         email: response.data.email || '',
         company: response.data.company || 'N/A',
       });
+
+      // Fetch contact attempts
+      if (response.data._id) {
+        setIsFetchingAttempts(true);
+        const attemptsResponse = await axios.get(`${API_URL}/user/contact-attempts`, {
+          params: { userId: response.data._id }, // Pass userId as query parameter
+          withCredentials: true,
+        });
+        setContactAttemptsLeft(attemptsResponse.data.attemptsLeft);
+      }
     } catch (error) {
-      console.error('Error fetching user profile:', error.response || error.message);
+      console.error('Error fetching user data:', error.response || error.message);
       setContactError('Failed to fetch user profile. Please log in again.');
-      setLoggedInUserId(null); // Ensure loggedInUserId is null if fetch fails
+      setLoggedInUserId(null);
+      setUserProfile({ name: 'Anonymous', email: 'N/A', company: 'N/A' });
+      setContactAttemptsLeft(0);
+    } finally {
+      setIsFetchingAttempts(false);
     }
   };
 
-  // Fetch user profile on mount
+  // Fetch user profile and contact attempts on mount
   useEffect(() => {
     fetchLoggedInUser();
   }, []);
@@ -109,6 +126,7 @@ function Buyers() {
       try {
         const response = await axios.get(`${API_URL}/farmerform/search-suggestions`, {
           params: { query },
+          withCredentials: true,
         });
         setSearchSuggestions(response.data.suggestions || []);
       } catch (error) {
@@ -121,6 +139,10 @@ function Buyers() {
 
   // Handle search input change
   const handleSearchChange = (e) => {
+    if (!loggedInUserId) {
+      setShowSignInPrompt(true);
+      return;
+    }
     const query = e.target.value;
     setSearchQuery(query);
     debouncedSearch(query);
@@ -128,6 +150,10 @@ function Buyers() {
 
   // Handle filter chip addition/removal
   const toggleFilter = (filter) => {
+    if (!loggedInUserId) {
+      setShowSignInPrompt(true);
+      return;
+    }
     if (selectedFilters.includes(filter)) {
       setSelectedFilters(selectedFilters.filter((f) => f !== filter));
     } else {
@@ -142,14 +168,21 @@ function Buyers() {
       return;
     }
     if (!userProfile.email) {
-      setContactError('User email not available. Please log in again.');
+      setContactError('User email not available. Please complete your profile.');
       return;
     }
     if (!selectedBuyerForm?.company?.contactEmail) {
       setContactError('No contact email available for this buyer.');
       return;
     }
+    if (contactAttemptsLeft <= 0) {
+      setContactError('You have reached the daily limit of 3 contact attempts.');
+      return;
+    }
 
+    setIsContactLoading(true);
+    setContactError('');
+    setContactSuccess('');
     try {
       const response = await axios.post(
         `${API_URL}/user/api/contact-offer`,
@@ -159,21 +192,23 @@ function Buyers() {
           company: userProfile.company,
           toEmail: selectedBuyerForm.company.contactEmail,
           offerTitle: selectedBuyerForm.title,
+          userId: loggedInUserId, // Include userId in request body
         },
         { withCredentials: true }
       );
-
       if (response.status === 200) {
         setContactSuccess('Your interest has been sent successfully!');
-        setContactError('');
+        setContactAttemptsLeft(response.data.attemptsLeft);
         setTimeout(() => {
           setContactSuccess('');
           setShowBuyerFormModal(false);
+          setIsContactLoading(false);
         }, 3000);
       }
     } catch (error) {
-      setContactError(error.response?.data?.error || 'Failed to send message. Please try again.');
-      setContactSuccess('');
+      const errorMessage = error.response?.data?.error || 'Failed to send message. Please try again.';
+      setContactError(errorMessage);
+      setIsContactLoading(false);
     }
   };
 
@@ -340,7 +375,7 @@ function Buyers() {
 
   // Handle sign-in redirect
   const handleSignInRedirect = () => {
-    navigate('/signin'); // Redirect to sign-in page
+    navigate('/signin');
     setShowSignInPrompt(false);
   };
 
@@ -502,6 +537,35 @@ function Buyers() {
           .tooltip-container:hover .tooltip {
             opacity: 1;
           }
+          .contact-counter {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #e6f3e6;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #2e7d32;
+            margin-bottom: 16px;
+            animation: pulse 2s infinite;
+          }
+          .contact-counter.warning {
+            background: #fff3e0;
+            color: #e65100;
+          }
+          .contact-counter.danger {
+            background: #ffebee;
+            color: #d32f2f;
+          }
+          .contact-counter svg {
+            width: 20px;
+            height: 20px;
+          }
+          @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+          }
         `}
       </style>
 
@@ -521,6 +585,25 @@ function Buyers() {
                   </span>
                 )}
               </p>
+              {loggedInUserId && !isFetchingAttempts && (
+                <div
+                  className={`contact-counter ${
+                    contactAttemptsLeft <= 1
+                      ? contactAttemptsLeft === 0
+                        ? "danger"
+                        : "warning"
+                      : ""
+                  } inline-flex mx-auto`}
+                >
+                  <NioIcon
+                    name={contactAttemptsLeft === 0 ? "block" : "mail"}
+                    className={contactAttemptsLeft === 0 ? "text-red-500" : "text-teal-500"}
+                  />
+                  <span>
+                    You have {contactAttemptsLeft} contact {contactAttemptsLeft === 1 ? "opportunity" : "opportunities"} left today
+                  </span>
+                </div>
+              )}
             </Col>
           </Row>
         </NioSection.Content>
@@ -549,7 +632,7 @@ function Buyers() {
                 value={searchQuery}
                 onChange={handleSearchChange}
                 className="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-teal-500"
-                disabled={!loggedInUserId} // Disable search for non-logged-in users
+                disabled={!loggedInUserId}
               />
               {searchSuggestions.length > 0 && loggedInUserId && (
                 <div className="absolute top-full left-0 w-full bg-white border border-gray-200 rounded-lg mt-1 shadow-lg z-20">
@@ -1034,6 +1117,25 @@ function Buyers() {
                 />
                 <div className="bg-gray-50 p-4 rounded-lg">
                   <h5 className="text-lg font-semibold text-teal-800 mb-3">Contact Buyer</h5>
+                  {loggedInUserId && !isFetchingAttempts && (
+                    <div
+                      className={`contact-counter ${
+                        contactAttemptsLeft <= 1
+                          ? contactAttemptsLeft === 0
+                            ? "danger"
+                            : "warning"
+                          : ""
+                      }`}
+                    >
+                      <NioIcon
+                        name={contactAttemptsLeft === 0 ? "block" : "mail"}
+                        className={contactAttemptsLeft === 0 ? "text-red-500" : "text-teal-500"}
+                      />
+                      <span>
+                        You have {contactAttemptsLeft} contact {contactAttemptsLeft === 1 ? "opportunity" : "opportunities"} left today
+                      </span>
+                    </div>
+                  )}
                   {contactError && (
                     <div className="bg-red-100 text-red-700 p-2 rounded-lg mb-3">
                       {contactError}
@@ -1068,9 +1170,9 @@ function Buyers() {
                   </div>
                   <NioButton
                     className="btn-buyer w-full"
-                    label="Send Interest"
+                    label={isContactLoading ? "Sending..." : "Send Interest"}
                     onClick={handleContactBuyer}
-                    disabled={!loggedInUserId}
+                    disabled={isContactLoading || !loggedInUserId || contactAttemptsLeft === 0}
                   />
                 </div>
               </Col>

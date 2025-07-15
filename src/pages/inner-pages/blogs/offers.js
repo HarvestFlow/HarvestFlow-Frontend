@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { NioSection, NioButton, NioIcon, NioBadge } from '../../../components';
+import { NioSection, NioButton, NioIcon } from '../../../components';
 import AppLayout from '../../../layouts/AppLayout/AppLayout';
 
 const API_URL = 'http://localhost:5000';
@@ -26,20 +26,54 @@ function MyOffers() {
   const [offerType, setOfferType] = useState('farmer');
   const [sortBy, setSortBy] = useState('similarity');
   const [expandedDetails, setExpandedDetails] = useState({});
+  const [userProfile, setUserProfile] = useState({ name: '', email: '', company: '' });
+  const [contactError, setContactError] = useState('');
+  const [contactSuccess, setContactSuccess] = useState('');
+  const [showSignInPrompt, setShowSignInPrompt] = useState(false);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [pendingRecommendation, setPendingRecommendation] = useState(null);
+  const [contactAttemptsLeft, setContactAttemptsLeft] = useState(3);
+  const [isContactLoading, setIsContactLoading] = useState(false);
+  const [isFetchingAttempts, setIsFetchingAttempts] = useState(false);
+
+  // Fetch logged-in user profile and contact attempts
+  const fetchLoggedInUser = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/user/getProfile`, {
+        withCredentials: true,
+        timeout: 5000,
+      });
+      setIsAuthenticated(true);
+      setUserId(response.data._id);
+      setUserProfile({
+        name: response.data.firstname || 'Anonymous',
+        email: response.data.email || '',
+        company: response.data.company || 'N/A',
+      });
+
+      // Fetch contact attempts
+      if (response.data._id) {
+        setIsFetchingAttempts(true);
+        const attemptsResponse = await axios.get(`${API_URL}/user/contact-attempts`, {
+          params: { userId: response.data._id },
+          withCredentials: true,
+        });
+        setContactAttemptsLeft(attemptsResponse.data.attemptsLeft);
+      }
+    } catch (error) {
+      console.error('Error fetching user profile:', error.response || error.message);
+      setIsAuthenticated(false);
+      setUserId(null);
+      setContactError('Failed to fetch user profile. Please log in again.');
+      setContactAttemptsLeft(0);
+      navigate('/login');
+    } finally {
+      setIsFetchingAttempts(false);
+    }
+  };
 
   useEffect(() => {
-    const checkAuthStatus = async () => {
-      try {
-        const response = await axios.get(`${API_URL}/user/getProfile`, { withCredentials: true });
-        setIsAuthenticated(true);
-        setUserId(response.data._id);
-        if (!response.data.isActivated) console.log('Account not activated');
-      } catch (err) {
-        setIsAuthenticated(false);
-        navigate('/login');
-      }
-    };
-    checkAuthStatus();
+    fetchLoggedInUser();
   }, [navigate]);
 
   useEffect(() => {
@@ -88,6 +122,10 @@ function MyOffers() {
   };
 
   const toggleRecommendations = (offerId, type) => {
+    if (!isAuthenticated) {
+      setShowSignInPrompt(true);
+      return;
+    }
     if (expandedOffer === offerId) {
       setExpandedOffer(null);
     } else {
@@ -97,6 +135,10 @@ function MyOffers() {
   };
 
   const toggleDetails = (offerId) => {
+    if (!isAuthenticated) {
+      setShowSignInPrompt(true);
+      return;
+    }
     setExpandedDetails(prev => ({ ...prev, [offerId]: !prev[offerId] }));
   };
 
@@ -139,10 +181,85 @@ function MyOffers() {
     alert('Copié dans le presse-papiers !');
   };
 
+  const isValidEmail = (email) => {
+    if (!email || typeof email !== 'string') return false;
+    const lowerEmail = email.toLowerCase();
+    if (lowerEmail === 'n/a' || lowerEmail === 'na' || lowerEmail.trim() === '') return false;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const handleContactRecommendation = async (recommendation) => {
+    if (!isAuthenticated || !userId) {
+      setShowSignInPrompt(true);
+      return;
+    }
+    if (!userProfile.email) {
+      setContactError('Votre email n’est pas disponible. Veuillez vous reconnecter.');
+      return;
+    }
+    const contactEmail = recommendation.item.company?.contactEmail || recommendation.item.email;
+    if (!isValidEmail(contactEmail)) {
+      setContactError('Aucun email de contact valide disponible pour cette recommandation.');
+      return;
+    }
+    if (contactAttemptsLeft <= 0) {
+      setContactError('Vous avez atteint la limite quotidienne de 3 tentatives de contact.');
+      return;
+    }
+
+    setIsContactLoading(true);
+    setContactError('');
+    setContactSuccess('');
+    try {
+      const response = await axios.post(
+        `${API_URL}/user/api/contact-offer`,
+        {
+          firstname: userProfile.name,
+          email: userProfile.email,
+          company: userProfile.company,
+          toEmail: contactEmail,
+          offerTitle: recommendation.item.title || 'Offre sans titre',
+          userId: userId,
+        },
+        { withCredentials: true }
+      );
+
+      if (response.status === 200) {
+        setContactSuccess('Votre intérêt a été envoyé avec succès !');
+        setContactAttemptsLeft(response.data.attemptsLeft);
+        setTimeout(() => {
+          setContactSuccess('');
+          setSelectedRecommendation(null);
+          setIsContactLoading(false);
+        }, 3000);
+      }
+    } catch (error) {
+      setContactError(error.response?.data?.error || 'Échec de l’envoi. Veuillez réessayer.');
+      setContactSuccess('');
+      setIsContactLoading(false);
+    }
+  };
+
+  const promptContactConfirmation = (recommendation) => {
+    if (!isAuthenticated) {
+      setShowSignInPrompt(true);
+      return;
+    }
+    setPendingRecommendation(recommendation);
+    setShowConfirmDialog(true);
+  };
+
+  const confirmContact = () => {
+    if (pendingRecommendation) {
+      handleContactRecommendation(pendingRecommendation);
+    }
+    setShowConfirmDialog(false);
+    setPendingRecommendation(null);
+  };
+
   const renderOfferCard = (offer) => {
     const isActive = !offer[offerType === 'farmer' ? 'availabilityEndDate' : 'offerEndDate'] || new Date(offer[offerType === 'farmer' ? 'availabilityEndDate' : 'offerEndDate']) >= new Date();
-    const rating = offer.rating || 4.9;
-    const reviewCount = offer.reviewCount || 127;
     const expiryProgress = calculateExpiryProgress(offer[offerType === 'farmer' ? 'availabilityEndDate' : 'offerEndDate']);
     const isExpanded = expandedDetails[offer._id];
 
@@ -206,16 +323,18 @@ function MyOffers() {
           </div>
           <div className="flex space-x-2">
             <NioButton
-              className="flex-1 px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-sm"
+              className={`flex-1 px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-sm transform hover:scale-105 transition-transform ${!isAuthenticated ? 'opacity-50 cursor-not-allowed' : ''}`}
               label="Recommandations"
               icon="users"
               onClick={() => toggleRecommendations(offer._id, offerType)}
+              disabled={!isAuthenticated}
             />
             <NioButton
-              className="flex-1 px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
+              className={`flex-1 px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm transform hover:scale-105 transition-transform ${!isAuthenticated ? 'opacity-50 cursor-not-allowed' : ''}`}
               label="Détails"
               icon="eye"
               onClick={() => setSelectedRecommendation({ item: offer })}
+              disabled={!isAuthenticated}
             />
           </div>
         </div>
@@ -227,21 +346,13 @@ function MyOffers() {
   const renderRecommendationCard = (rec, index, offerId) => {
     const item = rec.item || {};
     const status = item.verifiedStatus || 'En attente';
-    const statusClass = {
-      Expire: 'bg-red-500 text-white',
-      VERIFIED: 'bg-green-500 text-white',
-      'NOT_VERIFIED': 'bg-yellow-500 text-white',
-      'PENDING': 'bg-yellow-500 text-white',
-      'En attente': 'bg-yellow-500 text-white',
-    }[status] || 'bg-gray-500 text-white';
     const currentDate = new Date();
     const endDate = item.offerEndDate || item.availabilityEndDate || currentDate.toISOString().split('T')[0];
     const isActive = new Date(endDate) >= currentDate;
-    const rating = item.rating || 4.9;
-    const reviewCount = item.reviewCount || 127;
     const similarity = rec.similarity || 0.95;
     const expiryProgress = calculateExpiryProgress(endDate);
     const isExpanded = expandedDetails[`${offerId}-rec-${index}`];
+    const hasEmail = isValidEmail(item.company?.contactEmail || item.email);
 
     const formattedItem = {
       title: item.title || 'N/A',
@@ -322,12 +433,35 @@ function MyOffers() {
               <a href={`tel:${formattedItem.phone}`} className="text-xs text-green-600 hover:underline block">{formattedItem.phone}</a>
             </div>
           </div>
-          <NioButton
-            className="w-full px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
-            label="Détails"
-            icon="eye"
-            onClick={() => setSelectedRecommendation(rec)}
-          />
+          {!hasEmail && (
+            <p className="no-email-message mb-2">Email de contact non disponible</p>
+          )}
+          {isAuthenticated && !isFetchingAttempts && (
+            <div className={`contact-counter ${contactAttemptsLeft <= 1 ? contactAttemptsLeft === 0 ? 'danger' : 'warning' : ''} mb-3`}>
+              <NioIcon
+                name={contactAttemptsLeft === 0 ? 'block' : 'mail'}
+                className={contactAttemptsLeft === 0 ? 'text-red-500' : 'text-green-500'}
+              />
+              <span>Vous avez {contactAttemptsLeft} opportunité{contactAttemptsLeft === 1 ? '' : 's'} de contact restante{contactAttemptsLeft === 1 ? '' : 's'} aujourd'hui</span>
+            </div>
+          )}
+          <div className="flex space-x-2">
+            {hasEmail && (
+              <NioButton
+                className={`flex-1 px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-sm transform hover:scale-105 transition-transform ${!isAuthenticated || contactAttemptsLeft === 0 || isContactLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                label={isContactLoading ? 'Envoi...' : 'Envoyer l’intérêt'}
+                icon="mail"
+                onClick={() => promptContactConfirmation(rec)}
+                disabled={!isAuthenticated || contactAttemptsLeft === 0 || isContactLoading}
+              />
+            )}
+            <NioButton
+              className="flex-1 px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm transform hover:scale-105 transition-transform"
+              label="Détails"
+              icon="eye"
+              onClick={() => setSelectedRecommendation(rec)}
+            />
+          </div>
         </div>
         <div className="absolute top-1 left-1 w-2 h-2 bg-green-400 rounded-full animate-ping" style={{ display: isActive ? 'block' : 'none' }}></div>
       </div>
@@ -406,7 +540,7 @@ function MyOffers() {
               left: 0;
               right: 0;
               bottom: 0;
-              background: rgba(0, 0, 0, 0.7);
+              background: rgba(0, 0, 0, 0.4);
               display: flex;
               justify-content: center;
               align-items: center;
@@ -414,7 +548,7 @@ function MyOffers() {
               animation: fadeIn 0.3s ease;
             }
             .modal-content {
-              background:rgb(217, 249, 237); /* bg-green-200 */
+              background: rgb(217, 249, 237);
               padding: 2rem;
               border-radius: 1.5rem;
               max-width: 1400px;
@@ -458,6 +592,136 @@ function MyOffers() {
             .animate-slide-down {
               animation: slideDown 0.3s ease;
             }
+            .confirmation-modal {
+              position: fixed;
+              top: 0;
+              left: 0;
+              right: 0;
+              bottom: 0;
+              background: rgba(0, 0, 0, 0.4);
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              z-index: 1000;
+              animation: fadeIn 0.3s ease;
+            }
+            .confirmation-modal-content {
+              max-width: 400px;
+              padding: 1.5rem;
+              border-radius: 1rem;
+              box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+              background: white;
+              animation: fadeInScale 0.3s ease;
+              text-align: center;
+            }
+            .confirmation-modal-content p {
+              margin-bottom: 1.5rem;
+              color: #4a5568;
+              font-size: 1rem;
+              font-weight: 500;
+            }
+            .confirmation-modal-content .btn {
+              padding: 0.5rem 1.5rem;
+              border-radius: 0.5rem;
+              transition: transform 0.2s ease, background-color 0.2s ease;
+              cursor: pointer;
+              font-size: 0.875rem;
+              font-weight: 500;
+              border: none;
+              margin: 0 0.5rem;
+            }
+            .confirmation-modal-content .btn-confirm {
+              background: #10b981;
+              color: white;
+            }
+            .confirmation-modal-content .btn-confirm:hover {
+              background: #059669;
+              transform: scale(1.05);
+            }
+            .confirmation-modal-content .btn-cancel {
+              background: #6b7280;
+              color: white;
+            }
+            .confirmation-modal-content .btn-cancel:hover {
+              background: #4b5563;
+              transform: scale(1.05);
+            }
+            .toast {
+              position: fixed;
+              bottom: 20px;
+              right: 20px;
+              background: #10b981;
+              color: white;
+              padding: 0.75rem 1.5rem;
+              border-radius: 0.5rem;
+              box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+              z-index: 2000;
+              animation: slideInRight 0.3s ease;
+            }
+            .no-email-message {
+              color: #6b7280;
+              font-style: italic;
+              font-size: 0.75rem;
+              text-align: center;
+            }
+            .sign-in-modal {
+              position: fixed;
+              top: 0;
+              left: 0;
+              right: 0;
+              bottom: 0;
+              background: rgba(0, 0, 0, 0.4);
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              z-index: 1000;
+              animation: fadeIn 0.3s ease;
+            }
+            .sign-in-modal-content {
+              background: white;
+              padding: 2rem;
+              border-radius: 1rem;
+              max-width: 400px;
+              width: 90%;
+              box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+              animation: fadeInScale 0.3s ease;
+              text-align: center;
+            }
+            .sign-in-modal-content h3 {
+              font-size: 1.25rem;
+              font-weight: bold;
+              color: #1a3c34;
+              margin-bottom: 1rem;
+            }
+            .sign-in-modal-content p {
+              font-size: 1rem;
+              color: #4a5568;
+              margin-bottom: 1.5rem;
+            }
+            .contact-counter {
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              background: #e6f3e6;
+              padding: 8px 12px;
+              border-radius: 8px;
+              font-size: 14px;
+              color: #2e7d32;
+              margin-bottom: 16px;
+              animation: pulse 2s infinite;
+            }
+            .contact-counter.warning {
+              background: #fff3e0;
+              color: #e65100;
+            }
+            .contact-counter.danger {
+              background: #ffebee;
+              color: #d32f2f;
+            }
+            .contact-counter svg {
+              width: 20px;
+              height: 20px;
+            }
             @keyframes slideDown {
               from { transform: translateY(-10px); opacity: 0; }
               to { transform: translateY(0); opacity: 1; }
@@ -470,8 +734,21 @@ function MyOffers() {
               from { transform: translateY(20px); opacity: 0; }
               to { transform: translateY(0); opacity: 1; }
             }
+            @keyframes slideInRight {
+              from { transform: translateX(100px); opacity: 0; }
+              to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes fadeInScale {
+              from { transform: scale(0.95); opacity: 0; }
+              to { transform: scale(1); opacity: 1; }
+            }
             @keyframes ping {
               75%, 100% { transform: scale(2); opacity: 0; }
+            }
+            @keyframes pulse {
+              0% { transform: scale(1); }
+              50% { transform: scale(1.05); }
+              100% { transform: scale(1); }
             }
             @media (max-width: 1024px) {
               .recommendations-grid {
@@ -501,6 +778,15 @@ function MyOffers() {
             <p className="text-lg mb-6 animate-fade-in" style={{ animationDelay: '0.2s' }}>
               Connectez-vous à un réseau mondial d’agriculteurs et d’acheteurs pour cultiver des opportunités durables et prospères. Découvrez des offres et des demandes adaptées à vos besoins.
             </p>
+            {isAuthenticated && !isFetchingAttempts && (
+              <div className={`contact-counter ${contactAttemptsLeft <= 1 ? contactAttemptsLeft === 0 ? 'danger' : 'warning' : ''} inline-flex mx-auto`}>
+                <NioIcon
+                  name={contactAttemptsLeft === 0 ? 'block' : 'mail'}
+                  className={contactAttemptsLeft === 0 ? 'text-red-500' : 'text-green-500'}
+                />
+                <span>Vous avez {contactAttemptsLeft} opportunité{contactAttemptsLeft === 1 ? '' : 's'} de contact restante{contactAttemptsLeft === 1 ? '' : 's'} aujourd'hui</span>
+              </div>
+            )}
             <div className="stats-grid">
               <div className="stat-item animate-fade-in" style={{ animationDelay: '0.4s' }}>
                 <h3 className="text-2xl font-bold">1,200+</h3>
@@ -537,10 +823,11 @@ function MyOffers() {
                     key={status}
                     onClick={() => setFilter(status)}
                     className={filter === status ? 'filter-button active' : 'filter-button hover:bg-gray-100'}
+                    disabled={!isAuthenticated}
                   >{status.charAt(0).toUpperCase() + status.slice(1)}</button>
                 ))}
               </div>
-              <select className="sort-select" value={sortBy} onChange={e => setSortBy(e.target.value)}>
+              <select className="sort-select" value={sortBy} onChange={e => setSortBy(e.target.value)} disabled={!isAuthenticated}>
                 <option value="similarity">Trier par Similitude</option>
                 <option value="quantity">Trier par Quantité</option>
                 <option value="price">Trier par Prix</option>
@@ -594,6 +881,25 @@ function MyOffers() {
           <div className="modal" onClick={() => setSelectedRecommendation(null)}>
             <div className="modal-content" onClick={e => e.stopPropagation()}>
               <h2 className="text-2xl font-bold text-brown-800 mb-4">Détails de la Recommandation</h2>
+              {contactError && (
+                <div className="bg-red-100 text-red-700 p-2 rounded-lg mb-3">
+                  {contactError}
+                </div>
+              )}
+              {contactSuccess && (
+                <div className="toast">
+                  {contactSuccess}
+                </div>
+              )}
+              {isAuthenticated && !isFetchingAttempts && (
+                <div className={`contact-counter ${contactAttemptsLeft <= 1 ? contactAttemptsLeft === 0 ? 'danger' : 'warning' : ''} mb-3`}>
+                  <NioIcon
+                    name={contactAttemptsLeft === 0 ? 'block' : 'mail'}
+                    className={contactAttemptsLeft === 0 ? 'text-red-500' : 'text-green-500'}
+                  />
+                  <span>Vous avez {contactAttemptsLeft} opportunité{contactAttemptsLeft === 1 ? '' : 's'} de contact restante{contactAttemptsLeft === 1 ? '' : 's'} aujourd'hui</span>
+                </div>
+              )}
               <div className="flex space-x-4 mb-4">
                 <button className="px-4 py-2 bg-green-600 text-white rounded-xl hover:bg-green-700">Général</button>
                 <button className="px-4 py-2 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300">Produit</button>
@@ -624,7 +930,75 @@ function MyOffers() {
                 <p><strong>Expire le:</strong> {formatDate(selectedRecommendation.item.offerEndDate || selectedRecommendation.item.availabilityEndDate)}</p>
                 <p><strong>Localisation:</strong> <span className="text-gray-500">[Carte à venir]</span></p>
               </div>
-              <NioButton className="mt-6 px-4 py-2 bg-green-600 text-white rounded-xl hover:bg-green-700" label="Fermer" onClick={() => setSelectedRecommendation(null)} />
+              {!isValidEmail(selectedRecommendation.item.company?.contactEmail || selectedRecommendation.item.email) && (
+                <p className="no-email-message mt-3">Email de contact non disponible</p>
+              )}
+              {isValidEmail(selectedRecommendation.item.company?.contactEmail || selectedRecommendation.item.email) && (
+                <NioButton
+                  className={`mt-6 px-4 py-2 bg-green-600 text-white rounded-xl hover:bg-green-700 transform hover:scale-105 transition-transform ${!isAuthenticated || contactAttemptsLeft === 0 || isContactLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  label={isContactLoading ? 'Envoi...' : 'Envoyer l’intérêt'}
+                  icon="mail"
+                  onClick={() => promptContactConfirmation(selectedRecommendation)}
+                  disabled={!isAuthenticated || contactAttemptsLeft === 0 || isContactLoading}
+                />
+              )}
+              <NioButton
+                className="mt-2 px-4 py-2 bg-gray-600 text-white rounded-xl hover:bg-gray-700 transform hover:scale-105 transition-transform"
+                label="Fermer"
+                onClick={() => setSelectedRecommendation(null)}
+              />
+            </div>
+          </div>
+        )}
+
+        {showSignInPrompt && (
+          <div className="sign-in-modal" onClick={() => setShowSignInPrompt(false)}>
+            <div className="sign-in-modal-content" onClick={e => e.stopPropagation()}>
+              <h3>Connexion requise</h3>
+              <p>Veuillez vous connecter pour interagir avec les offres recommandées.</p>
+              <div className="flex justify-center space-x-4">
+                <NioButton
+                  className="px-4 py-2 bg-green-600 text-white rounded-xl hover:bg-green-700 transform hover:scale-105 transition-transform"
+                  label="Se connecter"
+                  onClick={() => {
+                    navigate('/login');
+                    setShowSignInPrompt(false);
+                  }}
+                />
+                <NioButton
+                  className="px-4 py-2 bg-gray-600 text-white rounded-xl hover:bg-gray-700 transform hover:scale-105 transition-transform"
+                  label="Fermer"
+                  onClick={() => setShowSignInPrompt(false)}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {showConfirmDialog && (
+          <div className="confirmation-modal" onClick={() => setShowConfirmDialog(false)}>
+            <div className="confirmation-modal-content" onClick={e => e.stopPropagation()}>
+              <p>
+                Voulez-vous envoyer votre intérêt à{' '}
+                <span className="font-bold text-green-600">
+                  {pendingRecommendation?.item.company?.contactEmail || pendingRecommendation?.item.email || 'N/A'} ?
+                </span>
+              </p>
+              <div className="flex justify-center space-x-4 mt-4">
+                <button
+                  className={`btn btn-confirm ${contactAttemptsLeft === 0 || isContactLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  onClick={confirmContact}
+                  disabled={contactAttemptsLeft === 0 || isContactLoading}
+                >
+                  Confirmer
+                </button>
+                <button
+                  className="btn btn-cancel"
+                  onClick={() => setShowConfirmDialog(false)}
+                >
+                  Annuler
+                </button>
+              </div>
             </div>
           </div>
         )}

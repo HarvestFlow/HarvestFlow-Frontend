@@ -53,6 +53,7 @@ import TradingSelectionPage from "../FarmerDashboard/IAanalyst/TradingSelectionP
 import AdminScrapper from "../adminscrapper/adminscrapper";
 import FinanceDashboard from "../financialManagement/FinanceDashboard";
 import StockDashboard from "../stockManagement/StockDashboard";
+import AdminContactDashboard from "../AdminBackoffice/AdminContactDashboard";
 
 function Sidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -192,6 +193,7 @@ function Sidebar() {
       ? [
           { name: "Trade Wizard", icon: faChartLine, path: "/trade-wizard", roles: ["transporter"] },
           { name: "Finance Dashboard", icon: faCalculator, path: "/financialManagment", roles: ["transporter"] },
+          
         ]
       : []),
 
@@ -201,6 +203,8 @@ function Sidebar() {
           { name: "AdminDashboard", icon: faTachometerAlt, path: "/AdminDashboard", roles: ["admin"] },
           { name: "Gestion User", icon: faUserCheck, path: "/gestionUser", roles: ["admin"] },
           { name: "AdminScrapper", icon: faListCheck, path: "/AdminScrapper", roles: ["admin"] },
+                    { name: "AdminContactDashboard", icon: faListCheck, path: "/AdminContactDashboard", roles: ["admin"] },
+
         ]
       : []),
   ];
@@ -494,6 +498,8 @@ function Sidebar() {
               <Route path="/AdminDashboard" element={<AdminDashboard />} />
               <Route path="/gestionUser" element={<GestionUser />} />
               <Route path="/AdminScrapper" element={<AdminScrapper />} />
+                            <Route path="/AdminContactDashboard" element={<AdminContactDashboard />} />
+
             </>
           )}
 

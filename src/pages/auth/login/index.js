@@ -39,13 +39,13 @@ export default function Login() {
         // Redirect based on the user's role
         switch (response.data.role) {
           case "farmer":
-            navigate("/index-company-home-page");
+            navigate("/index-collaboration-tool");
             break;
           case "distributor":
-            navigate("/index-distributor-home-page");
+            navigate("/index-collaboration-tool");
             break;
           case "transporter":
-            navigate("/index-transporter-home-page");
+            navigate("/index-collaboration-tool");
             break;
           default:
             navigate("/");

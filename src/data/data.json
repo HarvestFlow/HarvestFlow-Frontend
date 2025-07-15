@@ -7,101 +7,11 @@
             "url": "/",
             "mega": true,
             "toggle": true,
-            "title": "Homepages",
+            "title": "Homepage",
             "submenu": {
               "media": false,
               "items": [
-                {
-                  "color": "primary",
-                  "icon": "pie-fill",
-                  "url": "/index-analytics",
-                  "title": "Analytics Saas",
-                  "subtitle": "All In One Analytics Tool."
-                },
-                {
-                  "color": "danger",
-                  "icon": "book-fill",
-                  "url": "/index-kids-course",
-                  "title": "Kids Course Startup",
-                  "subtitle": "Super Courses For Super Kids."
-                },
-                {
-                  "color": "info",
-                  "icon": "users-fill",
-                  "url": "/index-collaboration-tool",
-                  "title": "Collaboration Tool",
-                  "subtitle": "Secure Team Management."
-                },
-                {
-                  "color": "warning",
-                  "icon": "building-fill",
-                  "url": "/index-bs-expense-tracker",
-                  "title": "Business Expense Tracker",
-                  "subtitle": "Track Business Performance."
-                },
-                {
-                  "color": "success",
-                  "icon": "chat-circle-fill",
-                  "url": "/index-live-chat-app",
-                  "title": "Live Chat App Software",
-                  "subtitle": "Connect With Customers."
-                },
-                {
-                  "color": "primary",
-                  "icon": "db-fill",
-                  "url": "/index-bs-solution",
-                  "title": "Business Solutions",
-                  "subtitle": "Empowering Business Growth."
-                },
-                {
-                  "color": "danger",
-                  "icon": "bar-chart-fill",
-                  "url": "/index-saas",
-                  "title": "Business Expenses",
-                  "subtitle": "Coast Mangement Tool."
-                },
-                {
-                  "color": "success",
-                  "icon": "cloud-fill",
-                  "url": "/index-bs-digital",
-                  "title": "Digital Business SAAS",
-                  "subtitle": "Streamline Business Opearations"
-                },
-                {
-                  "color": "warning",
-                  "icon": "sign-btc-alt",
-                  "url": "/index-crypto-profile",
-                  "title": "Crypto Profile",
-                  "subtitle": "Manage Your Crypto Assets."
-                },
-                {
-                  "color": "info",
-                  "icon": "package-fill",
-                  "url": "/index-bs-management",
-                  "title": "Business Management",
-                  "subtitle": "Smart Business Tool."
-                },
-                {
-                  "color": "danger",
-                  "icon": "coin-alt-fill",
-                  "url": "/index-bs-subscription",
-                  "title": "Business Subscription",
-                  "subtitle": "Grow business with subscription."
-                },
-                {
-                  "color": "primary",
-                  "icon": "growth-fill",
-                  "url": "/index-data-driven",
-                  "title": "Data-Driven Business",
-                  "subtitle": "Business analysis tool."
-                },
-                {
-                  "color": "info-alt",
-                  "icon": "file-text-fill",
-                  "url": "/index-language-learning",
-                  "title": "Language Learning",
-                  "subtitle": "Optimize Decisions and Outcomes."
-                }
+               
               ]
             }
           }
@@ -110,112 +20,107 @@
           "item": {
             "url": "/blogs",
             "mega": false,
-            "title": "Offers",
+            "title": "Connections",
+            "submenu": {
+              "media": false,
+              "items": [ {
+                  "color": "primary",
+                  "icon": "pie-fill",
+                  "url": "/offers",
+                  "title": "Offers",
+                  "subtitle": "All In One Analytics Tool."
+                },
+               
+                {
+                  "color": "info-alt",
+                  "icon": "file-text-fill",
+                  "url": "/Buyers",
+                  "title": "Buyers",
+                  "subtitle": "Optimize Decisions and Outcomes."
+                }]
+            }
+          }
+        },
+        
+      
+        {
+          "item": {
+            "url": "/contact-us",
+            "mega": false,
+            "title": "Contact us",
+            "submenu": {
+              "media": false,
+              "items": []
+            }
+          }
+        }
+        
+      ]
+    },
+    "two": {
+      "menus": [
+        {
+          "item": {
+            "url": "/index-collaboration-tool",
+            "mega": true,
+            "toggle": true,
+            "title": "Homepage",
             "submenu": {
               "media": false,
               "items": []
             }
           }
         },
-        {
+         {
           "item": {
-            "url": "/",
+            "url": "/blogs",
             "mega": false,
-            "title": "Pages",
+            "title": "Connections",
             "submenu": {
-              "media": true,
-              "items": [
-                {
-                  "url": "/about",
-                  "title": "About"
+              "media": false,
+              "items": [ {
+                  "color": "primary",
+                  "icon": "pie-fill",
+                  "url": "/offers",
+                  "title": "Offers",
+                  "subtitle": "All In One Analytics Tool."
                 },
+               
                 {
-                  "url": "/about-solution",
-                  "title": "About 2"
+                  "color": "info-alt",
+                  "icon": "file-text-fill",
+                  "url": "/Buyers",
+                  "title": "Buyers",
+                  "subtitle": "Optimize Decisions and Outcomes."
                 },
-                {
-                  "url": "/404",
-                  "title": "404 Error"
-                },
-                {
-                  "url": "/features",
-                  "title": "Features"
-                },
-                {
-                  "url": "/features-solution",
-                  "title": "Features 2"
-                },
-                {
-                  "url": "/customer-testimonials",
-                  "title": "Testimonials"
-                },
-                {
-                  "url": "/contact-us",
-                  "title": "Contact Us"
-                },
-                {
-                  "url": "/contact-us-solution",
-                  "title": "Contact Us 2 "
-                },
-                {
-                  "url": "/auth/login",
-                  "title": "Login"
-                },
-                {
-                  "url": "/pricing",
-                  "title": "Pricing"
-                },
-                {
-                  "url": "/pricing-solution",
-                  "title": "Pricing 2"
-                },
-                {
-                  "url": "/auth/sign-up",
-                  "title": "Sign Up"
-                },
-                {
-                  "url": "/blogs",
-                  "title": "Blogs"
-                },
-                {
-                  "url": "/blog-details",
-                  "title": "Blog Single"
-                },
-                {
-                  "url": "/auth/reset-password",
-                  "title": "Reset Password"
-                },
-                {
-                  "url": "/help-center",
-                  "title": "Help Center"
-                },
-                {
-                  "url": "/help-center-details",
-                  "title": "Help Center Single"
-                },
-                {
-                  "url": "/auth/forgot-password",
-                  "title": "Forgot Password"
-                },
-                {
-                  "url": "/terms-and-conditions",
-                  "title": "Terms & Conditions"
-                },
-                {
-                  "url": "/careers",
-                  "title": "Careers"
-                },
-                {
-                  "url": "/career-details",
-                  "title": "Career Details"
+                 {
+                  "color": "info-alt",
+                  "icon": "file-text-fill",
+                  "url": "/MyOffers",
+                  "title": "MyOffers",
+                  "subtitle": "Optimize Decisions and Outcomes."
                 }
               ]
             }
           }
         },
+        
+        
+       
+        
         {
           "item": {
-            "url": "Dashboard/AdminDashboard",
+            "url": "/contact-us",
+            "mega": false,
+            "title": "Contact",
+            "submenu": {
+              "media": false,
+              "items": []
+            }
+          }
+        },        {
+          "item": {
+            "url": "/Dashboard",
             "mega": false,
             "title": "Dashboard",
             "submenu": {
@@ -223,238 +128,12 @@
               "items": []
             }
           }
-        }
-      ]
-    },
-    "two": {
-      "menus": [
-        {
-          "item": {
-            "url": "#",
-            "mega": true,
-            "toggle": true,
-            "title": "Homepages",
-            "submenu": {
-              "media": false,
-              "items": [
-                {
-                  "color": "primary",
-                  "icon": "pie-fill",
-                  "url": "/index-analytics",
-                  "title": "Analytics Saas",
-                  "subtitle": "All In One Analytics Tool."
-                },
-                {
-                  "color": "danger",
-                  "icon": "book-fill",
-                  "url": "/index-kids-course",
-                  "title": "Kids Course Startup",
-                  "subtitle": "Super Courses For Super Kids."
-                },
-                {
-                  "color": "info",
-                  "icon": "users-fill",
-                  "url": "/index-collaboration-tool",
-                  "title": "Collaboration Tool",
-                  "subtitle": "Secure Team Management."
-                },
-                {
-                  "color": "warning",
-                  "icon": "building-fill",
-                  "url": "/index-bs-expense-tracker",
-                  "title": "Business Expense Tracker",
-                  "subtitle": "Track Business Performance."
-                },
-                {
-                  "color": "success",
-                  "icon": "chat-circle-fill",
-                  "url": "/index-live-chat-app",
-                  "title": "Live Chat App Software",
-                  "subtitle": "Connect With Customers."
-                },
-                {
-                  "color": "primary",
-                  "icon": "db-fill",
-                  "url": "/index-bs-solution",
-                  "title": "Business Solutions",
-                  "subtitle": "Empowering Business Growth."
-                },
-                {
-                  "color": "danger",
-                  "icon": "bar-chart-fill",
-                  "url": "/index-saas",
-                  "title": "Business Expenses",
-                  "subtitle": "Coast Mangement Tool."
-                },
-                {
-                  "color": "success",
-                  "icon": "cloud-fill",
-                  "url": "/index-bs-digital",
-                  "title": "Digital Business SAAS",
-                  "subtitle": "Streamline Business Opearations"
-                },
-                {
-                  "color": "warning",
-                  "icon": "sign-btc-alt",
-                  "url": "/index-crypto-profile",
-                  "title": "Crypto Profile",
-                  "subtitle": "Manage Your Crypto Assets."
-                },
-                {
-                  "color": "info",
-                  "icon": "package-fill",
-                  "url": "/index-bs-management",
-                  "title": "Business Management",
-                  "subtitle": "Smart Business tool."
-                },
-                {
-                  "color": "danger",
-                  "icon": "coin-alt-fill",
-                  "url": "/index-bs-subscription",
-                  "title": "Business Subscription",
-                  "subtitle": "Grow Business With Subscription."
-                },
-                {
-                  "color": "primary",
-                  "icon": "growth-fill",
-                  "url": "/index-data-driven",
-                  "title": "Data-Driven Business",
-                  "subtitle": "Optimize Decisions and Outcomes."
-                },
-                {
-                  "color": "info-alt",
-                  "icon": "file-text-fill",
-                  "url": "/index-language-learning",
-                  "title": "Language Learning",
-                  "subtitle": "Dive into Language Learning"
-                }
-              ]
-            }
-          }
         },
         {
           "item": {
-            "url": "/about",
+            "url": "/dashboard/UpdateFarmerProfile",
             "mega": false,
-            "title": "About",
-            "submenu": {
-              "media": false,
-              "items": []
-            }
-          }
-        },
-        {
-          "item": {
-            "url": "#",
-            "mega": false,
-            "title": "Pages",
-            "submenu": {
-              "media": true,
-              "items": [
-                {
-                  "url": "/about",
-                  "title": "About"
-                },
-                {
-                  "url": "/about-solution",
-                  "title": "About 2"
-                },
-                {
-                  "url": "/404",
-                  "title": "404 Error"
-                },
-                {
-                  "url": "/features",
-                  "title": "Features"
-                },
-                {
-                  "url": "/features-solution",
-                  "title": "Features 2"
-                },
-                {
-                  "url": "/customer-testimonials",
-                  "title": "Testimonials"
-                },
-                {
-                  "url": "/contact-us",
-                  "title": "Contact Us"
-                },
-                {
-                  "url": "/contact-us-solution",
-                  "title": "Contact Us 2"
-                },
-                {
-                  "url": "/auth/login",
-                  "title": "Login"
-                },
-                {
-                  "url": "/pricing",
-                  "title": "Pricing"
-                },
-                {
-                  "url": "/pricing-solution",
-                  "title": "Pricing 2"
-                },
-                {
-                  "url": "/auth/sign-up",
-                  "title": "Sign Up"
-                },
-                {
-                  "url": "/blogs",
-                  "title": "Blogs"
-                },
-                {
-                  "url": "/blog-details",
-                  "title": "Blog Single"
-                },
-                {
-                  "url": "/auth/reset-password",
-                  "title": "Reset Password"
-                },
-                {
-                  "url": "/help-center",
-                  "title": "Help Center"
-                },
-                {
-                  "url": "/help-center-details",
-                  "title": "Help Center Single"
-                },
-                {
-                  "url": "/auth/forgot-password",
-                  "title": "Forgot Password"
-                },
-                {
-                  "url": "/terms-and-conditions",
-                  "title": "Terms & Conditions"
-                },
-                {
-                  "url": "/careers",
-                  "title": "Careers"
-                },
-                {
-                  "url": "/career-details",
-                  "title": "Career Details"
-                }
-              ]
-            }
-          }
-        },
-        {
-          "item": {
-            "url": "/blogs",
-            "mega": false,
-            "title": "Blogs",
-            "submenu": {
-              "media": false,
-              "items": []
-            }
-          }
-        },
-        {
-          "item": {
-            "url": "/contact-us",
-            "mega": false,
-            "title": "Contact",
+            "title": "Profile",
             "submenu": {
               "media": false,
               "items": []

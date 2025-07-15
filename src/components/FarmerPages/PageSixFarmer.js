@@ -165,7 +165,7 @@ const PageSixFarmer = ({ formData, setFormData, onButtonClick }) => {
                 onClick={handleSubmit}
                 label="Submit"
                 className="f6 grow br2 ph3 pv2 mb2 dib white"
-                style={{ width: '100%', backgroundColor: '#664DE5', border: 'none', color: 'white' }}
+                  style={{ width: "100%", backgroundColor: '#57b42e', border: 'none', color: 'white' }}
                 disabled={!termsAccepted || !isCaptchaValid} // Désactiver le bouton si les termes ne sont pas acceptés
               />
             </div>

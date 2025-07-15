@@ -1,17 +1,40 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Col, Row } from 'react-bootstrap';
 import { Wheat, Truck, ShoppingBasket, ArrowRight } from 'lucide-react';
 import { NioSection, NioButton } from '../../components';
+import { useNavigate } from 'react-router-dom';
 
 // Utility for conditional class names
 const cn = (...classes) => classes.filter(Boolean).join(' ');
 
 const roles = [
   {
+    id: 'transporter',
+    title: 'Transporteur',
+    subtitle: 'Gérez vos opérations logistiques',
+    description: 'Suivez et gérez vos stocks transportés, optimisez vos finances et prenez des décisions éclairées avec des analyses basées sur les données.',
+    icon: Truck,
+    variant: 'transporter',
+    gradient: 'from-pink-500 via-rose-600 to-red-700',
+    textColor: 'text-gray-900',
+    bgPattern: 'bg-pink-300',
+    stats: [
+      { label: 'Transporteurs actifs', value: '1.8K+', icon: 'ni ni-users' },
+      { label: 'Efficacité logistique', value: '+25%', icon: 'ni ni-trending-up' },
+      { label: 'Stocks gérés', value: '10K+/mois', icon: 'ni ni-package' },
+    ],
+    features: [
+      'Gestion des stocks transportés',
+      'Suivi financier des opérations',
+      'Importation de données CSV/XLSX',
+      'Rapports IA pour décisions',
+    ],
+  },
+  {
     id: 'farmer',
     title: 'Agriculteur',
-    subtitle: 'Le cœur de l’agriculture moderne',
-    description: 'Optimisez vos rendements avec des données précises et des analyses prédictives avancées.',
+    subtitle: 'Optimisez votre production agricole',
+    description: 'Gérez vos parcelles, suivez vos cultures et maximisez vos rendements avec des outils avancés et des prévisions basées sur l’IA.',
     icon: Wheat,
     variant: 'farmer',
     gradient: 'from-green-500 via-emerald-600 to-green-700',
@@ -19,186 +42,66 @@ const roles = [
     bgPattern: 'bg-green-300',
     stats: [
       { label: 'Agriculteurs actifs', value: '5.2K+', icon: 'ni ni-users' },
-      { label: 'Rendement moyen', value: '+23%', icon: 'ni ni-trending-up' },
-      { label: 'Temps économisé', value: '15h/sem', icon: 'ni ni-clock' },
+      { label: 'Précision des prévisions', value: '92%', icon: 'ni ni-trending-up' },
+      { label: 'Temps économisé', value: '20h/sem', icon: 'ni ni-clock' },
     ],
     features: [
-      'Analyse des sols en temps réel',
-      'Prédictions météorologiques',
-      'Gestion des cultures optimisée',
-      'Marketplace intégrée',
-    ],
-  },
-  {
-    id: 'transporter',
-    title: 'Transporteur',
-    subtitle: 'La logistique intelligente',
-    description: 'Optimisez vos routes et réduisez vos coûts avec notre système de planification intelligent.',
-    icon: Truck,
-    variant: 'transporter',
-    gradient: 'from-pink-500 via-rose-600 to-red-700',
-    textColor: 'text-gray-900',
-    bgPattern: 'bg-pink-300',
-    stats: [
-      { label: 'Transporteurs', value: '1.8K+', icon: 'ni ni-users' },
-      { label: 'Coûts réduits', value: '-18%', icon: 'ni ni-trending-up' },
-      { label: 'Routes optimisées', value: '95%', icon: 'ni ni-clock' },
-    ],
-    features: [
-      'Planification automatique des routes',
-      'Suivi en temps réel',
-      'Gestion des stocks mobiles',
-      'Réseau de partenaires',
+      'Gestion des parcelles sur carte interactive',
+      'Suivi météo et alertes en temps réel',
+      'Prévisions de rendement basées sur l’IA',
+      'Création d’offres et besoins agricoles',
     ],
   },
   {
     id: 'distributor',
     title: 'Distributeur',
-    subtitle: 'Le pont vers les consommateurs',
-    description: 'Connectez-vous directement aux producteurs et optimisez votre chaîne d’approvisionnement.',
+    subtitle: 'Connectez producteurs et consommateurs',
+    description: 'Créez des offres, gérez vos stocks et recevez des recommandations basées sur l’IA pour optimiser votre chaîne d’approvisionnement.',
     icon: ShoppingBasket,
     variant: 'distributor',
     gradient: 'from-blue-500 via-indigo-600 to-purple-700',
     textColor: 'text-gray-900',
     bgPattern: 'bg-blue-300',
     stats: [
-      { label: 'Distributeurs', value: '3.1K+', icon: 'ni ni-users' },
-      { label: 'Profit augmenté', value: '+31%', icon: 'ni ni-trending-up' },
-      { label: 'Commandes traitées', value: '2.4K/j', icon: 'ni ni-clock' },
+      { label: 'Distributeurs actifs', value: '3.1K+', icon: 'ni ni-users' },
+      { label: 'Profit optimisé', value: '+35%', icon: 'ni ni-trending-up' },
+      { label: 'Commandes/jour', value: '2.8K', icon: 'ni ni-cart' },
     ],
     features: [
-      'Accès direct aux producteurs',
-      'Négociation en temps réel',
+      'Création et matching d’offres',
+      'Recommandations basées sur l’IA',
       'Gestion automatisée des stocks',
-      'Analytics avancées',
+      'Accès direct aux producteurs',
     ],
   },
 ];
 
-const SignupForm = ({ role, onClose }) => {
-  const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    password: '',
-    country: '',
-  });
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Form submitted for', role.title, formData);
-    onClose();
-  };
-
-  return (
-    <div className="absolute inset-0 bg-white/95 backdrop-blur-xl rounded-3xl p-6 z-10 animate-slide-up">
-      <div className="flex items-center justify-between mb-4">
-        <h4 className={cn("text-lg font-bold", role.textColor)}>
-          Rejoindre en tant que {role.title}
-        </h4>
-        <button
-          onClick={onClose}
-          aria-label="Fermer le formulaire"
-          className="w-6 h-6 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
-        >
-          ×
-        </button>
-      </div>
-      <form onSubmit={handleSubmit} className="space-y-3">
-        <div className="space-y-1">
-          <label htmlFor={`${role.id}-fullName`} className="text-xs font-medium text-gray-700">
-            Nom complet
-          </label>
-          <input
-            id={`${role.id}-fullName`}
-            type="text"
-            placeholder="Votre nom complet"
-            value={formData.fullName}
-            onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-            required
-            className="form-control border-gray-200 focus:border-current focus:ring-1 focus:ring-current"
-          />
-        </div>
-        <div className="space-y-1">
-          <label htmlFor={`${role.id}-email`} className="text-xs font-medium text-gray-700">
-            Email
-          </label>
-          <input
-            id={`${role.id}-email`}
-            type="email"
-            placeholder="votre@email.com"
-            value={formData.email}
-            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            required
-            className="form-control border-gray-200 focus:border-current focus:ring-1 focus:ring-current"
-          />
-        </div>
-        <div className="space-y-1">
-          <label htmlFor={`${role.id}-password`} className="text-xs font-medium text-gray-700">
-            Mot de passe
-          </label>
-          <input
-            id={`${role.id}-password`}
-            type="password"
-            placeholder="••••••••"
-            value={formData.password}
-            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-            required
-            className="form-control border-gray-200 focus:border-current focus:ring-1 focus:ring-current"
-          />
-        </div>
-        <div className="space-y-1">
-          <label htmlFor={`${role.id}-country`} className="text-xs font-medium text-gray-700">
-            Pays
-          </label>
-          <select
-            id={`${role.id}-country`}
-            value={formData.country}
-            onChange={(e) => setFormData({ ...formData, country: e.target.value })}
-            className="form-select border-gray-200 focus:border-current focus:ring-1 focus:ring-current"
-            required
-          >
-            <option value="" disabled>Sélectionnez votre pays</option>
-            <option value="fr">France</option>
-            <option value="us">États-Unis</option>
-            <option value="ca">Canada</option>
-            <option value="br">Brésil</option>
-            <option value="de">Allemagne</option>
-            <option value="es">Espagne</option>
-          </select>
-        </div>
-        <NioButton
-          className={cn("w-100", `btn-${role.variant}`, `bg-gradient-to-r ${role.gradient} text-white`)}
-          label={`Créer mon compte ${role.title}`}
-        />
-      </form>
-    </div>
-  );
-};
-
 const NioSectionSignUp = () => {
-  const [isFormOpen, setIsFormOpen] = useState({ farmer: false, transporter: false, distributor: false });
+  const navigate = useNavigate();
 
-  const toggleForm = (roleId) => {
-    setIsFormOpen((prev) => ({
-      ...prev,
-      [roleId]: !prev[roleId],
-    }));
+  // Define onClick handlers for each role
+  const handleRoleClick = (roleId) => {
+    localStorage.setItem('role', roleId);
+    console.log('Role stored:', localStorage.getItem('role')); // Log the stored role
+    navigate('/farmerform');
   };
 
   return (
     <NioSection className="nk-section-roles py-5 py-lg-7 bg-light">
-       <NioSection.Head alignX="center">
-          <h2>
-            HarvestFlow <span className="text-indigo">S’Adapte à Vous</span>
-          </h2>
-          <p className="fs-5 text-muted mb-0">
-            Que vous cultiviez, transportiez ou distribuiez, notre plateforme vous connecte au cœur de l’agriculture moderne.
-          </p>
-        </NioSection.Head>
+      <NioSection.Head alignX="center">
+        <h2>
+          HarvestFlow <span className="text-indigo">S’Adapte à Vous</span>
+        </h2>
+        <p className="fs-5 text-muted mb-0">
+          Que vous cultiviez, transportiez ou distribuiez, notre plateforme vous connecte au cœur de l’agriculture moderne.
+        </p>
+      </NioSection.Head>
       <NioSection.Content>
         <Row className="g-4 align-items-stretch justify-content-center">
-          {roles.map((role) => {
+          {roles.map((role, index) => {
             const Icon = role.icon;
+            const isFarmer = role.id === 'farmer';
+            const FloatingIcon = role.id === 'farmer' ? Wheat : role.id === 'transporter' ? Truck : ShoppingBasket;
             return (
               <Col
                 key={role.id}
@@ -209,30 +112,54 @@ const NioSectionSignUp = () => {
               >
                 <div
                   className={cn(
-                    "role-card rounded-3 w-100",
-                    "relative overflow-hidden border border-gray-100 shadow-lg"
+                    "role-card rounded-3 w-100 d-flex flex-column",
+                    "relative overflow-hidden border border-gray-100",
+                    isFarmer ? "shadow-2xl z-10" : "shadow-lg",
+                    `reflect-${role.id}`
                   )}
                   style={{
                     background: '#ffffff',
                     transition: 'transform 0.3s ease, box-shadow 0.3s ease',
                     minHeight: '350px',
-                    height: '100%',
                   }}
                 >
+                  {/* Floating Design Element */}
+                  <FloatingIcon
+                    className={cn(
+                      "floating-design absolute top-4 right-4",
+                      `float-animation float-delay-${index}`,
+                      isFarmer ? "w-10 h-10" : "w-8 h-8"
+                    )}
+                    style={{
+                      fill: `url(#gradient-${role.id})`,
+                      stroke: 'none',
+                      zIndex: 1,
+                    }}
+                  />
+                  <svg width="0" height="0">
+                    <defs>
+                      <linearGradient id={`gradient-${role.id}`} x1="0%" y1="0%" x2="100%" y2="0%">
+                        {role.gradient.split(' ').map((color, i) => (
+                          <stop key={i} offset={`${i * 50}%`} stopColor={color.replace('from-', '').replace('via-', '').replace('to-', '')} />
+                        ))}
+                      </linearGradient>
+                    </defs>
+                  </svg>
                   <div className={cn("h-[20px]", `bg-gradient-to-r ${role.gradient}`)}></div>
-                  <div className="p-3">
-                    <div className="relative z-10">
+                  <div className="p-3 flex-grow d-flex flex-column">
+                    <div>
                       <div
                         className={cn(
-                          "w-14 h-14 rounded-2xl flex items-center justify-center mb-3",
+                          "rounded-2xl flex items-center justify-center mb-3",
                           `bg-gradient-to-br ${role.gradient}`,
-                          "shadow-lg shadow-current/25"
+                          "shadow-lg shadow-current/25",
+                          isFarmer ? "w-16 h-16" : "w-14 h-14"
                         )}
                       >
-                        <Icon className="w-7 h-7 text-white" />
+                        <Icon className={cn("text-white", isFarmer ? "w-8 h-8" : "w-7 h-7")} />
                       </div>
                       <div className="space-y-1">
-                        <h3 className={cn("text-2xl font-bold", role.textColor)}>
+                        <h3 className={cn("font-bold", role.textColor, isFarmer ? "text-3xl" : "text-2xl")}>
                           {role.title}
                         </h3>
                         <p className={cn("font-medium text-sm bg-clip-text text-transparent", `bg-gradient-to-r ${role.gradient}`)}>
@@ -240,7 +167,7 @@ const NioSectionSignUp = () => {
                         </p>
                       </div>
                     </div>
-                    <div className="pt-3">
+                    <div className="pt-3 flex-grow">
                       <p className="text-gray-700 text-sm mb-3">{role.description}</p>
                       <div className="grid grid-cols-3 gap-2 mb-3">
                         {role.stats.map((stat, i) => (
@@ -265,21 +192,18 @@ const NioSectionSignUp = () => {
                           </div>
                         ))}
                       </div>
-                      <div className="mt-auto">
-                        <NioButton
-                          onClick={() => toggleForm(role.id)}
-                          className={cn("w-100", `bg-gradient-to-r ${role.gradient} text-white`)}
-                          label={
-                            <span className="flex items-center justify-center gap-2">
-                              Rejoindre maintenant
-                              <ArrowRight className="w-4 h-4" />
-                            </span>
-                          }
-                        />
-                      </div>
-                      {isFormOpen[role.id] && (
-                        <SignupForm role={role} onClose={() => toggleForm(role.id)} />
-                      )}
+                    </div>
+                    <div className="mt-auto">
+                      <NioButton
+                        onClick={() => handleRoleClick(role.id)}
+                        className={cn("w-100", `bg-gradient-to-r ${role.gradient} text-white`)}
+                        label={
+                          <span className="flex items-center justify-center gap-2">
+                            Rejoindre maintenant
+                            <ArrowRight className="w-4 h-4" />
+                          </span>
+                        }
+                      />
                     </div>
                   </div>
                 </div>
@@ -309,29 +233,106 @@ const NioSectionSignUp = () => {
           transition: all 0.3s ease;
         }
         .role-card:hover {
-          transform: scale(1.03);
-          box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+          transform: scale(1.08);
+          box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
         }
-        .animate-slide-up {
-          animation: slideIn 0.7s ease backwards;
+        .floating-design {
+          animation: float 3s ease-in-out infinite;
         }
-        .signup-form {
-          animation: slideIn 0.3s ease;
+        .float-delay-0 {
+          animation-delay: 0s;
         }
-        @keyframes slideIn {
-          from {
-            opacity: 0;
-            transform: translateY(10px);
-          }
-          to {
-            opacity: 1;
+        .float-delay-1 {
+          animation-delay: 0.2s;
+        }
+        .float-delay-2 {
+          animation-delay: 0.4s;
+        }
+        @keyframes float {
+          0% {
             transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-8px);
+          }
+          100% {
+            transform: translateY(0);
+          }
+        }
+        /* Reflective Effect for Agriculteur */
+        .reflect-farmer::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 50%;
+          height: 100%;
+          background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(16, 185, 129, 0.2),
+            transparent
+          );
+          animation: shine 4s ease-in-out infinite;
+          z-index: 2;
+        }
+        /* Reflective Effect for Transporteur */
+        .reflect-transporter::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 50%;
+          height: 100%;
+          background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(244, 63, 94, 0.2),
+            transparent
+          );
+          animation: shine 4s ease-in-out infinite 0.2s;
+          z-index: 2;
+        }
+        /* Reflective Effect for Distributeur */
+        .reflect-distributor::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 50%;
+          height: 100%;
+          background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(59, 130, 246, 0.2),
+            transparent
+          );
+          animation: shine 4s ease-in-out infinite 0.4s;
+          z-index: 2;
+        }
+        @keyframes shine {
+          0% {
+            left: -100%;
+          }
+          50% {
+            left: 100%;
+          }
+          100% {
+            left: 100%;
           }
         }
         @media (max-width: 991px) {
           .role-card {
             margin-bottom: 1rem;
             width: 100%;
+          }
+          .floating-design {
+            animation: none; /* Disable floating on smaller screens */
+          }
+          .reflect-farmer::before,
+          .reflect-transporter::before,
+          .reflect-distributor::before {
+            animation: none; /* Disable reflection on smaller screens */
           }
         }
       `}</style>

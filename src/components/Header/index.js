@@ -6,10 +6,8 @@ import React, { useEffect, useRef, useState } from 'react';
 // context 
 import { useLayout } from '../../context/LayoutProvider/LayoutProvider';
 
-
 // config 
 import config from '../../data/layout-config';
-
 
 // utilities
 import { GetParents, SlideDown, SlideUp } from '../../utilities';
@@ -21,9 +19,8 @@ import HeaderLogo from './components/HeaderLogo/HeaderLogo';
 import HeaderAction from './components/HeaderAction/HeaderAction';
 
 export default function Header({ variant, data, className }) {
-
   const layout = useLayout();
-  const history = useNavigate();
+  const navigate = useNavigate();
   const headerRef = useRef(null);
   const [isFixed, setIsFixed] = useState(false);
 
@@ -49,7 +46,6 @@ export default function Header({ variant, data, className }) {
   const [variantsNav] = filterDataByVariant(variant || 1);
 
   // helper functions 
-
   let currentLink = function (selector) {
     let elm = document.querySelectorAll(selector);
 
@@ -60,19 +56,17 @@ export default function Header({ variant, data, className }) {
         parents.forEach(parentElemets => {
           parentElemets.classList.add(menu.classes.active, menu.classes.current);
           let subItem = parentElemets.querySelector(`.${menu.classes.sub}`);
-          subItem !== null && (subItem.style.display = "block")
-        })
+          subItem !== null && (subItem.style.display = "block");
+        });
       } else {
         item?.parentElement.classList.remove(menu.classes.active, menu.classes.current);
       }
     });
-
-  }
+  };
 
   let dropdownExtended = function (elm) {
     let nextelm = elm?.nextElementSibling;
     let headerCollapse = layout.headerCollapse ? layout.headerCollapse : layout.breaks.lg;
-    // eslint-disable-next-line
     if (window.innerWidth > eval(`layout.breaks.${headerCollapse}`)) {
       let placement = GetParents(elm, `.${menu.classes.main}`, menu.classes.sub).length > 0 ? 'right-start' : 'bottom-start';
       createPopper(elm, nextelm, {
@@ -80,11 +74,9 @@ export default function Header({ variant, data, className }) {
         boundary: '.nk-wrap',
       });
     }
-  }
-
+  };
 
   let closeSiblings = function (elm) {
-
     let parent = elm?.parentElement;
     let parentElement = parent?.parentElement;
     let siblings = parentElement?.children;
@@ -98,13 +90,12 @@ export default function Header({ variant, data, className }) {
             subitem.forEach(child => {
               child?.parentElement?.classList.remove(menu.classes.active);
               SlideUp(child, 400);
-            })
+            });
           }
         }
       });
     }
-
-  }
+  };
 
   let dropdownToggle = function (elm) {
     let parent = elm?.parentElement;
@@ -117,51 +108,42 @@ export default function Header({ variant, data, className }) {
       parent?.classList.remove(menu.classes.active);
       SlideUp(nextelm, speed);
     }
-  }
+  };
 
   let menuToggle = function (e) {
     e.preventDefault();
-    let item = e.target.closest(`.${menu.classes.toggle}`)
+    let item = e.target.closest(`.${menu.classes.toggle}`);
     dropdownToggle(item);
     closeSiblings(item);
-  }
+  };
 
   let menuHover = function (e) {
     e.preventDefault();
-    let item = e.target.closest(`.${menu.classes.toggle}`)
+    let item = e.target.closest(`.${menu.classes.toggle}`);
     dropdownExtended(item);
-  }
+  };
 
   // get current links  
   useEffect(() => {
-    currentLink(`.${menu.classes.link}`)
-    // eslint-disable-next-line
-  }, [null])
-
+    currentLink(`.${menu.classes.link}`);
+  }, []);
 
   // navbar on scroll
   useEffect(() => {
-    // Add event listener for popstate event
     window.addEventListener("scroll", handleScroll);
-
     return () => {
-      // Remove event listener when component unmounts
       window.removeEventListener("scroll", handleScroll);
-    }
+    };
   }, []);
 
   useEffect(() => {
-    // Call handleScroll when the route changes
     handleScroll();
-  }, [history.location]);
+  }, [navigate]);
 
   const handleScroll = () => {
-    // Check if window.scrollY is greater than 60
     const shouldFixHeader = window.scrollY > 60;
-
-    // Update isFixed state based on the scroll position
     setIsFixed(shouldFixHeader);
-  }
+  };
 
   // components classes
   const compClasses = classNames({
@@ -177,7 +159,6 @@ export default function Header({ variant, data, className }) {
     "bg-transparent": variantsNav?.header.transparent && !isFixed,
     "shadow-xl": variantsNav?.header.activeBg === "white" && isFixed,
     [`bg-${variantsNav?.header.bgColor}`]: !variantsNav?.header.transparent && !isFixed,
-
   });
 
   const menuClasses = classNames({
@@ -212,8 +193,8 @@ export default function Header({ variant, data, className }) {
           buttonContent={{
             "class": nioBtnClasses,
             "icon": variantsNav?.header.actBtn.icon,
-            "label": variantsNav?.header.actBtn.label,
-            "redirect": variantsNav?.header.actBtn.url,
+            "label": variantsNav?.header.actBtn.label || "Sign In",
+            "redirect": variantsNav?.header.actBtn.url || "/auth/login",
           }}
           className={menuClasses}
         />
@@ -223,13 +204,11 @@ export default function Header({ variant, data, className }) {
           nioToggleClasses={toggleBtnClass}
           buttonContent={{
             "icon": variantsNav?.header.actBtn.icon,
-            "label": variantsNav?.header.actBtn.label,
-            "redirect": variantsNav?.header.actBtn.url,
+            "label": variantsNav?.header.actBtn.label || "Sign In",
+            "redirect": variantsNav?.header.actBtn.url || "/auth/login",
           }}
         />
-
       </HeaderMain>
     </header>
-  )
+  );
 }
-
