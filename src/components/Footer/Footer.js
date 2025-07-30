@@ -13,63 +13,51 @@ import useRouteMatch from '../../hooks/useRouteMatch';
 import { NioBrand, NioIcon } from '..';
 
 export default function Footer({ variant = 1, children }) {
-
   const compClasses = classNames({
-    [`${useRouteMatch("/") ? "nk-footer-landing" : "nk-footer"}`]: true,
+    [`${useRouteMatch("/dashboard") ? "nk-footer-harvest" : "nk-footer"}`]: true,
 
     // bg color
-    "bg-dark": useRouteMatch(["/index-crypto-profile"]),
-    "bg-blue-1700": useRouteMatch(["/index-bs-analytics"]),
-    "bg-gray-1200": useRouteMatch(["/index-bs-consulting", "/index-fintech"]),
-    "bg-gray-1100": useRouteMatch(["/index-crypto-profile", "/index-coaching-service"]),
-    "is-theme": useRouteMatch(["/index-bs-analytics", "/index-coaching-service", "/index-crypto-profile", "/index-bs-consulting", "/index-fintech"])
+    "bg-dark": useRouteMatch(["/dashboard/parcelinfo"]),
+    "bg-green-700": useRouteMatch(["/dashboard/BuyerOffers"]),
+    "bg-gray-1200": useRouteMatch(["/dashboard/trade-wizard", "/dashboard/gestionUser"]),
+    "is-theme": useRouteMatch(["/dashboard/parcelinfo", "/dashboard/BuyerOffers", "/dashboard/trade-wizard", "/dashboard/gestionUser"])
   });
 
-
   const socialIconClasses = classNames({
-
     // border radius
-    "rounded-1": !useRouteMatch(["/index-crypto-profile"]),
+    "rounded-1": !useRouteMatch(["/dashboard/parcelinfo"]),
 
     // bg colors
-    "text-bg-purple": useRouteMatch(["/index-kids-course"]),
-    "text-bg-white": useRouteMatch(["/index-crypto-profile"]),
-    "text-bg-success-alt text-white": useRouteMatch(["/index-live-chat-app"]),
-    "text-bg-info text-white": useRouteMatch(["/index-bs-management"]),
-    "text-bg-info-alt text-white": useRouteMatch(["/index-language-learning"]),
-    "text-bg-indigo text-white": useRouteMatch(["/index-collaboration-tool", "/index-bs-solution", "/about-solution", "/features-solution", "/contact-us-solution", "/pricing-solution"]),
-    "text-bg-primary-alt text-white": useRouteMatch(["/index-bs-expense-tracker", "/index-saas", "/index-bs-subscription", "/index-data-driven"]),
-    "text-bg-success text-white": useRouteMatch(["/index-bs-digital"]),
-    "text-bg-primary": !useRouteMatch(["/index-kids-course", "/index-crypto-profile", "/index-live-chat-app", "/index-bs-management", "/index-language-learning", "/index-collaboration-tool", "/index-bs-solution", "/index-bs-expense-tracker", "/index-saas", "/index-bs-subscription", "/index-data-driven", "/index-bs-digital"]),
+    "text-bg-green-500 text-white": useRouteMatch(["/dashboard/parcelinfo"]),
+    "text-bg-blue-600 text-white": useRouteMatch(["/dashboard/BuyerOffers"]),
+    "text-bg-gray-800 text-white": useRouteMatch(["/dashboard/trade-wizard"]),
+    "text-bg-primary text-white": useRouteMatch(["/dashboard/gestionUser"]),
+    "text-bg-primary": !useRouteMatch(["/dashboard/parcelinfo", "/dashboard/BuyerOffers", "/dashboard/trade-wizard", "/dashboard/gestionUser"]),
   });
 
   const brandLinkClasses = classNames({
-    "text-info": useRouteMatch(["/index-bs-management"]),
-    "text-success-alt": useRouteMatch(["/index-live-chat-app"]),
-    "text-success": useRouteMatch(["/index-bs-digital"]),
-    "text-info-alt": useRouteMatch(["/index-language-learning"]),
-    "text-purple": useRouteMatch(["/index-kids-course", "/index-crypto-profile"]),
-    "text-primary-alt": useRouteMatch(["/index-bs-expense-tracker", "/index-saas", "/index-bs-subscription", "/index-data-driven"]),
-    "text-indigo": useRouteMatch(["/index-collaboration-tool", "/index-bs-solution", "/about-solution", "/features-solution", "/contact-us-solution", "/pricing-solution"]),
-    "text-primary": !useRouteMatch(["/index-kids-course", "/index-crypto-profile", "/index-live-chat-app", "/index-bs-management", "/index-language-learning", "/index-collaboration-tool", "/index-bs-solution", "/index-bs-expense-tracker", "/index-saas", "/index-bs-subscription", "/index-data-driven", "/index-bs-digital"])
+    "text-green-500": useRouteMatch(["/dashboard/parcelinfo"]),
+    "text-blue-600": useRouteMatch(["/dashboard/BuyerOffers"]),
+    "text-gray-800": useRouteMatch(["/dashboard/trade-wizard"]),
+    "text-primary": useRouteMatch(["/dashboard/gestionUser"]),
+    "text-primary": !useRouteMatch(["/dashboard/parcelinfo", "/dashboard/BuyerOffers", "/dashboard/trade-wizard", "/dashboard/gestionUser"])
   });
-
 
   const footerTextClasses = classNames({
     // typography
-    "fs-16": useRouteMatch(["/index-kids-course"]),
-    "fw-medium": useRouteMatch(["/index-kids-course"]),
+    "fs-16": useRouteMatch(["/dashboard/parcelinfo"]),
+    "fw-medium": useRouteMatch(["/dashboard/parcelinfo"]),
     "text-capitalize": true,
 
     // colors
-    "text-dark": !useRouteMatch(["/index-crypto-profile"]),
+    "text-dark": !useRouteMatch(["/dashboard/parcelinfo"]),
   });
 
-  // variants of navbar 
+  // variants of footer 
   function filterDataByVariant(variantNumber) {
     return config.filter(item => item.variant === variantNumber);
   }
-  const [data] = filterDataByVariant(variant)
+  const [data] = filterDataByVariant(variant);
 
   return (
     <footer className={compClasses}>
@@ -83,17 +71,18 @@ export default function Footer({ variant = 1, children }) {
                   <Row className="justify-content-center">
                     <Col xl={6}>
                       <div className="call-to-info text-center">
+                        
                         <NioBrand className="mb-3" logo={data.footer.logo?.name || "s1"} variant={data.footer.logo?.variant || "dark"} />
-                        <h2 className="mb-1">Create Better Build Faster</h2>
-                        <p className="m-0">Everything you need to create your next unique and professional website, including impressive and ready-made pages.</p>
+                        <h2 className="mb-1">Grow Smarter with Harvest Flow</h2>
+                        <p className="m-0">Empower your agricultural business with tools to manage crops, trade, and finances efficiently.</p>
                         <div className="call-to-action pt-5 pt-lg-7">
-                          <Link to="https://themeforest.net/user/softnio/portfolio" target="_blank" className="btn btn-primary mb-1">
+                          <Link to="/dashboard" className="btn btn-primary mb-1">
                             <NioIcon name="bag-fill" className="me-2" />
-                            Purchase NioLand Now
+                            Get Started with Harvest Flow
                           </Link>
-                          <Link to="https://themeforest.net/user/softnio/portfolio" target="_blank">
-                            <img src="/images/icon/envato.png" alt="envato" />
-                            <span>Available only on Envato</span>
+                          <Link to="https://harvestflow.com" target="_blank">
+                            <img src="/images/icon/harvestflow.png" alt="harvestflow" />
+                            <span>Explore Harvest Flow</span>
                           </Link>
                         </div>
                       </div>
@@ -102,10 +91,10 @@ export default function Footer({ variant = 1, children }) {
                 </div>
               </Container>
             </div>
-            <div className="nk-footer-landing-copyright py-3">
+            <div className="nk-footer-harvest-copyright py-3">
               <Container>
                 <p className="mb-0 text-capitalize">
-                  Copyright &copy; <span className="text-white">{new Date().getFullYear()}</span> NioLand. Template made by <Link to="https://softnio.com/" target="_blank" className={brandLinkClasses}>Softnio</Link>
+                  Copyright © <span className="text-white">{new Date().getFullYear()}</span> Harvest Flow. Made by <Link to="https://harvestflow.com/" target="_blank" className={brandLinkClasses}>Harvest Flow</Link>
                 </p>
               </Container>
             </div>
@@ -118,30 +107,28 @@ export default function Footer({ variant = 1, children }) {
                   <Row className="nk-footer-content justify-content-xl-between">
                     <Col md={8} lg={4} xl={4}>
                       <div className="nk-footer-brand pb-5 pb-lg-0">
-                        <div className="nk-footer-brand-info mb-4">
-                          <div className="nk-footer-logo">
-                            <NioBrand logo={data.footer.logo?.name} variant={data.footer.logo?.variant} />
-                          </div>
-                          <p>Streamline your business operations with our powerful suite of solutions. Boost productivity and drive growth with NioLand.</p>
+                        <div className="nk-footer-logo">
+                          <NioBrand logo={data.footer.logo?.name} variant={data.footer.logo?.variant} />
                         </div>
+                        <p>Harvest Flow provides innovative solutions for farmers, distributors, and transporters to optimize their agricultural operations.</p>
                         <ul className="nk-footer-social">
                           <li>
-                            <Link to="#" className={socialIconClasses}>
+                            <Link to="https://facebook.com/harvestflow" className={socialIconClasses} target="_blank">
                               <NioIcon name="facebook-f" />
                             </Link>
                           </li>
                           <li>
-                            <Link to="#" className={socialIconClasses}>
+                            <Link to="https://twitter.com/harvestflow" className={socialIconClasses} target="_blank">
                               <NioIcon name="twitter" />
                             </Link>
                           </li>
                           <li>
-                            <Link to="#" className={socialIconClasses}>
+                            <Link to="https://linkedin.com/company/harvestflow" className={socialIconClasses} target="_blank">
                               <NioIcon name="linkedin" />
                             </Link>
                           </li>
                           <li>
-                            <Link to="#" className={socialIconClasses}>
+                            <Link to="https://telegram.me/harvestflow" className={socialIconClasses} target="_blank">
                               <NioIcon name="telegram" />
                             </Link>
                           </li>
@@ -155,28 +142,34 @@ export default function Footer({ variant = 1, children }) {
                             <h5 className="title">Pages</h5>
                             <ul className="row gy-1 gy-sm-4">
                               <li className="col-6">
-                                <Link to="/features">Features</Link>
+                                <Link to="/dashboard/parcelinfo">Parcel Info</Link>
                               </li>
                               <li className="col-6">
-                                <Link to="/about">About</Link>
+                                <Link to="/dashboard/MapSelector">Map</Link>
                               </li>
                               <li className="col-6">
-                                <Link to="/pricing">Pricing</Link>
+                                <Link to="/dashboard/StockManagement">Stock Management</Link>
                               </li>
                               <li className="col-6">
-                                <Link to="/blogs">Blog</Link>
+                                <Link to="/dashboard/WheatPrediction">Wheat Prediction</Link>
                               </li>
                               <li className="col-6">
-                                <Link to="/blog-details">Blog Post</Link>
+                                <Link to="/dashboard/FarmerOffers">Farmer Offers</Link>
                               </li>
                               <li className="col-6">
-                                <Link to="/customer-testimonials">Customer Reviews</Link>
+                                <Link to="/dashboard/recommendations">Recommendations</Link>
                               </li>
                               <li className="col-6">
-                                <Link to="/help-center">Help Center</Link>
+                                <Link to="/dashboard/trade">Trade Data</Link>
                               </li>
                               <li className="col-6">
-                                <Link to="/contact-us">Contact</Link>
+                                <Link to="/dashboard/CountryStats">Country Stats</Link>
+                              </li>
+                              <li className="col-6">
+                                <Link to="/dashboard/trade-wizard">Trade Wizard</Link>
+                              </li>
+                              <li className="col-6">
+                                <Link to="/dashboard/financialManagment">Finance Dashboard</Link>
                               </li>
                             </ul>
                           </div>
@@ -189,7 +182,7 @@ export default function Footer({ variant = 1, children }) {
                                 <Link to="/auth/login">Login</Link>
                               </li>
                               <li className="col-12">
-                                <Link to="/auth/signup">Sign up</Link>
+                                <Link to="/auth/signup">Sign Up</Link>
                               </li>
                               <li className="col-12">
                                 <Link to="/auth/reset-password">Reset Password</Link>
@@ -209,20 +202,21 @@ export default function Footer({ variant = 1, children }) {
                 <Container>
                   <Row className="nk-footer-content justify-content-between">
                     <Col lg={6} className="px-0">
-                      <p className="nk-footer-copyright-text text-center text-lg-start">&copy; 2011 - <span id="currentYear"> {new Date().getFullYear()} </span>
-                        <Link className={brandLinkClasses} to="https://softnio.com/" target="_blank"> Softnio</Link>. All Rights Reserved.
+                      <p className="nk-footer-copyright-text text-center text-lg-start">
+                        © 2011 - <span id="currentYear">{new Date().getFullYear()}</span>
+                        <Link className={brandLinkClasses} to="https://harvestflow.com/" target="_blank"> Harvest Flow</Link>. All Rights Reserved.
                       </p>
                     </Col>
                     <Col lg={6} className="px-0">
                       <ul className="nk-footer-copyright justify-content-center justify-content-lg-end">
                         <li>
-                          <Link className={footerTextClasses} to="#">All Rights</Link>
+                          <Link className={footerTextClasses} to="/terms">Terms & Conditions</Link>
                         </li>
                         <li>
-                          <Link className={footerTextClasses} to="#">Terms & conditions</Link>
+                          <Link className={footerTextClasses} to="/privacy">Privacy Policy</Link>
                         </li>
                         <li>
-                          <Link className={footerTextClasses} to="#">Privacy Policy</Link>
+                          <Link className={footerTextClasses} to="/contact">Contact Us</Link>
                         </li>
                       </ul>
                     </Col>
@@ -235,6 +229,6 @@ export default function Footer({ variant = 1, children }) {
               {children}
             </>
       }
-    </footer >
-  )
+    </footer>
+  );
 }

@@ -66,7 +66,7 @@ export default function VerifPassword() {
   }, []);
 
   return (
-    <NioSection className="bg-purple-100" masks={["shape-18"]}  >
+    <NioSection className="bg-green-100" masks={["shape-18"]}  >
       <AuthLayout1 title="Forgot Password" rootClass="layout-1" >
         {showSuccess && (
           <NioToaster variant="success" title="Success" message="Your Password sent it to your email" />
@@ -96,7 +96,7 @@ export default function VerifPassword() {
                 ))}
                 <Col xs={12}>
                   <div className="form-group "   style={{ marginTop: '30px' }}>
-                    <NioButton type="submit" className="btn-indigo btn-block" label="Verify Code" style={{ marginTop: '30px' }} />
+                    <NioButton type="submit" className="btn-success btn-block" label="Verify Code" style={{ marginTop: '30px' }} />
                   </div>
                 </Col>
               </Row>

@@ -61,16 +61,16 @@ export default function VerifCode() {
             // Redirect based on role
             switch (createUserResponse.data.role) {
               case 'farmer':
-                navigate("/index-company-home-page");
+                navigate("/index-collaboration-tool");
                 break;
               case 'distributor':
-                navigate("/index-distributor-home-page");
+                navigate("/index-collaboration-tool");
                 break;
               case 'transporter':
-                navigate("/index-transporter-home-page");
+                navigate("/index-collaboration-tool");
                 break;
               default:
-                navigate("/");
+                navigate("/index-collaboration-tool");
                 break;
             }
           } else {
@@ -110,7 +110,7 @@ export default function VerifCode() {
   }, []);
 
   return (
-    <NioSection className="bg-purple-100" masks={["shape-18"]}  >
+    <NioSection className="bg-green-100" masks={["shape-18"]}>
     <AuthLayout1 title="Forgot Password" rootClass="layout-1" style={{ marginTop: '50px' }}>
       <NioCard className="nk-form-card card card-gutter-md nk-auth-form-card mx-md-9 mx-xl-auto">
         <NioCard.Body>
@@ -135,7 +135,7 @@ export default function VerifCode() {
               ))}
               <Col xs={12}>
                 <div className="form-group"  style={{ marginTop: '100px' }}>
-                  <NioButton type="submit" className="btn-indigo btn-block" label="Verify Code" />
+                  <NioButton type="submit" className="btn-success btn-block" label="Verify & Send Code" />                  
                 </div>
               </Col>
             </Row>

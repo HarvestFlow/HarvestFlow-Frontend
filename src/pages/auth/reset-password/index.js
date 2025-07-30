@@ -72,7 +72,7 @@ useEffect(() => {
 
 
   return (
-    <NioSection className="bg-purple-100" masks={["shape-18"]}  >
+    <NioSection className="bg-green-100" masks={["shape-18"]}  >
     <AuthLayout1 title="Reset Password" rootClass="layout-1">
       {showSuccess && (
         <NioToaster variant="success" title="Success" message="Your password has been reset" />
@@ -130,7 +130,7 @@ useEffect(() => {
               </Col>
               <Col xs={12}>
                 <div className="form-group">
-                  <NioButton type="submit" className="btn-indigo btn-block" label="Reset Password" />
+                  <NioButton type="submit" className="btn-success btn-block" label="Reset Password" />
                 </div>
               </Col>
             </Row>

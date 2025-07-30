@@ -55,7 +55,7 @@ export default function ForgotPassword() {
 
 
   return (
-    <NioSection className="bg-purple-100" masks={["shape-18"]}  >
+    <NioSection className="bg-green-100" masks={["shape-18"]}  >
     <AuthLayout1 title="Forgot Password" rootClass="layout-1">
       {
         showSuccess && (
@@ -91,7 +91,7 @@ export default function ForgotPassword() {
               </Col>
               <Col xs={12}>
                 <div className="form-group">
-                  <NioButton className="btn-indigo btn-block" label="Send Reset Link" />
+                  <NioButton className="btn-success btn-block" label="Send Reset Link" />
                 </div>
               </Col>
             </Row>

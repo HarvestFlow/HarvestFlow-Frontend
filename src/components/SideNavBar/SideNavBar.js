@@ -25,7 +25,7 @@ import {
   faShoppingCart,
 } from "@fortawesome/free-solid-svg-icons";
 import NioBrand from "../NioBrand/NioBrand";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom"; // Add useLocation
 import axios from "axios";
 import "./SideNavBar.css";
 import Observations from "../FarmerDashboard/ParcelInfo/Observations";
@@ -61,12 +61,12 @@ function Sidebar() {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [userRole, setUserRole] = useState(null); // Store user role
+  const [userRole, setUserRole] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showNotifications, setShowNotifications] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation(); // Add useLocation to track current path
   const sidebarRef = useRef(null);
-
   const { notifications, userId } = useNotifications();
   const API_URL = "http://localhost:5000";
 
@@ -77,10 +77,10 @@ function Sidebar() {
           withCredentials: true,
           timeout: 5000,
         });
-        setUserRole(response.data.role); // Set role (admin, farmer, distributor, transporter)
-        console.log("Profile response:", response.data);
+        setUserRole(response.data.role);
       } catch (err) {
         console.error("Erreur lors de la récupération du profil:", err);
+        navigate("/login"); // Redirect to login if profile fetch fails
       } finally {
         setLoading(false);
       }
@@ -106,6 +106,35 @@ function Sidebar() {
   }, [navigate]);
 
   useEffect(() => {
+  console.log("Redirection useEffect triggered:", {
+    userRole,
+    loading,
+    pathname: location.pathname,
+  });
+
+  if (!loading && userRole && location.pathname.toLowerCase() === "/dashboard") {
+    console.log(`Redirecting ${userRole} to appropriate dashboard...`);
+    switch (userRole) {
+      case "farmer":
+        navigate("/dashboard/parcelinfo");
+        break;
+      case "distributor":
+        navigate("/dashboard/BuyerOffers");
+        break;
+      case "transporter":
+        navigate("/dashboard/trade-wizard");
+        break;
+      case "admin":
+        navigate("/dashboard/gestionUser");
+        break;
+      default:
+        console.log("Unknown role, redirecting to /login");
+        navigate("/login");
+    }
+  }
+}, [userRole, loading, location.pathname, navigate]);
+
+  useEffect(() => {
     const handleClickOutside = (event) => {
       if (
         isMobile &&
@@ -113,13 +142,12 @@ function Sidebar() {
         sidebarRef.current &&
         !sidebarRef.current.contains(event.target)
       ) {
-        console.log("Clic en dehors détecté sur mobile, réduction du sidebar");
         setIsMobileCollapsed(true);
       }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isMobile, isMobileCollapsed]);
 
   const toggleSidebar = () => {
@@ -157,9 +185,7 @@ function Sidebar() {
     }
   };
 
-  // Define menu items for each role
   const menuItems = [
-    // Farmer-specific routes
     ...(userRole === "farmer"
       ? [
           { name: "Parcel Info", icon: faInfoCircle, path: "/parcelinfo", roles: ["farmer"] },
@@ -173,11 +199,8 @@ function Sidebar() {
           { name: "Trade Wizard", icon: faChartLine, path: "/trade-wizard", roles: ["farmer"] },
           { name: "Finance Dashboard", icon: faCalculator, path: "/financialManagment", roles: ["farmer"] },
           { name: "Stock", icon: faCalculator, path: "/Stock", roles: ["farmer"] },
-
         ]
       : []),
-
-    // Distributor-specific routes
     ...(userRole === "distributor"
       ? [
           { name: "BuyerOffers", icon: faShoppingCart, path: "/BuyerOffers", roles: ["distributor"] },
@@ -187,24 +210,17 @@ function Sidebar() {
           { name: "Finance Dashboard", icon: faCalculator, path: "/financialManagment", roles: ["distributor"] },
         ]
       : []),
-
-    // Transporter-specific routes
     ...(userRole === "transporter"
       ? [
           { name: "Trade Wizard", icon: faChartLine, path: "/trade-wizard", roles: ["transporter"] },
           { name: "Finance Dashboard", icon: faCalculator, path: "/financialManagment", roles: ["transporter"] },
-          
         ]
       : []),
-
-    // Admin-specific routes
     ...(userRole === "admin"
       ? [
-          { name: "AdminDashboard", icon: faTachometerAlt, path: "/AdminDashboard", roles: ["admin"] },
           { name: "Gestion User", icon: faUserCheck, path: "/gestionUser", roles: ["admin"] },
           { name: "AdminScrapper", icon: faListCheck, path: "/AdminScrapper", roles: ["admin"] },
-                    { name: "AdminContactDashboard", icon: faListCheck, path: "/AdminContactDashboard", roles: ["admin"] },
-
+          { name: "AdminContactDashboard", icon: faListCheck, path: "/AdminContactDashboard", roles: ["admin"] },
         ]
       : []),
   ];
@@ -411,7 +427,6 @@ function Sidebar() {
         } ${isMobile && !isMobileCollapsed ? "mobile-expanded" : ""}`}
       >
         <Routes>
-          {/* Farmer Routes */}
           {userRole === "farmer" && (
             <>
               <Route path="/parcelinfo" element={<ParcelInfo />} />
@@ -423,12 +438,9 @@ function Sidebar() {
               <Route path="/FarmerOffers" element={<FarmerOffers />} />
               <Route path="/recommendations" element={<RecommendationsSelector />} />
               <Route path="/recommendations/:shapeId" element={<Recommendations />} />
-
-
               <Route path="/trade" element={<TradeDataManager />} />
               <Route path="/trade-data/:fileId" element={<FileDataManager />} />
               <Route path="/trade-data/:fileId/charts" element={<DynamicChartPage />} />
-
               <Route path="/CountryStats" element={<CountryStats />} />
               <Route
                 path="/trade-wizard/*"
@@ -444,11 +456,8 @@ function Sidebar() {
               />
               <Route path="/financialManagment" element={<FinanceDashboard />} />
               <Route path="/stock" element={<StockDashboard />} />
-
             </>
           )}
-
-          {/* Distributor Routes */}
           {userRole === "distributor" && (
             <>
               <Route path="/BuyerOffers" element={<BuyerOffers />} />
@@ -472,8 +481,6 @@ function Sidebar() {
               <Route path="/financialManagment" element={<FinanceDashboard />} />
             </>
           )}
-
-          {/* Transporter Routes */}
           {userRole === "transporter" && (
             <>
               <Route
@@ -491,19 +498,13 @@ function Sidebar() {
               <Route path="/financialManagment" element={<FinanceDashboard />} />
             </>
           )}
-
-          {/* Admin Routes */}
           {userRole === "admin" && (
             <>
-              <Route path="/AdminDashboard" element={<AdminDashboard />} />
               <Route path="/gestionUser" element={<GestionUser />} />
               <Route path="/AdminScrapper" element={<AdminScrapper />} />
-                            <Route path="/AdminContactDashboard" element={<AdminContactDashboard />} />
-
+              <Route path="/AdminContactDashboard" element={<AdminContactDashboard />} />
             </>
           )}
-
-          {/* Fallback Route */}
           <Route path="*" element={<div>Page non trouvée</div>} />
         </Routes>
       </div>

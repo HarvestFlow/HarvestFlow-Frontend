@@ -56,7 +56,7 @@ export default function Answers() {
   }, []);
 
   return (
-    <NioSection className="bg-purple-100" masks={["shape-18"]}>
+    <NioSection className="bg-green-100" masks={["shape-18"]}>
       <AuthLayout1 title="Reset Password" rootClass="layout-1">
         {showSuccess && (
           <NioToaster variant="success" title="Success" message="Verification successful, check your email" />
@@ -105,8 +105,7 @@ export default function Answers() {
                 </Col>
                 <Col xs={12}>
                   <div className="form-group">
-                    <NioButton type="submit" className="btn-indigo btn-block" label="Verify & Send Code" />
-                  </div>
+                  <NioButton type="submit" className="btn-success btn-block" label="Verify & Send Code" />                  </div>
                 </Col>
               </Row>
             </Form>

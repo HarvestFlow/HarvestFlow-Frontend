@@ -19,6 +19,8 @@ function AdminContactDashboard() {
   const [searchQuery, setSearchQuery] = useState('');
   const [dateRange, setDateRange] = useState({ start: '', end: '' });
   const [filterUser, setFilterUser] = useState('');
+  const [page, setPage] = useState(1);
+  const rowsPerPage = 10;
 
   // Fetch user profile to verify admin status
   const fetchUserProfile = async () => {
@@ -88,6 +90,14 @@ function AdminContactDashboard() {
       return matchesSearch && matchesDateRange && matchesUser;
     });
   }, [contactRequests, searchQuery, dateRange, filterUser]);
+
+  // Pagination
+  const paginatedRequests = useMemo(() => {
+    const startIndex = (page - 1) * rowsPerPage;
+    return filteredRequests.slice(startIndex, startIndex + rowsPerPage);
+  }, [filteredRequests, page]);
+
+  const totalPages = Math.ceil(filteredRequests.length / rowsPerPage);
 
   // Chart data for contact request trends
   const chartData = useMemo(() => {
@@ -166,40 +176,7 @@ function AdminContactDashboard() {
             min-height: 100vh;
             background: linear-gradient(to bottom, #f0fdf4, #ffffff);
             font-family: 'Arial', sans-serif;
-          }
-          .top-nav {
-            background: #10b981;
-            color: white;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-          }
-          .top-nav h1 {
-            font-size: 1.75rem;
-            font-weight: bold;
-          }
-          .nav-links {
-            display: flex;
-            gap: 1rem;
-          }
-          .nav-links button {
-            background: #059669;
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
-            border: none;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background 0.2s ease, transform 0.2s ease;
-          }
-          .nav-links button:hover {
-            background: #047857;
-            transform: scale(1.05);
+            padding: 2rem;
           }
           .dashboard-header {
             background: linear-gradient(135deg, #10b981 0%, #059669 100%);
@@ -207,7 +184,7 @@ function AdminContactDashboard() {
             padding: 2rem;
             text-align: center;
             border-radius: 1rem;
-            margin: 2rem auto;
+            margin: 0 auto 2rem;
             max-width: 1200px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
             animation: fadeIn 0.5s ease;
@@ -224,7 +201,7 @@ function AdminContactDashboard() {
             display: flex;
             flex-wrap: wrap;
             gap: 1rem;
-            margin: 2rem auto;
+            margin: 0 auto 2rem;
             max-width: 1200px;
             background: #e6f3e6;
             padding: 1.5rem;
@@ -250,7 +227,7 @@ function AdminContactDashboard() {
             padding: 2rem;
             border-radius: 1rem;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            margin: 2rem auto;
+            margin: 0 auto 2rem;
             max-width: 800px;
             animation: slideIn 0.5s ease;
           }
@@ -262,7 +239,8 @@ function AdminContactDashboard() {
             background: white;
             border-radius: 1rem;
             overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+            border: 2px solid #10b981;
           }
           .contact-table th,
           .contact-table td {
@@ -273,17 +251,18 @@ function AdminContactDashboard() {
             color: #1f2937;
           }
           .contact-table th {
-            background: #e6f3e6;
-            color: #2e7d32;
+            background: #10b981;
+            color: white;
             font-weight: 700;
             font-size: 1.1rem;
           }
-          .contact-table tr {
-            transition: background 0.2s ease, transform 0.2s ease;
+          .contact-table tbody tr:nth-child(odd) {
+            background: #f9fafb;
           }
-          .contact-table tr:hover {
-            background: #f5f7f6;
-            transform: translateY(-2px);
+          .contact-table tbody tr:hover {
+            background: #e6f3e6;
+            transform: scale(1.01);
+            transition: background 0.2s ease, transform 0.2s ease;
           }
           .contact-card {
             background: white;
@@ -317,6 +296,10 @@ function AdminContactDashboard() {
             color: #1f2937;
             font-size: 1.25rem;
             margin: 2rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
           }
           .action-button {
             background: #10b981;
@@ -332,6 +315,45 @@ function AdminContactDashboard() {
             background: #059669;
             transform: scale(1.05);
           }
+          .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 2rem auto;
+            max-width: 1200px;
+          }
+          .pagination button {
+            background: #10b981;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.2s ease;
+          }
+          .pagination button:hover {
+            background: #059669;
+            transform: scale(1.05);
+          }
+          .pagination button:disabled {
+            background: #6b7280;
+            cursor: not-allowed;
+            transform: none;
+          }
+          .pagination span {
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            color: #1f2937;
+          }
+          .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #10b981;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+          }
           @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -339,6 +361,10 @@ function AdminContactDashboard() {
           @keyframes slideIn {
             from { transform: translateY(20px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
+          }
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
           }
           @media (max-width: 768px) {
             .contact-table {
@@ -350,22 +376,18 @@ function AdminContactDashboard() {
             .controls {
               flex-direction: column;
             }
-            .nav-links {
-              flex-wrap: wrap;
-              gap: 0.5rem;
-            }
-            .nav-links button {
-              padding: 0.5rem;
-              font-size: 0.9rem;
-            }
-            .top-nav h1 {
-              font-size: 1.5rem;
-            }
             .dashboard-header h1 {
               font-size: 1.75rem;
             }
             .dashboard-header p {
               font-size: 1rem;
+            }
+            .pagination {
+              flex-wrap: wrap;
+            }
+            .pagination button, .pagination span {
+              padding: 0.5rem;
+              font-size: 0.9rem;
             }
           }
           @media (min-width: 769px) {
@@ -376,21 +398,7 @@ function AdminContactDashboard() {
         `}
       </style>
 
-      <div className="top-nav">
-        <h1>Farmer Nexus Admin</h1>
-        <div className="nav-links">
-          <button onClick={() => navigate('/admin/dashboard')}>Tableau de Bord</button>
-          <button onClick={() => navigate('/admin/users')}>Utilisateurs</button>
-          <button onClick={() => fetchContactRequests()}>Demandes de Contact</button>
-          <button onClick={() => navigate('/login')}>Déconnexion</button>
-        </div>
-      </div>
-
-      <div className="dashboard-header">
-        <h1>Demandes de Contact</h1>
-        <p>Analysez et gérez les demandes de contact envoyées par les utilisateurs</p>
-      </div>
-
+    
       {error && (
         <div className="error-message">
           {error}
@@ -439,7 +447,8 @@ function AdminContactDashboard() {
 
       {isLoading ? (
         <div className="loading-message">
-          <span className="animate-spin inline-block mr-2">⌀</span> Chargement...
+          <div className="spinner"></div>
+          Chargement...
         </div>
       ) : filteredRequests.length === 0 ? (
         <div className="text-center py-16">
@@ -460,7 +469,7 @@ function AdminContactDashboard() {
               </tr>
             </thead>
             <tbody>
-              {filteredRequests.map((request, index) => (
+              {paginatedRequests.map((request, index) => (
                 <tr key={request._id} style={{ animationDelay: `${index * 0.1}s` }}>
                   <td>{request.firstname || 'N/A'}</td>
                   <td>{request.email || 'N/A'}</td>
@@ -483,6 +492,34 @@ function AdminContactDashboard() {
               <p><strong>Date:</strong> {formatDate(request.createdAt)}</p>
             </div>
           ))}
+
+          <div className="pagination">
+            <button
+              onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+              disabled={page === 1}
+            >
+              Précédent
+            </button>
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+              <button
+                key={pageNum}
+                onClick={() => setPage(pageNum)}
+                style={{
+                  background: pageNum === page ? '#059669' : '#10b981',
+                  fontWeight: pageNum === page ? 'bold' : 'normal',
+                }}
+              >
+                {pageNum}
+              </button>
+            ))}
+            <button
+              onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+              disabled={page === totalPages}
+            >
+              Suivant
+            </button>
+            <span>Page {page} sur {totalPages}</span>
+          </div>
         </>
       )}
     </div>

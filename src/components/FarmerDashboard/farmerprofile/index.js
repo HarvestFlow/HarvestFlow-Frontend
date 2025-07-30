@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import AppLayout from '../../../layouts/AppLayout/AppLayout';
 
-const UpdateFarmerProfile = () => {
+const UpdateUserProfile = () => {
   const [formData, setFormData] = useState({
     firstname: '',
     lastname: '',
@@ -19,8 +19,11 @@ const UpdateFarmerProfile = () => {
   const [initialData, setInitialData] = useState(null);
   const [userId, setUserId] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+  const [showConfirmPopup, setShowConfirmPopup] = useState(false);
+  const [formErrors, setFormErrors] = useState({});
 
   useEffect(() => {
     let mounted = true;
@@ -34,22 +37,21 @@ const UpdateFarmerProfile = () => {
         });
 
         if (mounted && response.status === 200) {
-          const farmerData = response.data;
+          const userData = response.data;
           setFormData({
-            firstname: farmerData.firstname || '',
-            lastname: farmerData.lastname || '',
-            email: farmerData.email || '',
-            phone: farmerData.phone || '',
-            companyname: farmerData.companyname || '',
-            country: farmerData.country || '',
-            address: farmerData.address || '',
-            productionType: Array.isArray(farmerData.productionType) ? farmerData.productionType : [],
-            productionMethod: Array.isArray(farmerData.productionMethod) ? farmerData.productionMethod : [],
+            firstname: userData.firstname || '',
+            lastname: userData.lastname || '',
+            email: userData.email || '',
+            phone: userData.phone || '',
+            companyname: userData.companyname || '',
+            country: userData.country || '',
+            address: userData.address || '',
+     
             certification: null,
             imageUser: null,
           });
-          setInitialData(farmerData);
-          setUserId(farmerData._id);
+          setInitialData(userData);
+          setUserId(userData._id);
         }
       } catch (err) {
         if (mounted) {
@@ -68,9 +70,18 @@ const UpdateFarmerProfile = () => {
     };
   }, []);
 
+  const validateForm = () => {
+    const errors = {};
+    if (!formData.email) errors.email = 'L’email est requis';
+    else if (!/\S+@\S+\.\S+/.test(formData.email)) errors.email = 'L’email est invalide';
+    if (formData.phone && !/^\+?\d{10,15}$/.test(formData.phone)) errors.phone = 'Numéro de téléphone invalide';
+    return errors;
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormErrors((prev) => ({ ...prev, [name]: null }));
   };
 
   const handleFileChange = (e) => {
@@ -86,24 +97,30 @@ const UpdateFarmerProfile = () => {
     setFormData((prev) => ({ ...prev, [name]: selectedValues }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     setError(null);
     setSuccess(null);
+    setSubmitting(true);
+
+    const errors = validateForm();
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      setSubmitting(false);
+      return;
+    }
 
     if (!userId) {
-      setError('Authentication required');
+      setError('Authentification requise');
+      setSubmitting(false);
       return;
     }
 
     const data = new FormData();
     Object.entries(formData).forEach(([key, value]) => {
-      if (value) {
-        if (Array.isArray(value)) {
-          data.append(key, JSON.stringify(value));
-        } else if (key !== 'certification' && key !== 'imageUser') {
-          data.append(key, value);
-        }
+      if (Array.isArray(value)) {
+        data.append(key, JSON.stringify(value));
+      } else if (key !== 'certification' && key !== 'imageUser') {
+        data.append(key, value || '');
       }
     });
     if (formData.certification) data.append('certification', formData.certification);
@@ -119,12 +136,40 @@ const UpdateFarmerProfile = () => {
           timeout: 5000,
         }
       );
-      setInitialData(response.data.data);
+      const updatedUser = response.data.data;
+      setInitialData(updatedUser);
+      setFormData((prev) => ({
+        ...prev,
+        firstname: updatedUser.firstname || '',
+        lastname: updatedUser.lastname || '',
+        email: updatedUser.email || '',
+        phone: updatedUser.phone || '',
+        companyname: updatedUser.companyname || '',
+        country: updatedUser.country || '',
+        address: updatedUser.address || '',
+        productionType: Array.isArray(updatedUser.productionType) ? updatedUser.productionType : [],
+        productionMethod: Array.isArray(updatedUser.productionMethod) ? updatedUser.productionMethod : [],
+        certification: null,
+        imageUser: null,
+      }));
       setSuccess('Profil mis à jour avec succès');
+      setShowConfirmPopup(false);
       setTimeout(() => setSuccess(null), 3000);
     } catch (err) {
       setError(err.response?.data?.message || err.message || 'Une erreur est survenue');
+      setShowConfirmPopup(false);
+    } finally {
+      setSubmitting(false);
     }
+  };
+
+  const handleConfirmClick = (e) => {
+    e.preventDefault();
+    setShowConfirmPopup(true);
+  };
+
+  const handleCancel = () => {
+    setShowConfirmPopup(false);
   };
 
   if (loading) {
@@ -154,7 +199,7 @@ const UpdateFarmerProfile = () => {
           width: '100%',
           padding: '40px 20px',
           fontFamily: "'Arial', sans-serif",
-          backgroundColor: '#f5f7f5', // Fond vert très clair et subtil
+          backgroundColor: '#f5f7f5',
         }}
       >
         <div
@@ -165,35 +210,144 @@ const UpdateFarmerProfile = () => {
             boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
             borderRadius: '10px',
             backgroundColor: '#fff',
-            border: '1px solid #e0e8e0', // Bordure verte subtile
+            border: '1px solid #e0e8e0',
           }}
         >
+          {/* Success Popup */}
           {success && (
             <div
               style={{
-                backgroundColor: '#d4edda',
-                color: '#155724',
-                padding: '15px',
-                borderRadius: '8px',
-                marginBottom: '20px',
-                textAlign: 'center',
+                position: 'fixed',
+                top: '0',
+                left: '0',
+                right: '0',
+                bottom: '0',
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                zIndex: '1000',
               }}
             >
-              {success}
+              <div
+                style={{
+                  backgroundColor: '#d4edda',
+                  color: '#155724',
+                  padding: '20px',
+                  borderRadius: '8px',
+                  textAlign: 'center',
+                  maxWidth: '400px',
+                  width: '90%',
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
+                }}
+              >
+                <p style={{ fontSize: '16px', fontWeight: '500', marginBottom: '20px' }}>{success}</p>
+                <button
+                  onClick={() => setSuccess(null)}
+                  style={{
+                    padding: '10px 20px',
+                    backgroundColor: '#4caf50',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '5px',
+                    cursor: 'pointer',
+                    fontSize: '16px',
+                    fontWeight: '600',
+                    transition: 'background-color 0.3s',
+                  }}
+                  onMouseEnter={(e) => (e.target.style.backgroundColor = '#388e3c')}
+                  onMouseLeave={(e) => (e.target.style.backgroundColor = '#4caf50')}
+                >
+                  OK
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Confirmation Popup */}
+          {showConfirmPopup && (
+            <div
+              style={{
+                position: 'fixed',
+                top: '0',
+                left: '0',
+                right: '0',
+                bottom: '0',
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                zIndex: '1000',
+              }}
+            >
+              <div
+                style={{
+                  backgroundColor: '#fff',
+                  padding: '20px',
+                  borderRadius: '8px',
+                  textAlign: 'center',
+                  maxWidth: '400px',
+                  width: '90%',
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
+                }}
+              >
+                <p style={{ fontSize: '16px', fontWeight: '500', marginBottom: '20px', color: '#333' }}>
+                  Confirmez-vous la mise à jour de votre profil ?
+                </p>
+                <div style={{ display: 'flex', justifyContent: 'center', gap: '20px' }}>
+                  <button
+                    onClick={handleSubmit}
+                    disabled={submitting}
+                    style={{
+                      padding: '10px 20px',
+                      backgroundColor: submitting ? '#6b7280' : '#4caf50',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '5px',
+                      cursor: submitting ? 'not-allowed' : 'pointer',
+                      fontSize: '16px',
+                      fontWeight: '600',
+                      transition: 'background-color 0.3s',
+                    }}
+                    onMouseEnter={(e) => !submitting && (e.target.style.backgroundColor = '#388e3c')}
+                    onMouseLeave={(e) => !submitting && (e.target.style.backgroundColor = '#4caf50')}
+                  >
+                    Confirmer
+                  </button>
+                  <button
+                    onClick={handleCancel}
+                    style={{
+                      padding: '10px 20px',
+                      backgroundColor: '#dc2626',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '5px',
+                      cursor: 'pointer',
+                      fontSize: '16px',
+                      fontWeight: '600',
+                      transition: 'background-color 0.3s',
+                    }}
+                    onMouseEnter={(e) => (e.target.style.backgroundColor = '#b91c1c')}
+                    onMouseLeave={(e) => (e.target.style.backgroundColor = '#dc2626')}
+                  >
+                    Annuler
+                  </button>
+                </div>
+              </div>
             </div>
           )}
 
           <h2
             style={{
               textAlign: 'center',
-              color: '#2e7d32', // Vert agronomique subtil
+              color: '#2e7d32',
               marginBottom: '30px',
               fontSize: '28px',
               fontWeight: '700',
-              marginTop:'30px'
+              marginTop: '30px',
             }}
           >
-            Mise à jour du profil agriculteur
+            Mise à jour du profil
           </h2>
 
           {/* Section Image de Profil */}
@@ -211,14 +365,14 @@ const UpdateFarmerProfile = () => {
                 height: '250px',
                 borderRadius: '50%',
                 overflow: 'hidden',
-                border: '4px solid #4caf50', // Bordure verte agronomique
+                border: '4px solid #4caf50',
                 backgroundColor: '#e0e0e0',
               }}
             >
               {initialData?.imageUser ? (
                 <img
                   src={`http://localhost:5000/${initialData.imageUser}`}
-                  alt="User Profile"
+                  alt="Photo de profil"
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 />
               ) : (
@@ -242,7 +396,7 @@ const UpdateFarmerProfile = () => {
               htmlFor="imageUserInput"
               style={{
                 padding: '10px 20px',
-                backgroundColor: '#4caf50', // Vert agronomique
+                backgroundColor: '#4caf50',
                 color: 'white',
                 borderRadius: '25px',
                 cursor: 'pointer',
@@ -267,139 +421,174 @@ const UpdateFarmerProfile = () => {
           </div>
 
           {/* Champs en Colonnes */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px', alignItems: 'start' }}>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+              gap: '30px',
+              alignItems: 'start',
+            }}
+          >
             {/* Colonne 1 */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
               <div>
-                <label style={{ fontSize: '16px', color: '#333', fontWeight: '600', marginBottom: '5px', display: 'block' }}>Prénom :</label>
+                <label style={{ fontSize: '16px', color: '#333', fontWeight: '600', marginBottom: '5px', display: 'block' }}>
+                  Prénom :
+                </label>
                 <input
                   type="text"
                   name="firstname"
                   value={formData.firstname}
                   onChange={handleInputChange}
-                  style={{ width: '100%', padding: '12px', border: '1px solid #a5d6a7', borderRadius: '5px' }} // Bordure verte subtile
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    border: `1px solid ${formErrors.firstname ? '#dc2626' : '#a5d6a7'}`,
+                    borderRadius: '5px',
+                  }}
                 />
+                {formErrors.firstname && (
+                  <p style={{ color: '#dc2626', fontSize: '14px', marginTop: '5px' }}>{formErrors.firstname}</p>
+                )}
               </div>
 
               <div>
-                <label style={{ fontSize: '16px', color: '#333', fontWeight: '600', marginBottom: '5px', display: 'block' }}>Nom :</label>
+                <label style={{ fontSize: '16px', color: '#333', fontWeight: '600', marginBottom: '5px', display: 'block' }}>
+                  Nom :
+                </label>
                 <input
                   type="text"
                   name="lastname"
                   value={formData.lastname}
                   onChange={handleInputChange}
-                  style={{ width: '100%', padding: '12px', border: '1px solid #a5d6a7', borderRadius: '5px' }}
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    border: `1px solid ${formErrors.lastname ? '#dc2626' : '#a5d6a7'}`,
+                    borderRadius: '5px',
+                  }}
                 />
+                {formErrors.lastname && (
+                  <p style={{ color: '#dc2626', fontSize: '14px', marginTop: '5px' }}>{formErrors.lastname}</p>
+                )}
               </div>
 
               <div>
-                <label style={{ fontSize: '16px', color: '#333', fontWeight: '600', marginBottom: '5px', display: 'block' }}>Email :</label>
+                <label style={{ fontSize: '16px', color: '#333', fontWeight: '600', marginBottom: '5px', display: 'block' }}>
+                  Email : <span style={{ color: '#dc2626' }}>*</span>
+                </label>
                 <input
                   type="email"
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  style={{ width: '100%', padding: '12px', border: '1px solid #a5d6a7', borderRadius: '5px' }}
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    border: `1px solid ${formErrors.email ? '#dc2626' : '#a5d6a7'}`,
+                    borderRadius: '5px',
+                  }}
                 />
+                {formErrors.email && (
+                  <p style={{ color: '#dc2626', fontSize: '14px', marginTop: '5px' }}>{formErrors.email}</p>
+                )}
               </div>
 
               <div>
-                <label style={{ fontSize: '16px', color: '#333', fontWeight: '600', marginBottom: '5px', display: 'block' }}>Téléphone :</label>
+                <label style={{ fontSize: '16px', color: '#333', fontWeight: '600', marginBottom: '5px', display: 'block' }}>
+                  Téléphone :
+                </label>
                 <input
                   type="tel"
                   name="phone"
                   value={formData.phone}
                   onChange={handleInputChange}
-                  style={{ width: '100%', padding: '12px', border: '1px solid #a5d6a7', borderRadius: '5px' }}
-                />
-              </div>
-
-              <div>
-                <label style={{ fontSize: '16px', color: '#333', fontWeight: '600', marginBottom: '5px', display: 'block' }}>Type de production :</label>
-                <select
-                  name="productionType"
-                  multiple
-                  value={formData.productionType}
-                  onChange={handleArrayChange}
                   style={{
                     width: '100%',
                     padding: '12px',
-                    border: '1px solid #a5d6a7',
+                    border: `1px solid ${formErrors.phone ? '#dc2626' : '#a5d6a7'}`,
                     borderRadius: '5px',
-                    height: '150px',
                   }}
-                >
-                  <option value="Bio">Bio</option>
-                  <option value="Conventionnel">Conventionnel</option>
-                  <option value="Raisonné">Raisonné</option>
-                </select>
-                <p style={{ fontSize: '14px', color: '#666', marginTop: '5px' }}>
-                  Actuel : {initialData?.productionType?.join(', ') || 'Aucun'}
-                </p>
+                />
+                {formErrors.phone && (
+                  <p style={{ color: '#dc2626', fontSize: '14px', marginTop: '5px' }}>{formErrors.phone}</p>
+                )}
               </div>
             </div>
 
             {/* Colonne 2 */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
               <div>
-                <label style={{ fontSize: '16px', color: '#333', fontWeight: '600', marginBottom: '5px', display: 'block' }}>Nom de l'entreprise :</label>
+                <label style={{ fontSize: '16px', color: '#333', fontWeight: '600', marginBottom: '5px', display: 'block' }}>
+                  Nom de l'entreprise :
+                </label>
                 <input
                   type="text"
                   name="companyname"
                   value={formData.companyname}
                   onChange={handleInputChange}
-                  style={{ width: '100%', padding: '12px', border: '1px solid #a5d6a7', borderRadius: '5px' }}
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    border: `1px solid ${formErrors.companyname ? '#dc2626' : '#a5d6a7'}`,
+                    borderRadius: '5px',
+                  }}
                 />
+                {formErrors.companyname && (
+                  <p style={{ color: '#dc2626', fontSize: '14px', marginTop: '5px' }}>{formErrors.companyname}</p>
+                )}
               </div>
 
               <div>
-                <label style={{ fontSize: '16px', color: '#333', fontWeight: '600', marginBottom: '5px', display: 'block' }}>Pays :</label>
+                <label style={{ fontSize: '16px', color: '#333', fontWeight: '600', marginBottom: '5px', display: 'Block' }}>
+                  Pays :
+                </label>
                 <input
                   type="text"
                   name="country"
                   value={formData.country}
                   onChange={handleInputChange}
-                  style={{ width: '100%', padding: '12px', border: '1px solid #a5d6a7', borderRadius: '5px' }}
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    border: `1px solid ${formErrors.country ? '#dc2626' : '#a5d6a7'}`,
+                    borderRadius: '5px',
+                  }}
                 />
+                {formErrors.country && (
+                  <p style={{ color: '#dc2626', fontSize: '14px', marginTop: '5px' }}>{formErrors.country}</p>
+                )}
               </div>
 
               <div>
-                <label style={{ fontSize: '16px', color: '#333', fontWeight: '600', marginBottom: '5px', display: 'block' }}>Adresse :</label>
+                <label style={{ fontSize: '16px', color: '#333', fontWeight: '600', marginBottom: '5px', display: 'block' }}>
+                  Adresse :
+                </label>
                 <input
                   type="text"
                   name="address"
                   value={formData.address}
                   onChange={handleInputChange}
-                  style={{ width: '100%', padding: '12px', border: '1px solid #a5d6a7', borderRadius: '5px' }}
-                />
-              </div>
-
-              <div>
-                <label style={{ fontSize: '16px', color: '#333', fontWeight: '600', marginBottom: '5px', display: 'block' }}>Méthode de production :</label>
-                <select
-                  name="productionMethod"
-                  multiple
-                  value={formData.productionMethod}
-                  onChange={handleArrayChange}
                   style={{
                     width: '100%',
                     padding: '12px',
-                    border: '1px solid #a5d6a7',
+                    border: `1px solid ${formErrors.address ? '#dc2626' : '#a5d6a7'}`,
                     borderRadius: '5px',
-                    height: '150px',
                   }}
-                >
-                  <option value="Bio">Bio</option>
-                  <option value="Conventionnel">Conventionnel</option>
-                  <option value="Raisonné">Raisonné</option>
-                </select>
-                <p style={{ fontSize: '14px', color: '#666', marginTop: '5px' }}>
-                  Actuel : {initialData?.productionMethod?.join(', ') || 'Aucun'}
-                </p>
+                />
+                {formErrors.address && (
+                  <p style={{ color: '#dc2626', fontSize: '14px', marginTop: '5px' }}>{formErrors.address}</p>
+                )}
               </div>
 
+              
+
+              
+
               <div>
-                <label style={{ fontSize: '16px', color: '#333', fontWeight: '600', marginBottom: '5px', display: 'block' }}>Certification :</label>
+                <label style={{ fontSize: '16px', color: '#333', fontWeight: '600', marginBottom: '5px', display: 'block' }}>
+                  Certification :
+                </label>
                 <input
                   type="file"
                   name="certification"
@@ -408,7 +597,7 @@ const UpdateFarmerProfile = () => {
                   style={{
                     width: '100%',
                     padding: '12px',
-                    border: '1px dashed #a5d6a7',
+                    border: `1px dashed ${formErrors.certification ? '#dc2626' : '#a5d6a7'}`,
                     borderRadius: '5px',
                   }}
                 />
@@ -425,35 +614,54 @@ const UpdateFarmerProfile = () => {
                     </a>
                   </p>
                 )}
+                {formErrors.certification && (
+                  <p style={{ color: '#dc2626', fontSize: '14px', marginTop: '5px' }}>{formErrors.certification}</p>
+                )}
               </div>
             </div>
           </div>
 
           <button
             type="submit"
-            onClick={handleSubmit}
+            onClick={handleConfirmClick}
+            disabled={submitting}
             style={{
               width: '100%',
               padding: '15px',
-              backgroundColor: '#4caf50', // Vert agronomique
+              backgroundColor: submitting ? '#6b7280' : '#4caf50',
               color: 'white',
               border: 'none',
               borderRadius: '5px',
               fontSize: '18px',
               fontWeight: '600',
-              cursor: 'pointer',
+              cursor: submitting ? 'not-allowed' : 'pointer',
               transition: 'background-color 0.3s',
               marginTop: '30px',
             }}
-            onMouseEnter={(e) => (e.target.style.backgroundColor = '#388e3c')}
-            onMouseLeave={(e) => (e.target.style.backgroundColor = '#4caf50')}
+            onMouseEnter={(e) => !submitting && (e.target.style.backgroundColor = '#388e3c')}
+            onMouseLeave={(e) => !submitting && (e.target.style.backgroundColor = '#4caf50')}
           >
-            Mettre à jour le profil
+            {submitting ? 'Mise à jour...' : 'Mettre à jour le profil'}
           </button>
         </div>
       </div>
+
+      {/* Inline CSS for Animation */}
+      <style>
+        {`
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+          @media (max-width: 768px) {
+            div[style*="gridTemplateColumns"] {
+              grid-template-columns: 1fr;
+            }
+          }
+        `}
+      </style>
     </AppLayout>
   );
 };
 
-export default UpdateFarmerProfile;
+export default UpdateUserProfile;

@@ -23,13 +23,8 @@
             "title": "Connections",
             "submenu": {
               "media": false,
-              "items": [ {
-                  "color": "primary",
-                  "icon": "pie-fill",
-                  "url": "/offers",
-                  "title": "Offers",
-                  "subtitle": "All In One Analytics Tool."
-                },
+              "items": [ 
+               
                
                 {
                   "color": "info-alt",
@@ -37,7 +32,19 @@
                   "url": "/Buyers",
                   "title": "Buyers",
                   "subtitle": "Optimize Decisions and Outcomes."
-                }]
+                },
+                {
+                  "color": "info-alt",
+                  "icon": "file-text-fill",
+                  "url": "/blogs",
+                  "title": "offers",
+                  "subtitle": "Optimize Decisions and Outcomes."
+                }
+              
+              
+              
+              
+              ]
             }
           }
         },
@@ -78,21 +85,23 @@
             "title": "Connections",
             "submenu": {
               "media": false,
-              "items": [ {
-                  "color": "primary",
-                  "icon": "pie-fill",
-                  "url": "/offers",
-                  "title": "Offers",
-                  "subtitle": "All In One Analytics Tool."
-                },
-               
-                {
+              "items": [
+                
+                 {
                   "color": "info-alt",
                   "icon": "file-text-fill",
                   "url": "/Buyers",
                   "title": "Buyers",
                   "subtitle": "Optimize Decisions and Outcomes."
                 },
+                {
+                  "color": "info-alt",
+                  "icon": "file-text-fill",
+                  "url": "/blogs",
+                  "title": "offres",
+                  "subtitle": "Optimize Decisions and Outcomes."
+                }
+              ,
                  {
                   "color": "info-alt",
                   "icon": "file-text-fill",
